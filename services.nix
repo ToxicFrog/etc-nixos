@@ -1,4 +1,4 @@
-# Ancilla services not large enough to need their own file, like mail.
+# Ancilla services not large enough to need their own file.
 
 { config, pkgs, lib, ... }:
 
@@ -29,6 +29,7 @@ in {
 
     smartd = {
       enable = true;
+      # TODO: fix this so mail actually goes somewhere useful
       notifications.mail.mailer = "/run/current-system/sw/bin/sendmail";
       notifications.mail.enable = true;
       notifications.mail.recipient = "root@ancilla.ca";

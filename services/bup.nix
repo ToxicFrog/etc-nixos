@@ -1,4 +1,4 @@
-# Ancilla services not large enough to need their own file, like mail.
+# Ancilla backup services.
 
 { config, pkgs, ... }:
 

@@ -1,4 +1,4 @@
-# Ancilla services not large enough to need their own file, like mail.
+# Samba file server configuration.
 
 { config, pkgs, ... }:
 
