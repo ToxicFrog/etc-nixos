@@ -11,6 +11,7 @@
     ./doomrl-server.nix
     ./services.nix
     ./overlays/default.nix
+    ./secrets/netmount.nix
   ];
 
   system.stateVersion = "16.09";
@@ -63,6 +64,7 @@
     nodejs  # for discord-ircd
     (python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     rtorrent
+    sshfs
     skicka  # for backup upload to grive
     weechat
     gpodder youtube-dl sqlite  # for downloading podcasts
