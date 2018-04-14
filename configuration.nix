@@ -66,6 +66,7 @@
     rtorrent
     sshfs
     skicka  # for backup upload to grive
+    timg
     weechat
     gpodder youtube-dl sqlite  # for downloading podcasts
   ];
