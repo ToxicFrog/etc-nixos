@@ -63,6 +63,7 @@ in {
     calibre
     digikam # for digitaglinktree
     elinks
+    ipfs
     jshon
     ffmpeg-full
     nodejs  # for discord-ircd

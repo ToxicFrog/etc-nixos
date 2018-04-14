@@ -10,6 +10,7 @@ in {
     ./services/minecraft.nix
     ./services/nginx.nix
     ./services/smb.nix
+    ./services/ipfs.nix
   ];
 
   users.users.git.createHome = lib.mkForce false;
