@@ -2,7 +2,9 @@
 
 { config, pkgs, lib, ... }:
 
-{
+let
+  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
+in {
   imports = [
     ./hardware-configuration.nix
     ./boot.nix
@@ -57,7 +59,9 @@
 
   environment.systemPackages = with pkgs; [
     alpine
+    beets
     calibre
+    digikam # for digitaglinktree
     elinks
     jshon
     ffmpeg-full
@@ -68,7 +72,7 @@
     skicka  # for backup upload to grive
     timg
     weechat
-    gpodder youtube-dl sqlite  # for downloading podcasts
+    gpodder unstable.youtube-dl sqlite  # for downloading podcasts
   ];
 
   zramSwap = {
