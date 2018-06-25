@@ -1,6 +1,8 @@
 self: super:
 
-{
+let
+  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
+in {
   calibre = super.calibre.overrideAttrs (oldAttrs: {
     name = "calibre-3.12.0";
     version = "3.12.0";
@@ -31,14 +33,6 @@ self: super:
     nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [self.pidgin];
     configureFlags = oldAttrs.configureFlags ++ ["--purple=1" "--jabber=1"];
   });
-  purple-hangouts = super.purple-hangouts.overrideAttrs (oldAttrs: {
-    name = "purple-hangouts-hg-2017-10-03";
-    version = "2017-10-03";
-    src = self.fetchhg {
-      url = "https://bitbucket.org/EionRobb/purple-hangouts/";
-      rev = "5e76979";
-      sha256 = "0cs7dcd44lkc2anradyddjvmfvnl46ixw4idaf1m9fd7j35mg7b1";
-    };
-    patches = [ ./hangouts-me.diff ];
-  });
+  purple-hangouts = unstable.purple-hangouts;
+  ipfs = unstable.ipfs;
 }
