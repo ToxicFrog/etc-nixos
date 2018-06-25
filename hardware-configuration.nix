@@ -13,6 +13,11 @@
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
 
+  services.zfs.autoScrub = {
+    enable = true;
+    interval = "monthly";
+  };
+
   fileSystems."/" =
     { device = "ancilla/root";
       fsType = "zfs";
