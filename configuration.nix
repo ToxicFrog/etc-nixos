@@ -62,10 +62,12 @@ in {
     beets
     calibre
     digikam # for digitaglinktree
+    unstable.dosage
     elinks
     ipfs
     jshon
     ffmpeg-full
+    lgogdownloader
     nodejs  # for discord-ircd
     (python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     rtorrent
