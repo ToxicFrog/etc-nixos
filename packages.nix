@@ -29,7 +29,7 @@ in {
     p7zip
     posix_man_pages
     python
-    python27Packages.ledger-autosync
+    ledger-autosync
     python3
     stdmanpages
     taskwarrior
