@@ -16,7 +16,7 @@ in {
     ./secrets/netmount.nix
   ];
 
-  system.stateVersion = "16.09";
+  system.nixos.stateVersion = "16.09";
   boot.cleanTmpDir = true;
   time.timeZone = lib.mkDefault "America/Toronto";
   programs.zsh.enable = true;

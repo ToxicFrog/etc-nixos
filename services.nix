@@ -15,7 +15,6 @@ in {
 
   users.users.git.createHome = lib.mkForce false;
   systemd.services.gitolite-init.after = ["local-fs.target"];
-  systemd.services.bitlbee.environment.PURPLE_PLUGIN_PATH = "${pkgs.purple-hangouts}/lib/pidgin/";
 
   services = {
     fail2ban.enable = false;  # temporarily disabled due to doing lots and lots of disk
@@ -68,7 +67,6 @@ in {
     syncthing = {
       enable = true;
       systemService = false;
-      useInotify = true;
     };
   };
 
