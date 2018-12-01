@@ -8,7 +8,7 @@
     after = ["network.target" "local-fs.target"];
     wantedBy = ["multi-user.target"];
     timerConfig = {
-      OnCalendar = "*-*-* 00,01,02,03,04:00:00";
+      OnCalendar = "*-*-* 04:15:00";
       Unit = "bup.service";
     };
   };

@@ -1,0 +1,26 @@
+# Patterns for Ancilla.
+# Basically the same as thoth except we back up etc/nixos rather than just etc,
+# add /srv, and exclude a few more things.
+
+R root
+R var/lib
+R boot
+R home
+R etc/nixos
+R srv
+
+! **/tmp/
+! **/.cache/
+! **/.bup/
+! home/*/Videos/
+! home/*/Music/
+! home/*/music/
+! home/*/Pictures/
+! home/*/Comics/
+! home/*/Games/
+! home/*/.local/share/Steam/
+! home/*/.local/share/Trash/
+! var/lib/**/proc/
+! **/core
+! **/core.*
+! srv/minecraft/dynmap-web/

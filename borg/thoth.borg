@@ -1,0 +1,19 @@
+# Patterns for Thoth.
+R root
+R var/lib
+R boot
+R home
+R etc
+! **/tmp/
+! **/.cache/
+! **/.bup/
+! home/*/Videos/
+! home/*/Music/
+! home/*/Pictures/
+! home/*/Comics/
+! home/*/Games/
+! home/*/.local/share/Steam/
+! home/*/.local/share/Trash/
+! var/lib/**/proc/
+! **/core
+! **/core.*
