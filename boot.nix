@@ -15,7 +15,7 @@
   systemd.targets.zfs = {
     wantedBy = ["local-fs.target" "multi-user.target" "sysinit.target"];
     wants = ["zfs-mount.service"];
-    before = ["local-fs.target" "multi-user.target" "sysinit.target"];
+    before = ["local-fs.target" "multi-user.target" "sysinit.target" "network.target"];
   };
   systemd.services.zfs-mount.requires = ["zfs-import.target"];
 }

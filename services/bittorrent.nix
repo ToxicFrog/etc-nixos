@@ -3,6 +3,8 @@
 { config, pkgs, ... }:
 
 {
+  systemd.services.deluged.requires = ["zfs-mount.service"];
+  systemd.services.delugeweb.requires = ["deluged.service"];
   services = {
     deluge = {
       enable = true;
