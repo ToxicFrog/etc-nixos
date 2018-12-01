@@ -6,10 +6,10 @@
     loader.grub = {
       enable = true;
       version = 2;
-      device = "/dev/disk/by-id/usb-Generic-_SD_MMC_20090815198100000-0:0";
+      device = "/dev/disk/by-id/ata-KINGSTON_SA400S37240G_50026B77824F4828";
     };
     supportedFilesystems = ["zfs"];
-    zfs.extraPools = ["ancilla" "backup" "nix"];
+    zfs.extraPools = ["ancilla" "backup" "internal"];
     kernelParams = ["consoleblank=0"];
   };
   systemd.targets.zfs = {

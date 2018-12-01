@@ -15,7 +15,7 @@
 
   services.zfs.autoScrub = {
     enable = true;
-    interval = "monthly";
+    interval = "*-*-01 01:15:00";
   };
 
   fileSystems."/" =
@@ -23,7 +23,7 @@
       fsType = "zfs";
     };
   fileSystems."/nix" =
-    { device = "ancilla/nix";
+    { device = "internal/nix";
       fsType = "zfs";
     };
   fileSystems."/home" =
@@ -31,12 +31,13 @@
       fsType = "zfs";
     };
   fileSystems."/boot" =
-    { device = "nix/boot";
+    { device = "internal/boot";
       fsType = "zfs";
     };
 
   swapDevices =
-    [ { device = "/dev/zd0"; }
+    [
+      { device = "/dev/disk/by-label/internal-swap"; }
     ];
 
   nix.maxJobs = lib.mkDefault 4;
