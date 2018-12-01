@@ -74,12 +74,8 @@ in {
     };
   };
 
-  # Crank the inotify limit waaaaay up there for syncthing-inotify.
+  # Crank the inotify limit waaaaay up there for syncthing.
   boot.kernel.sysctl = { "fs.inotify.max_user_watches" = 204800; };
-  systemd.user.services.syncthing-inotify = {
-    wantedBy = [ "syncthing.service" ];
-    serviceConfig = lib.mkForce { Restart = "always"; };
-  };
 
   users.extraUsers.deluge.home = lib.mkForce "/ancilla/torrents/deluge";
 
