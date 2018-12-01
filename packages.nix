@@ -17,6 +17,7 @@ in {
     gdb
     gitAndTools.gitFull
     gnumake
+    # google-chrome
     htop
     jre
     kpcli
@@ -31,6 +32,7 @@ in {
     python
     ledger-autosync
     python3
+    sshfsFuse
     stdmanpages
     taskwarrior
     tmux
