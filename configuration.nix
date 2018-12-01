@@ -36,6 +36,10 @@ in {
 
   networking.firewall = {
     allowPing = true;
+    allowedTCPPortRanges = [
+      { from = 8000; to = 8100; }
+      { from = 24000; to = 25000; }
+    ];
     allowedTCPPorts = [
       22          # sshd
       80 443      # httpd
