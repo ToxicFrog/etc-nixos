@@ -70,7 +70,6 @@ in {
     lgogdownloader
     nodejs  # for discord-ircd
     (python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
-    rtorrent
     recoll  # log searching
     sshfs
     skicka  # for backup upload to grive

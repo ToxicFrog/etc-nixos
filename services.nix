@@ -6,11 +6,12 @@ let
   secrets = (import ./secrets/default.nix {});
 in {
   imports = [
+    ./services/bittorrent.nix
     ./services/bup.nix
+    ./services/ipfs.nix
     ./services/minecraft.nix
     ./services/nginx.nix
     ./services/smb.nix
-    ./services/ipfs.nix
   ];
 
   users.users.git.createHome = lib.mkForce false;
@@ -76,6 +77,8 @@ in {
     wantedBy = [ "syncthing.service" ];
     serviceConfig = lib.mkForce { Restart = "always"; };
   };
+
+  users.extraUsers.deluge.home = lib.mkForce "/ancilla/torrents/deluge";
 
   # dyndns
   systemd.timers.dyndns = {
