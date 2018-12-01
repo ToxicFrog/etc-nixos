@@ -9,6 +9,7 @@ in {
     ./services/bittorrent.nix
     ./services/bup.nix
     ./services/ipfs.nix
+    ./services/media.nix
     ./services/minecraft.nix
     ./services/nginx.nix
     ./services/smb.nix

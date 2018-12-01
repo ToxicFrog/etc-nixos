@@ -35,4 +35,10 @@ in {
   });
   purple-hangouts = unstable.purple-hangouts;
   ipfs = unstable.ipfs;
+  # TODO build airsonic from source so that this actually works
+  # airsonic = super.airsonic.overrideAttrs (oldAttrs: {
+  #   patches = [
+  #     ./airsonic-podcast-order.patch
+  #   ];
+  # });
 }
