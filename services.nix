@@ -20,8 +20,11 @@ in {
   services = {
     fail2ban.enable = false;  # temporarily disabled due to doing lots and lots of disk
     apcupsd.enable = true;
-    bitlbee.enable = true;
-
+    bitlbee = {
+      enable = true;
+      plugins = with pkgs; [ bitlbee-facebook bitlbee-discord bitlbee-steam ];
+      libpurple_plugins = with pkgs; [ purple-hangouts ];
+    };
 
     monit = {
       enable = true;
