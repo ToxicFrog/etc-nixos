@@ -3,15 +3,15 @@
 { config, pkgs, ... }:
 
 {
-  systemd.timers.bup = {
-    description = "Run daily backups";
-    after = ["network.target" "local-fs.target"];
-    wantedBy = ["multi-user.target"];
-    timerConfig = {
-      OnCalendar = "*-*-* 04:15:00";
-      Unit = "bup.service";
-    };
-  };
+  # systemd.timers.bup = {
+  #   description = "Run daily backups";
+  #   after = ["network.target" "local-fs.target"];
+  #   wantedBy = ["multi-user.target"];
+  #   timerConfig = {
+  #     OnCalendar = "*-*-* 04:15:00";
+  #     Unit = "bup.service";
+  #   };
+  # };
   systemd.services.bup = {
     description = "Run daily backups";
     environment = {
