@@ -13,6 +13,7 @@ R etc
 ! home/*/Comics/
 ! home/*/Games/
 ! home/*/.local/share/Steam/
+! home/*/.local/share/lutris/
 ! home/*/.local/share/Trash/
 ! var/lib/**/proc/
 ! **/core

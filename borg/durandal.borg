@@ -1,15 +1,10 @@
 # Patterns for Durandal.
 R home/
 R cygdrive/c/Users/
-R cygdrive/c/AppData/
 ! **/tmp/
 ! **/Temp/
 ! **/temp/
 ! home/*/.bup
-! cygdrive/c/ProgramData/Google/
-! cygdrive/c/ProgramData/Microsoft/
-! cygdrive/c/ProgramData/Steam/
-! cygdrive/c/ProgramData/Packages/
 ! cygdrive/c/Users/*/AppData/Local/Google/
 ! cygdrive/c/Users/*/AppData/Local/Microsoft/
 ! cygdrive/c/Users/*/AppData/Local/Packages/
