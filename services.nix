@@ -20,7 +20,7 @@ in {
   systemd.services.gitolite-init.after = ["local-fs.target"];
 
   services = {
-    fail2ban.enable = false;  # temporarily disabled due to doing lots and lots of disk
+    fail2ban.enable = true;  # temporarily disabled due to doing lots and lots of disk
     apcupsd.enable = true;
     bitlbee = {
       enable = true;
