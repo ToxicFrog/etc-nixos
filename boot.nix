@@ -13,7 +13,7 @@
     kernelParams = ["consoleblank=0"];
   };
   systemd.targets.zfs = {
-    wantedBy = ["local-fs.target" "multi-user.target" "sysinit.target"];
+    wantedBy = ["sysinit.target"];
     wants = ["zfs-mount.service"];
     before = ["local-fs.target" "multi-user.target" "sysinit.target" "network.target"];
   };
