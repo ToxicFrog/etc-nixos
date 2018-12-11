@@ -10,7 +10,6 @@ let
     extraCreateArgs = "--stats --progress --exclude-caches --files-cache=mtime,size --patterns-from=${borgcfg}/${name}.borg";
     repo = "/mnt/external/borg-dir";
     paths = [];
-    startAt = ["*-*-* 02:00:00"];
     encryption.mode = "none";
     appendFailedSuffix = false;
     dateFormat = "+%Yd%j";
@@ -75,24 +74,29 @@ in {
       name = "durandal";
       path = "/.";
       touch = "home/.borgbackup";
+      startAt = "Mon *-*-* 02:00:00";
     };
     "funkyhorror" = borg-sshfs {
       name = "funkyhorror";
       touch = ".borgbackup";
+      startAt = "Mon *-*-* 02:00:00";
     };
     "godbehere.ca" = borg-sshfs {
       name = "godbehere.ca";
       touch = ".borgbackup";
+      startAt = "Mon *-*-* 02:00:00";
     };
     "grandriverallbreedrescue.ca" = borg-sshfs {
       name = "GRABR.ca";
       host = "${secrets.grabr-user}@grandriverallbreedrescue.ca";
       touch = ".borgbackup";
+      startAt = "Mon *-*-* 02:00:00";
     };
     thoth = borg-sshfs {
       name = "thoth";
       path = "/.";
       touch = "root/.borgbackup";
+      startAt = "*-*-* 02:00:00";
     };
   };
   systemd.services = borg-ordering [
