@@ -58,7 +58,7 @@ in {
   nix = {
     useSandbox = true;
     gc.automatic = true;
-    gc.options = "--delete-older-than 7d";
+    gc.options = "--delete-older-than 60d";
   };
 
   environment.systemPackages = with pkgs; [
