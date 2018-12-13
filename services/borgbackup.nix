@@ -15,11 +15,27 @@ let
   borgcfg = pkgs.copyPathToStore ../borg;
   borg = { name, ... } @ opts: ({
     archiveBaseName = name;
-    extraCreateArgs = "--stats --progress --exclude-caches --files-cache=mtime,size --patterns-from=${borgcfg}/${name}.borg";
-    repo = "/mnt/external/borg-dir";
-    paths = [];
-    encryption.mode = "none";
+    extraCreateArgs = builtins.concatStringsSep " " [
+      "--stats"
+      "--progress"
+      "--exclude-caches"
+      "--files-cache=mtime,size"
+      "--patterns-from=${borgcfg}/${name}.borg"
+    ];
+    repo = "/backup/borg-repo";
+    paths = [];  # Paths are read from the --patterns-from file
+    encryption.mode = "repokey-blake2";
+    encryption.passCommand = "cat /backup/borg/passphrase";
     appendFailedSuffix = false;
+    environment = {
+      BORG_CONFIG_DIR = "/backup/borg/config";
+      BORG_CACHE_DIR = "/backup/borg/cache";
+      BORG_SECURITY_DIR = "/backup/borg/security";
+      BORG_KEYS_DIR = "/backup/borg/keys";
+    };
+    readWritePaths = [
+      "/backup/borg"
+    ];
     dateFormat = "+%Yd%j";
   } // removeAttrs opts ["name"]);
   borg-sshfs = {
