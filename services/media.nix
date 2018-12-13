@@ -10,16 +10,15 @@ in {
     airsonic = {
       enable = true;
       maxMemory = 256;
-      # home = "/srv/airsonic";
+      home = "/srv/airsonic";
     };
 
     plex = {
       enable = true;
       openFirewall = true;
-      # dataDir = "/srv/plex";
+      dataDir = "/srv/plex";
       extraPlugins = [
-        "/var/lib/plex/plugins/YouTubeTV.bundle"
-        #"/srv/plex/plugins/YouTubeTV.bundle"
+        "/srv/plex/plugins/YouTubeTV.bundle"
       ];
     };
 
