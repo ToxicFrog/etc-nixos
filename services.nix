@@ -87,9 +87,9 @@ in {
     after = ["network.target" "local-fs.target"];
     wantedBy = ["multi-user.target"];
     timerConfig = {
-      #OnCalendar = "*:0/5:*";
-      OnBootSec = "5min";
-      OnUnitActiveSec = "5min";
+      #OnCalendar = "*:0/15:*";
+      OnBootSec = "15min";
+      OnUnitActiveSec = "15min";
       Unit = "dyndns.service";
     };
   };
