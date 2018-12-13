@@ -49,20 +49,24 @@ let
   } // removeAttrs opts ["host" "path" "touch"]);
   name-to-service = name: {
     name = name;
-    "borgbackup-job-${name}".serviceConfig = {
-      Type = "oneshot";
-      # borg uses exit(1) for warnings like "file deleted during backup".
-      SuccessExitStatus = "1";
+    "borgbackup-job-${name}" = {
+      serviceConfig = {
+        Type = "oneshot";
+        # borg uses exit(1) for warnings like "file deleted during backup".
+        SuccessExitStatus = "1";
+      };
+      after = [];
     };
   };
   merge-and-order-services = first: second:
     if first.name == "" then
       second
     else
-      lib.attrsets.recursiveUpdate
+      let afters = first."borgbackup-job-${first.name}".after ++ ["borgbackup-job-${first.name}.service"];
+      in lib.attrsets.recursiveUpdate
         (first // second)
         {
-          "borgbackup-job-${second.name}".after = ["borgbackup-job-${first.name}.service"];
+          "borgbackup-job-${second.name}".after = afters;
         };
   borg-ordering = names:
     removeAttrs
