@@ -4,6 +4,14 @@
 
 let
   secrets = (import ../secrets/default.nix {});
+  preamble = ''
+    # Append an "+n" to duplicate archive names.
+    # So durandal-2018d123 becomes durandal-2018d123+1 the second time.
+    archiveCount="$(${pkgs.borgbackup}/bin/borg list -P "$archiveName" | ${pkgs.coreutils}/bin/wc -l)"
+    if (( archiveCount > 0 )); then
+      archiveName="$archiveName+$archiveCount"
+    fi
+  '';
   borgcfg = pkgs.copyPathToStore ../borg;
   borg = { name, ... } @ opts: ({
     archiveBaseName = name;
@@ -20,12 +28,7 @@ let
       path ? ".",
       ...} @ opts: borg ({
     preHook = ''
-      # Append an "+n" to duplicate archive names.
-      # So durandal-2018d123 becomes durandal-2018d123+1 the second time.
-      archiveCount="$(${pkgs.borgbackup}/bin/borg list -P "$archiveName" | ${pkgs.coreutils}/bin/wc -l)"
-      if (( archiveCount > 0 )); then
-        archiveName="$archiveName+$archiveCount"
-      fi
+      ${preamble}
 
       # Workaround for borgbackup dropping cache entries for the most recently
       # modified files in the backup dataset, c.f.
@@ -70,6 +73,16 @@ let
       ["name"];
 in {
   services.borgbackup.jobs = {
+    ancilla = borg {
+      name = "ancilla";
+      startAt = ["*-*-* 02:00:00"];
+      preHook = ''
+        ${preamble}
+
+        ssh localhost touch /root/.borgbackup
+        cd /
+      '';
+    };
     durandal = borg-sshfs {
       name = "durandal";
       path = "/.";
@@ -100,6 +113,7 @@ in {
     };
   };
   systemd.services = borg-ordering [
+    "ancilla"
     "thoth"
     "durandal"
     "godbehere.ca"
