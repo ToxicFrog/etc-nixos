@@ -2,12 +2,14 @@
 # Basically the same as thoth except we back up etc/nixos rather than just etc,
 # add /srv, and exclude a few more things.
 
-R root
-R var/lib
-R boot
-R home
-R etc/nixos
-R srv
+R /boot
+R /etc/nixos
+R /home
+R /root
+R /srv
+R /var/lib
+R /var/cache/locatedb
+R /ancilla/media/music/beets.db
 
 ! **/tmp/
 ! **/.cache/
@@ -24,3 +26,5 @@ R srv
 ! **/core
 ! **/core.*
 ! srv/minecraft/dynmap-web/
+# Not sure about this
+#! srv/ipfs/blocks/
