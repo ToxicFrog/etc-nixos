@@ -79,8 +79,6 @@ in {
   # Crank the inotify limit waaaaay up there for syncthing.
   boot.kernel.sysctl = { "fs.inotify.max_user_watches" = 204800; };
 
-  users.extraUsers.deluge.home = lib.mkForce "/ancilla/torrents/deluge";
-
   # dyndns
   systemd.timers.dyndns = {
     description = "Update afraid.org DNS records (timer)";
