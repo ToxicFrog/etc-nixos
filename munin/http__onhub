@@ -1,0 +1,218 @@
+#!/usr/bin/env bash
+
+: << =cut
+
+=head1 NAME
+
+http__onhub -- plugin to scrape status information from a Google OnHub
+
+=head1 CONFIGURATION
+
+These are the default settings:
+
+[ssh_host.tld_uptime]
+  env.onhub_address onhub.here
+
+=head1 AUTHOR
+
+Written by B. Kelly, based on Marcus Olsson onhub API documentation at
+https://github.com/olssonm/google-wifi-api
+
+=head1 LICENSE
+
+MIT
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+# source $MUNIN_LIBDIR/plugins/plugin.sh
+
+shopt -s lastpipe
+
+myname="$(basename $0)"
+host_name="$(echo "$myname" | cut -d_ -f2)"
+onhub_address="${onhub_address:=onhub.here}"
+
+if [[ "$1" == "autoconf" ]]; then
+  if curl -sf "http://${onhub_address}/api/v1/welcome-mat" >/dev/null; then
+    echo yes
+  else
+    echo "no (could not access http://${onhub_address}/api/v1/welcome-mat)"
+  fi
+  exit 0
+fi
+
+if [[ "$1" = "config" ]]; then
+  cat <<EOF
+host_name $host_name
+multigraph onhub_network
+graph_title Network size
+graph_category network
+graph_vlabel number of hosts
+graph_info Information about the number of hosts on the network managed by the OnHub.
+arp_count.label ARP table size
+arp_count.info The size of the ARP table, i.e. the number of distinct devices the OnHub has seen on the network, whether or not it gave them an IP address itself.
+arp_count.type GAUGE
+arp_count.draw LINE2
+dhcp_count.label DHCP lease count
+dhcp_count.info The number of devices the OnHub has given IP addresses to, whether or not they're currently connected.
+dhcp_count.type GAUGE
+dhcp_count.draw LINE2
+peer_count.label DHCP client count
+peer_count.info The number of currently connected peers that the OnHub gave addresses to via DHCP.
+peer_count.type GAUGE
+peer_count.draw LINE2
+
+multigraph onhub_speed
+graph_title WAN speed
+graph_category network
+graph_vlabel upstream (-) / downstream (+) speed
+graph_info This is the maximum WAN speed as measured by the OnHub during its most recent automatic probe.
+graph_args --base 1000
+upstream.label bps
+upstream.graph no
+upstream.type GAUGE
+upstream.cdef upstream,8,*
+downstream.label bps
+downstream.draw AREA
+downstream.type GAUGE
+downstream.cdef downstream,8,*
+downstream.negative upstream
+
+multigraph onhub_traffic
+graph_title Network traffic
+graph_category network
+graph_vlabel sent (-) / received (+) bytes per \${graph_period}
+graph_info This is actual network utilization, displayed separately for LAN and WAN traffic. Traffic to/from external systems will show up on both; traffic within the LAN will only show up on the LAN.
+graph_args --base 1000 --logarithmic --alt-autoscale
+lan_sent.label LAN egress
+lan_sent.draw AREA
+lan_sent.type DERIVE
+lan_sent.min 0
+lan_sent.cdef lan_sent,256,/,-1,*
+wan_sent.label WAN egress
+wan_sent.draw STACK
+wan_sent.type DERIVE
+wan_sent.min 0
+wan_sent.cdef wan_sent,256,/,-1,*
+lan_recv.label LAN ingress
+lan_recv.draw AREA
+lan_recv.type DERIVE
+lan_recv.min 0
+lan_recv.cdef lan_recv,256,/
+wan_recv.label WAN ingress
+wan_recv.draw STACK
+wan_recv.type DERIVE
+wan_recv.min 0
+wan_recv.cdef wan_recv,256,/
+EOF
+# lan_sent.graph no
+# wan_sent.graph no
+# lan_recv.negative lan_sent
+# wan_recv.negative wan_sent
+  exit 0
+fi
+
+function report {
+  cat /tmp/$$ | strings -n 8 -w
+}
+
+function arp-count {
+  report | sed -E -n '/\/proc\/net\/arp/,/^$/ p;' | grep br-lan | wc -l
+}
+
+function dhcp-count {
+  report | fgrep -a "dhcp_lease " | wc -l
+}
+
+function peer-count {
+  report | fgrep -a "connected: true" | wc -l
+}
+
+function speedtest {
+  report | fgrep -a "$1_speed_bytes_per_second:" | cut -d: -f2
+}
+
+function ifstat {
+  report \
+    | sed -E -n '/ip -s -d addr/,/^$/ p;' \
+    | sed -E -n "/^[0-9]: $1: /,/^[0-9]/ p;" \
+    | sed -E -n "/^    $2: bytes/ { n; p; q; }" \
+    | read bytes packets errors dropped _
+  # RX and TX bytes values, despite saying "bytes" in the dump, are (a) in hex
+  # and (b) actually (bytes * 256). At least, the values are 256 times higher
+  # than the same network traffic reported by the other end.
+  # We use a cdef to fix this.
+  printf "%d" 0x$bytes
+}
+
+# Time to actually probe the onhub.
+# This is very expensive (10+ seconds), so we do it once and save the
+# result.
+curl -s -f http://onhub.here/api/v1/diagnostic-report \
+  | zcat > /tmp/$$
+
+cat <<EOF
+multigraph onhub_network
+arp_count.value $(arp-count)
+dhcp_count.value $(dhcp-count)
+peer_count.value $(peer-count)
+multigraph onhub_speed
+upstream.value $(speedtest upload)
+downstream.value $(speedtest download)
+multigraph onhub_traffic
+lan_sent.value $(ifstat br-lan TX)
+lan_recv.value $(ifstat br-lan RX)
+wan_sent.value $(ifstat wan0 TX)
+wan_recv.value $(ifstat wan0 RX)
+EOF
+
+rm /tmp/$$
+
+  # graphs:
+  # size of ARP table: /proc/net/arp
+  # number of DHCP leases: dhcp_lease { ... }
+  #   both also let us match up IPs to MACs
+  # bandwidth and connection strength of wifi clients: "station dump"
+  #   uses MACs
+  #   there does not appear to be an equivalent for wired clients
+  # network connection status:
+  #   infra_state.wan_speed_test_results
+  #   network_service_state.wan_state
+  # DHCP clients:
+  #   station_state_update.station_info.*
+  #   contains mDNS name, DHCP hostname, and IP address
+  #   connected: true if still connected
+  #   wireless: true if wifi
+  #   not everything has names
+  #   lets us map name to IP (if any names are specified)
+  # per-interface bandwidth:
+  #   ip -s -d addr
+  #   wan0 is the WAN
+  #   lan0 is the cat5
+  #   wlan-2400mhz and wlan-5000mhz are the two bands of wifi
+  #   br-lan combines lan0 and the wifi interfaces
+
+# This requires us to probe the onhub to run "configure" which is not great
+# graph_title Per-device wifi traffic
+# graph_category network
+# graph_args --base 1000
+# graph_vlabel bits sent (-) / received (+) by peer
+# $(output_wifi_bandwidth_labels)
+# send_$name.label $name
+# send_$name.graph no
+# send_$name.type DERIVE
+# send_$name.min 0
+# send_$name.cdef wifi_send_$name,8,*
+# recv_$name.label $name
+# recv_$name.draw AREASTACK
+# recv_$name.type DERIVE
+# recv_$name.min 0
+# recv_$name.cdef wifi_recv_$name,8,*
+# recv_$name.negative send_$name
+# graph_title Wifi signal strength
+# ...similar to above...
