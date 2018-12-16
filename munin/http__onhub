@@ -83,6 +83,17 @@ function dimension {
     shift
   done
 }
+
+# TODO map MAC address to hostname or IP
+function wifi_strength_dimensions {
+  report | sed -n -E '
+    /^Station /,/connected time:/ {
+      /^Station / { s,Station ([0-9a-f]+) .*,\1,; p; }
+    }' | while read mac; do
+      dimension "wifi_power_$mac" "$mac" draw:LINE2 type:GAUGE
+    done
+}
+
 ### config implementation ###
 
 if [[ "$1" = "config" ]]; then
@@ -126,6 +137,14 @@ graph_info Network traffic on all the LAN interfaces (cat5, 2.4GHz wifi, and 5GH
 graph_args --base 1000
 $(dimension lan_recv RX draw:LINE2 type:DERIVE min:0 cdef:256,/)
 $(dimension lan_sent TX draw:LINE2 type:DERIVE min:0 cdef:256,/)
+
+multigraph onhub_wifi_strength
+graph_title Wifi signal strength
+graph_category network
+graph_vlabel dBm
+graph_info Signal strength (in decibel-milliwatts) of connected WiFi peers. If a peer is listed in the legend but has no data for a given time range, it was not connected during that time but had been seen recently by the AP.
+graph_args --base 1000
+$(wifi_strength_dimensions)
 EOF
 
 # upstream.graph yes
@@ -168,6 +187,17 @@ function ifstat {
   printf "%d" 0x$bytes
 }
 
+function wifi_strength_values {
+  report | sed -n -E '
+    /^Station /,/connected time:/ {
+      /^Station / { s,Station ([0-9a-f]+) .*,\1,; p; }
+      /signal: / { s,signal:[[:space:]]+(-?[0-9]+) dBm,\1,; p; }
+    }' | while read mac; do
+      read dBm
+      echo "wifi_power_$mac.value $dBm"
+    done
+}
+
 ### fetch implementation ###
 
 cat <<EOF
@@ -183,6 +213,7 @@ lan_sent.value $(ifstat br-lan TX)
 lan_recv.value $(ifstat br-lan RX)
 wan_sent.value $(ifstat wan0 TX)
 wan_recv.value $(ifstat wan0 RX)
+$(wifi_strength_values)
 EOF
 
   # graphs:
