@@ -87,10 +87,22 @@ function dimension {
 # TODO map MAC address to hostname or IP
 function wifi_strength_dimensions {
   report | sed -n -E '
-    /^Station /,/connected time:/ {
-      /^Station / { s,Station ([0-9a-f]+) .*,\1,; p; }
+    /Station /,/connected time:/ {
+      /Station / { s,.*Station ([0-9a-f]+) .*,\1,; p; }
     }' | while read mac; do
-      dimension "wifi_power_$mac" "$mac" draw:LINE2 type:GAUGE
+      local ip=$(report | sed -n -E "/^  mac_address: \"$mac\"/ { n; p; }" | cut -d\" -f2)
+      local name=$(
+        report \
+          | sed -n -E "/^ *ip_addresses: \"$ip\"/ { n; n; p; }" \
+          | cut -d\" -f2 \
+          | sed -E s,'-\*\*\*\*+$',"-${ip##*.}",)
+      if [[ $name ]]; then
+        dimension "wifi_power_$mac" "$name" draw:LINE2 type:GAUGE
+      elif [[ $ip ]]; then
+        dimension "wifi_power_$mac" "$ip" draw:LINE2 type:GAUGE
+      else
+        dimension "wifi_power_$mac" "$mac" draw:LINE2 type:GAUGE
+      fi
     done
 }
 
@@ -189,8 +201,8 @@ function ifstat {
 
 function wifi_strength_values {
   report | sed -n -E '
-    /^Station /,/connected time:/ {
-      /^Station / { s,Station ([0-9a-f]+) .*,\1,; p; }
+    /Station /,/connected time:/ {
+      /Station / { s,.*Station ([0-9a-f]+) .*,\1,; p; }
       /signal: / { s,signal:[[:space:]]+(-?[0-9]+) dBm,\1,; p; }
     }' | while read mac; do
       read dBm
@@ -208,11 +220,13 @@ peer_count.value $(peer-count)
 multigraph onhub_speed
 upstream.value $(speedtest upload)
 downstream.value $(speedtest download)
-multigraph onhub_traffic
+multigraph onhub_traffic_lan
 lan_sent.value $(ifstat br-lan TX)
 lan_recv.value $(ifstat br-lan RX)
+multigraph onhub_traffic_wan
 wan_sent.value $(ifstat wan0 TX)
 wan_recv.value $(ifstat wan0 RX)
+multigraph onhub_wifi_strength
 $(wifi_strength_values)
 EOF
 
