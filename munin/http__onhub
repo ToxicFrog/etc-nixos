@@ -85,32 +85,23 @@ graph_args --base 1000
 $(dimension downstream Downlink draw:AREA type:GAUGE cdef:8,*)
 $(dimension upstream Uplink draw:AREA type:GAUGE cdef:8,*)
 
-multigraph onhub_traffic
-graph_title Network traffic
+multigraph onhub_traffic_wan
+graph_title Network traffic (WAN)
 graph_category network
-graph_vlabel sent (-) / received (+) bytes per \${graph_period}
-graph_info This is actual network utilization, displayed separately for LAN and WAN traffic. Traffic to/from external systems will show up on both; traffic within the LAN will only show up on the LAN.
-graph_args --base 1000 --logarithmic --alt-autoscale
-lan_sent.label LAN egress
-lan_sent.draw AREA
-lan_sent.type DERIVE
-lan_sent.min 0
-lan_sent.cdef lan_sent,256,/,-1,*
-wan_sent.label WAN egress
-wan_sent.draw STACK
-wan_sent.type DERIVE
-wan_sent.min 0
-wan_sent.cdef wan_sent,256,/,-1,*
-lan_recv.label LAN ingress
-lan_recv.draw AREA
-lan_recv.type DERIVE
-lan_recv.min 0
-lan_recv.cdef lan_recv,256,/
-wan_recv.label WAN ingress
-wan_recv.draw STACK
-wan_recv.type DERIVE
-wan_recv.min 0
-wan_recv.cdef wan_recv,256,/
+graph_vlabel bytes per \${graph_period}
+graph_info Network traffic on the WAN interface.
+graph_args --base 1000
+$(dimension wan_recv RX draw:LINE2 type:DERIVE min:0 cdef:256,/)
+$(dimension wan_sent TX draw:LINE2 type:DERIVE min:0 cdef:256,/)
+
+multigraph onhub_traffic_lan
+graph_title Network traffic (LAN)
+graph_category network
+graph_vlabel bytes per \${graph_period}
+graph_info Network traffic on all the LAN interfaces (cat5, 2.4GHz wifi, and 5GHz wifi) combined.
+graph_args --base 1000
+$(dimension lan_recv RX draw:LINE2 type:DERIVE min:0 cdef:256,/)
+$(dimension lan_sent TX draw:LINE2 type:DERIVE min:0 cdef:256,/)
 EOF
 # lan_sent.graph no
 # wan_sent.graph no
