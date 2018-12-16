@@ -67,6 +67,12 @@
 
       [df_inode]
         env.exclude none unknown rootfs iso9660 squashfs udf romfs ramfs debugfs cgroup_root devtmpfs tmpfs nilfs2 vfat
+
+      [http_traxus_onhub]
+        env.name_64bc0cf4a1d3 symbol-phone
+        env.name_e442a6ab3cb6 isis
+        env.name_404e36863091 auxilior
+        env.name_54ab3aba8d0c lilypad
     '';
     extraAutoPlugins = [
       /usr/src/munin-contrib/plugins/zfs

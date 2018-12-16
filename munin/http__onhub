@@ -50,8 +50,8 @@ fi
 
 ### helper functions used by config ###
 
-STATEFILE="/tmp/$onhub_address.state"
-STAMPFILE="/tmp/$onhub_address.stamp"
+STATEFILE="/tmp/${host_name}.${onhub_address}.state"
+STAMPFILE="/tmp/${host_name}.${onhub_address}.stamp"
 
 # output the contents of the onhub statefile, fetching it first if stale
 # used by both config (to figure out some dimensions) and fetch
@@ -84,7 +84,11 @@ function dimension {
   done
 }
 
-# TODO map MAC address to hostname or IP
+# TODO keep track of which ones we've seen before, e.g. in ~/.onhub-seen
+# if any in the seen file are missing from the list, emit a dimension for them
+# and then emit U for them at fetch time
+# if we haven't seen one in a while, based on last_seen_seconds_since_epoch in
+# the station_state_update block, expire it from the seen file.
 function wifi_strength_dimensions {
   report | sed -n -E '
     /Station /,/connected time:/ {
@@ -96,6 +100,10 @@ function wifi_strength_dimensions {
           | sed -n -E "/^ *ip_addresses: \"$ip\"/ { n; n; p; }" \
           | cut -d\" -f2 \
           | sed -E s,'-\*\*\*\*+$',"-${ip##*.}",)
+      local rename="name_${mac}"
+      if [[ ${!rename} ]]; then
+        name="${!rename}"
+      fi
       if [[ $name ]]; then
         dimension "wifi_power_$mac" "$name" draw:LINE2 type:GAUGE
       elif [[ $ip ]]; then
