@@ -1,6 +1,6 @@
 # Configuration for bittorrent daemons -- deluge and jackett.
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   users.extraUsers.deluge.home = lib.mkForce "/ancilla/torrents/deluge";
