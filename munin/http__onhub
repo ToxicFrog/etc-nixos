@@ -46,6 +46,21 @@ if [[ "$1" == "autoconf" ]]; then
   exit 0
 fi
 
+
+# dimension name title fields...
+# e.g dimension recv rx draw:AREA type:DERIVE min:0
+function dimension {
+  name="$1"
+  echo "$name.label $2"
+  shift 2
+  while [[ "$1" ]]; do
+    local k="${1%:*}"
+    local v="${1#*:}"
+    if [[ $k == cdef ]]; then v="$name,$v"; fi
+    echo "$name.$k $v"
+    shift
+  done
+}
 if [[ "$1" = "config" ]]; then
   cat <<EOF
 host_name $host_name
@@ -54,18 +69,12 @@ graph_title Network size
 graph_category network
 graph_vlabel number of hosts
 graph_info Information about the number of hosts on the network managed by the OnHub.
-arp_count.label ARP table size
+$(dimension arp_count "ARP table size" type:GAUGE draw:LINE2)
 arp_count.info The size of the ARP table, i.e. the number of distinct devices the OnHub has seen on the network, whether or not it gave them an IP address itself.
-arp_count.type GAUGE
-arp_count.draw LINE2
-dhcp_count.label DHCP lease count
+$(dimension dhcp_count "DHCP lease count" type:GAUGE draw:LINE2)
 dhcp_count.info The number of devices the OnHub has given IP addresses to, whether or not they're currently connected.
-dhcp_count.type GAUGE
-dhcp_count.draw LINE2
-peer_count.label DHCP client count
+$(dimension peer_count "DHCP client count" type:GAUGE draw:LINE2)
 peer_count.info The number of currently connected peers that the OnHub gave addresses to via DHCP.
-peer_count.type GAUGE
-peer_count.draw LINE2
 
 multigraph onhub_speed
 graph_title WAN speed
@@ -73,15 +82,8 @@ graph_category network
 graph_vlabel upstream (-) / downstream (+) speed
 graph_info This is the maximum WAN speed as measured by the OnHub during its most recent automatic probe.
 graph_args --base 1000
-upstream.label bps
-upstream.graph no
-upstream.type GAUGE
-upstream.cdef upstream,8,*
-downstream.label bps
-downstream.draw AREA
-downstream.type GAUGE
-downstream.cdef downstream,8,*
-downstream.negative upstream
+$(dimension downstream Downlink draw:AREA type:GAUGE cdef:8,*)
+$(dimension upstream Uplink draw:AREA type:GAUGE cdef:8,*)
 
 multigraph onhub_traffic
 graph_title Network traffic
