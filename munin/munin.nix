@@ -1,4 +1,10 @@
 # Configuration for the Munin monitoring system.
+# To deploy the micronode on a raspi, use:
+# env MUNIN_LIBDIR=$(systemctl cat munin-node | grep MUNIN_LIBDIR | cut -d\" -f2) \
+#     ./micronode install root@raspi cpu load uptime acpi if_eth0=if_ if_wlan0=if_ cpuspeed
+# after making sure that passwordless login works
+# then edit the authorized_keys on the rpi and add: command="munin/micronode"
+# in front of the key munin will be using.
 
 { config, pkgs, lib, ... }:
 
@@ -8,6 +14,7 @@
     enable = true;
     extraGlobalConfig = ''
       htmldir /srv/www/munin
+      ssh_command /run/current-system/sw/bin/ssh
     '';
     # Monitor ancilla using a local node, and the rest of the network via proxy
     # plugins.
@@ -18,7 +25,11 @@
 
       [ancilla.ca;helix]
       use_node_name no
-      address localhost
+      address ssh://root@helix/
+
+      [ancilla.ca;oculus]
+      use_node_name no
+      address ssh://root@oculus/
 
       [ancilla.ca;traxus]
       use_node_name no
@@ -43,8 +54,6 @@
   services.munin-node = {
     enable = true;
     extraPlugins = {
-      # TODO: replace with general purpose CPU/memory/sensors plugin.
-      ssh_helix_uptime = ./ssh__uptime;
       http_traxus_onhub = ./http__onhub;
     };
     extraPluginConfig = ''
@@ -58,15 +67,14 @@
 
       [df_inode]
         env.exclude none unknown rootfs iso9660 squashfs udf romfs ramfs debugfs cgroup_root devtmpfs tmpfs nilfs2 vfat
-
-      [ssh_helix_*]
-        env.ssh_target root@helix
     '';
     extraAutoPlugins = [
       /usr/src/munin-contrib/plugins/zfs
     ];
     disabledPlugins = [
-      "buddyinfo"     # I don't care about memory fragmentation
+      "cpuspeed"      # so noisy it's useless
+      "buddyinfo"
+      "meminfo"       # don't care about memory fragmentation
       "diskstat_*"    # conflicts with diskstat
       "munin_stats"   # broken on NixOS
       "port_*"        # don't care about this either

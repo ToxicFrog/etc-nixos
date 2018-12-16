@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+#
+# A tiny Munin node. Smaller and simpler even than muninlite.
+# Intended to be run as a shell via ssh transport.
+#
+# Has a tiny installer built in; run with
+#   env MUNIN_LIBDIR=/path/to/munin/libdir \
+#     ./micronode install user@host \
+#     cpu load memory meminfo ...other non-instanced plugins
+#     if_eth0=if_ if_wlan0=if_ ...other instanced plugins
+
+if [[ "$1" == "install" ]]; then
+  target="$2"; shift 2
+  echo "Installing into $target:munin/..."
+  ssh "$target" mkdir -p munin/plugins
+  ssh "$target" rm -rf "munin/plugins/*"
+  scp "$0" "$target:munin/"
+  scp "$MUNIN_LIBDIR/plugins/plugin.sh" "$target:munin/plugins/"
+  while [[ "$1" ]]; do
+    if [[ "$1" == *=* ]]; then
+      instance="${1%=*}"
+      base="${1#*=}"
+      scp "$MUNIN_LIBDIR/plugins/$base" "$target:munin/plugins/$instance"
+    else
+      scp "$MUNIN_LIBDIR/plugins/$1" "$target:munin/plugins/"
+    fi
+    shift
+  done
+  ssh "$target" munin/micronode fix
+  exit 0
+fi
+
+cd "$(dirname "$0")"
+
+if [[ "$1" == "fix" ]]; then
+  # Ugly hack to fix Nix shebangs
+  cd plugins
+  echo "Fixing shebangs..."
+  sed -i -E '
+    1,1 {
+      s,^#!/nix/store/.*/([^/]+),#!/usr/bin/env \1,
+      s,^#!/run/current-system/sw/bin/(.*),#!/usr/bin/env \1,
+    }
+  ' *
+  echo "Removing perl plugins..."
+  egrep -rl '^#!/usr/bin/env perl' . | xargs rm -v
+  chmod a+x *
+  exit 0
+fi
+
+
+export MUNIN_LIBDIR="$PWD"
+export MUNIN_CAP_MULTIGRAPH=1
+export MUNIN_CAP_DIRTYCONFIG=0
+
+echo "# munin node at $(hostname)"
+
+# TODO: config file parsing
+
+while read cmd args; do
+  case "$cmd" in
+    cap) echo "cap multigraph" ;;
+    list) (cd plugins; echo * | sed 's, *plugin.sh *, ,') ;;
+    nodes) printf "%s\n.\n" "$(hostname)" ;;
+    config)
+      "plugins/$args" config
+      echo .
+      ;;
+    fetch)
+      "plugins/$args"
+      echo .
+      ;;
+    version) echo "munin micronode on $(hostname) version: 0.1" ;;
+    quit) exit 0 ;;
+    *) echo "# unknown command" ;;
+  esac
+done
