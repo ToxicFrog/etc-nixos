@@ -50,6 +50,24 @@ fi
 
 ### helper functions used by config ###
 
+STATEFILE="/tmp/$onhub_address.state"
+STAMPFILE="/tmp/$onhub_address.stamp"
+
+# output the contents of the onhub statefile, fetching it first if stale
+# used by both config (to figure out some dimensions) and fetch
+function report {
+  touch -d "3 minutes ago" "$STAMPFILE"
+  if [[ ! ( -e $STATEFILE ) || ( $STATEFILE -ot $STAMPFILE ) ]]; then
+    # Probe the onhub.
+    # This is very expensive (10+ seconds), so we only do it if the old state
+    # is missing or more than two minutes old.
+    curl -s -f http://onhub.here/api/v1/diagnostic-report \
+      | zcat > "$STATEFILE"
+  fi
+  rm "$STAMPFILE"
+
+  cat "$STATEFILE" | strings -n 8 -w
+}
 
 # dimension name title fields...
 # e.g dimension recv rx draw:AREA type:DERIVE min:0
@@ -119,9 +137,6 @@ EOF
   exit 0
 fi
 
-function report {
-  cat /tmp/$$ | strings -n 8 -w
-}
 ### helper functions for fetch ###
 
 function arp-count {
@@ -153,11 +168,6 @@ function ifstat {
   printf "%d" 0x$bytes
 }
 
-# Time to actually probe the onhub.
-# This is very expensive (10+ seconds), so we do it once and save the
-# result.
-curl -s -f http://onhub.here/api/v1/diagnostic-report \
-  | zcat > /tmp/$$
 ### fetch implementation ###
 
 cat <<EOF
@@ -174,8 +184,6 @@ lan_recv.value $(ifstat br-lan RX)
 wan_sent.value $(ifstat wan0 TX)
 wan_recv.value $(ifstat wan0 RX)
 EOF
-
-rm /tmp/$$
 
   # graphs:
   # size of ARP table: /proc/net/arp
