@@ -52,6 +52,7 @@ fi
 
 STATEFILE="/tmp/${host_name}.${onhub_address}.state"
 STAMPFILE="/tmp/${host_name}.${onhub_address}.stamp"
+SEENFILE="${HOME:=/var/lib/munin}/${host_name}.${onhub_address}.seen"
 
 # output the contents of the onhub statefile, fetching it first if stale
 # used by both config (to figure out some dimensions) and fetch
@@ -62,9 +63,12 @@ function report {
     # This is very expensive (10+ seconds), so we only do it if the old state
     # is missing or more than two minutes old.
     curl -s -f http://onhub.here/api/v1/diagnostic-report \
-      | zcat > "$STATEFILE"
+      | zcat > "$STATEFILE" || {
+        echo "Error fetching state from onhub!" >&2
+        exit 1
+      }
   fi
-  rm "$STAMPFILE"
+  rm -f "$STAMPFILE"
 
   cat "$STATEFILE" | strings -n 8 -w
 }
@@ -90,6 +94,8 @@ function dimension {
 # if we haven't seen one in a while, based on last_seen_seconds_since_epoch in
 # the station_state_update block, expire it from the seen file.
 function wifi_strength_dimensions {
+  local ts="$(date +%s)"
+  rm -f "$SEENFILE.new"
   report | sed -n -E '
     /Station /,/connected time:/ {
       /Station / { s,.*Station ([0-9a-f]+) .*,\1,; p; }
@@ -105,12 +111,24 @@ function wifi_strength_dimensions {
         name="${!rename}"
       fi
       if [[ $name ]]; then
-        dimension "wifi_power_$mac" "$name" draw:LINE2 type:GAUGE
+        echo "$mac $ts $name" >> "$SEENFILE.new"
       elif [[ $ip ]]; then
-        dimension "wifi_power_$mac" "$ip" draw:LINE2 type:GAUGE
+        echo "$mac $ts $ip" >> "$SEENFILE.new"
       else
-        dimension "wifi_power_$mac" "$mac" draw:LINE2 type:GAUGE
+        echo "$mac $ts $mac" >> "$SEENFILE.new"
       fi
+    done
+    # Combine the new seenfile with the old, discarding old entries.
+    cat "$SEENFILE" >> "$SEENFILE.new"
+    local horizon=$(date -d "1 week ago" +%s)
+    <"$SEENFILE.new" sort --reverse | uniq -w 12 | while read mac ts name; do
+      if (( ts < horizon )); then continue; fi  # remove entries older than horizon
+      echo "$mac $ts $name"
+    done >"$SEENFILE"
+
+    # Now generate dimensions
+    cat "$SEENFILE" | while read mac ts name; do
+      dimension "wifi_power_$mac" "$name" draw:LINE1 type:GAUGE
     done
 }
 
@@ -204,7 +222,7 @@ function ifstat {
   # and (b) actually (bytes * 256). At least, the values are 256 times higher
   # than the same network traffic reported by the other end.
   # We use a cdef to fix this.
-  printf "%d" 0x$bytes
+  printf "%d" 0x${bytes:=0}
 }
 
 function wifi_strength_values {
