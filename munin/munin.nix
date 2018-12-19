@@ -55,6 +55,7 @@
     enable = true;
     extraPlugins = {
       http_traxus_onhub = ./http__onhub;
+      borgbackup = ./borgbackup;
     };
     extraPluginConfig = ''
       [df]
@@ -73,6 +74,16 @@
         env.name_e442a6ab3cb6 isis
         env.name_404e36863091 auxilior
         env.name_54ab3aba8d0c lilypad
+
+      [borgbackup]
+        user root
+        env.backup_prefixes ancilla::24 thoth::24 durandal::168 godbehere.ca::168 funkyhorror::168 GRABR.ca::168
+        env.BORG_REPO /backup/borg-repo
+        env.BORG_PASSCOMMAND cat /backup/borg/passphrase
+        env.BORG_CONFIG_DIR /backup/borg/config
+        env.BORG_CACHE_DIR /backup/borg/cache
+        env.BORG_SECURITY_DIR /backup/borg/security
+        env.BORG_KEYS_DIR /backup/borg/keys
     '';
     extraAutoPlugins = [
       /usr/src/munin-contrib/plugins/zfs

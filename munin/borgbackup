@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+
+: << =cut
+
+=head1 NAME
+
+borg_age -- monitors the age of Borg backups
+
+=head1 CONFIGURATION
+
+This graph only has one mandatory setting:
+
+[borg_age]
+  env.backup_prefixes server::24 laptop::24 desktop::72 vm::4 ...
+
+Each backup_prefix will be used to query the repo for backups starting with that
+prefix, and report the age of the newest one. The number after the :: is the
+target backup frequency for that system, in hours.
+
+That said, you will probably also need to set env.BORG_REPO, and, if the repo
+is encrypted, env.BORG_PASSPHRASE or env.BORG_PASSCOMMAND. Depending on what the
+permissions on the repo are you may also need to set user and group accordingly.
+
+=head1 AUTHOR
+
+Written by B. Kelly
+
+=head1 LICENSE
+
+MIT
+
+=head1 MAGIC MARKERS
+
+ #%# family=contrib
+
+=cut
+
+source "${MUNIN_LIBDIR}/plugins/plugin.sh"
+is_multigraph
+
+function dimension {
+  local name="${1//./_}"
+  echo "$name.label $2"
+  shift 2
+  while [[ "$1" ]]; do
+    local k="${1%%:*}"
+    local v="${1#*:}"
+    if [[ $k == cdef ]]; then v="${v//%/$name}"; fi
+    echo "$name.$k $v"
+    shift
+  done
+}
+
+function graph {
+  local name="$1"
+  echo "multigraph borg_$1"
+  echo "graph_title $2"
+  echo "graph_category backup"
+  echo "graph_vlabel $3"
+  echo "graph_info $4"
+  echo "graph_args $5"
+  shift 5
+  for prefix in $backup_prefixes; do
+    local prefix="${prefix%::*}"
+    dimension "${prefix}_${name}" "${prefix}" "$@"
+  done
+}
+
+if [[ "$1" == "config" ]]; then
+  graph age "Backup age" "backup age (hours)" \
+    "The age of the most recent archive." \
+    "--base 1000 --units-exponent 0" "cdef:%,UN,PREV,%,3600,/,IF"
+  graph total_size "Backup size" "backup size (bytes)" \
+    "The size of the contents of the most recent archive. Does not take into account compression or deduplication -- this is how much disk space you'd need to restore it." \
+    "--base 1024" "cdef:%,UN,PREV,%,IF"
+  graph dedup_size "Deduplicated size" "deduplicated size (bytes)" \
+    "The size of the most recent archive after duplication -- roughly, how much creating this archive increased the total size of the repo by." \
+    "--base 1024" "cdef:%,UN,PREV,%,IF"
+  graph duration "Backup duration" "duration (minutes)" \
+    "How long it took each archive to be created." \
+    "--base 1000 --units-exponent 0" "cdef:%,UN,PREV,%,60,/,IF"
+
+  # age ratio graph needs special handling because of the embedded frequency values in the cdef
+  echo "multigraph borg_age_ratio"
+  echo "update no"
+  echo "graph_title Backup age ratio"
+  echo "graph_category backup"
+  echo "graph_vlabel backup age / backup frequency"
+  echo "graph_info The age of the most recent backup as a fraction of the target backup frequency. At 1.0 it should be getting backed up right now. Significantly above 1.0 means you've missed a backup."
+  echo "graph_args --base 1000 --units-exponent 0"
+  echo -n "graph_order "
+  echo "$backup_prefixes" | sed -E "s,::[0-9]+,,g; s,\.,_,g; s,([^ ]+),\1_age_ratio=borg_age.\1_age,g"
+  for prefix in $backup_prefixes; do
+    freq="${prefix#*::}"
+    prefix="${prefix%::*}"
+    dimension "${prefix}_age_ratio" "${prefix}" \
+      "cdef:%,DUP,UN,EXC,PREV,EXC,$(( freq * 3600 )),/,IF"
+  done
+
+  # total size of borg repo
+  echo "multigraph borg_repo_size"
+  echo "graph_title Borg repo size"
+  echo "graph_category backup"
+  echo "graph_vlabel repo size (bytes)"
+  echo "graph_info The total size of the borg repo on disk, after compression and deduplication."
+  echo "graph_args --base 1024"
+  dimension borg_repo_size "$BORG_REPO" "cdef:%,UN,PREV,%,IF"
+
+  exit 0
+fi
+
+# for fetch, try to acquire the lock, and if we can't immediately abort rather
+# than flailing around
+borg with-lock "$BORG_REPO" true || exit 1
+
+export now=$(date +%s)
+
+# json_value key
+# reads dynamic variable JSON as input
+function json_value {
+  echo "$JSON" | egrep " +\"$1\":" | cut -d: -f2- | sed -E 's:^ *"?::; s:"?, *$::'
+}
+
+function values_for_prefix {
+  local JSON="$(cat)"
+  local start=$(json_value start | date -f - +%s)
+  echo "AGE ${1}_age.value $(( now - start ))"
+  echo "SIZE ${1}_total_size.value $(json_value original_size)"
+  echo "DEDUP ${1}_dedup_size.value $(json_value deduplicated_size)"
+  echo "TIME ${1}_duration.value $(json_value duration)"
+  # TODO: age ratio
+  # this is a derived graph with value=age and cdef=age,max_age,/
+}
+
+{
+  echo "AGE multigraph borg_age"
+  echo "SIZE multigraph borg_total_size"
+  echo "DEDUP multigraph borg_dedup_size"
+  echo "TIME multigraph borg_duration"
+  for prefix in $backup_prefixes; do
+    prefix="${prefix%::*}"
+    borg info --prefix "$prefix" --last 1 --json \
+      | sed -E -n '/"archives":/,/^    \],/ p' \
+      | values_for_prefix "${prefix//./_}"
+  done
+} | sort --key 1,1 --stable | cut -d' ' -f2-
+echo "multigraph borg_repo_size"
+echo "borg_repo_size.value $(borg info --json | grep unique_csize | cut -d: -f2 | tr -d ,)"
+
+# foreach repo: total size of repo
+# foreach prefix: age of most recent; total size of most recent; delta size of most recent; creation speed of most recent
+# per-prefix age *ratio*, i.e. actual age / expected age?
+# n.b. if a backup is running the repo is inaccessible
+# we need to smear across the inaccessible time:
+# cdef foo,un,prev,foo,if
+# which is (if (un foo) prev foo)
+# and will smear the last recorded value across periods of unknowns
+# pushes the result of the CDEF, so we need to do this *after* any calculations
+# so it's more like
+# foo un
+# prev
+# foo 3600 /
+# if
