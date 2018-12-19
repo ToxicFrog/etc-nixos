@@ -74,12 +74,12 @@ in {
           proxy_read_timeout      600s;
           proxy_send_timeout      600s;
         '';
-        locations."/munin/" = {
-          root = "/srv/www";
-          extraConfig = ''
-            auth_basic off;
-          '';
-        };
+        # locations."/munin/" = {
+        #   root = "/srv/www";
+        #   extraConfig = ''
+        #     auth_basic off;
+        #   '';
+        # };
       };
     };
   };
