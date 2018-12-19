@@ -76,6 +76,7 @@
         env.name_e442a6ab3cb6 isis
         env.name_404e36863091 auxilior
         env.name_54ab3aba8d0c lilypad
+        env.name_58b0d4862ab5 kobo
 
       [borgbackup]
         user root
