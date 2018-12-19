@@ -7,6 +7,7 @@ let
 in {
   imports = [
     ./munin/munin.nix
+    ./munin/hugin.nix
     ./services/bittorrent.nix
     ./services/borgbackup.nix
     ./services/bup.nix
