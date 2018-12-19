@@ -30,17 +30,17 @@ in {
       libpurple_plugins = with pkgs; [ purple-hangouts ];
     };
 
-    monit = {
-      enable = true;
-      config = lib.readFile ./services/monit.conf;
-    };
-
     smartd = {
       enable = true;
-      # TODO: fix this so mail actually goes somewhere useful
-      notifications.mail.mailer = "/run/current-system/sw/bin/sendmail";
-      notifications.mail.enable = true;
-      notifications.mail.recipient = "root@ancilla.ca";
+      notifications = {
+        test = false;
+        wall.enable = true;
+        mail = {
+          enable = true;
+          mailer = "/run/current-system/sw/bin/hugin";
+          recipient = "#ancilla";
+        };
+      };
     };
 
     # Gitolite git repo hosting (mostly used by Nightstar)
@@ -96,7 +96,6 @@ in {
   };
   systemd.services.dyndns = {
     description = "Update afraid.org DNS records (service)";
-    path = with pkgs; [ curl ];
     serviceConfig.ExecStart = "${pkgs.curl}/bin/curl ${secrets.dyndns-url}";
     serviceConfig.Type = "oneshot";
   };
