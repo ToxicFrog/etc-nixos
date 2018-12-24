@@ -35,6 +35,7 @@ MIT
 
 =cut
 
+set -e
 source "${MUNIN_LIBDIR}/plugins/plugin.sh"
 is_multigraph
 
@@ -118,18 +119,16 @@ export now=$(date +%s)
 # json_value key
 # reads dynamic variable JSON as input
 function json_value {
-  echo "$JSON" | egrep " +\"$1\":" | cut -d: -f2- | sed -E 's:^ *"?::; s:"?, *$::'
+  echo "$JSON" | jq -r "$@"
 }
 
 function values_for_prefix {
   local JSON="$(cat)"
-  local start=$(json_value start | date -f - +%s)
+  local start=$(json_value ".archives[0].start" | date -f - +%s)
   echo "AGE ${1}_age.value $(( now - start ))"
-  echo "SIZE ${1}_total_size.value $(json_value original_size)"
-  echo "DEDUP ${1}_dedup_size.value $(json_value deduplicated_size)"
-  echo "TIME ${1}_duration.value $(json_value duration)"
-  # TODO: age ratio
-  # this is a derived graph with value=age and cdef=age,max_age,/
+  echo "SIZE ${1}_total_size.value $(json_value ".archives[0].stats.original_size")"
+  echo "DEDUP ${1}_dedup_size.value $(json_value ".archives[0].stats.deduplicated_size")"
+  echo "TIME ${1}_duration.value $(json_value ".archives[0].duration")"
 }
 
 {
@@ -140,12 +139,11 @@ function values_for_prefix {
   for prefix in $backup_prefixes; do
     prefix="${prefix%::*}"
     borg info --prefix "$prefix" --last 1 --json \
-      | sed -E -n '/"archives":/,/^    \],/ p' \
       | values_for_prefix "${prefix//./_}"
   done
 } | sort --key 1,1 --stable | cut -d' ' -f2-
 echo "multigraph borg_repo_size"
-echo "borg_repo_size.value $(borg info --json | grep unique_csize | cut -d: -f2 | tr -d ,)"
+echo "borg_repo_size.value $(borg info --json | jq -r .cache.stats.unique_csize)"
 
 # foreach repo: total size of repo
 # foreach prefix: age of most recent; total size of most recent; delta size of most recent; creation speed of most recent
