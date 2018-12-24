@@ -20,6 +20,7 @@ let
       "--progress"
       "--exclude-caches"
       "--files-cache=mtime,size"
+      "--exclude-if-present=.NOBACKUP"
       "--patterns-from=${borgcfg}/${name}.borg"
     ];
     repo = "/backup/borg-repo";
