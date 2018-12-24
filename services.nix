@@ -32,6 +32,12 @@ in {
 
     smartd = {
       enable = true;
+      # Automatically monitor devices
+      # Do not probe disks on standby unless they've skipped the last 24 probes
+      # Enable automatic offline data collection
+      # Run a short self-test every morning at 5am
+      # Report if new errors appear in the selftest or error logs
+      defaults.autodetected = "-a -n standby,24 -o on -s (S/../.././05) -l error -l selftest";
       notifications = {
         test = false;
         wall.enable = true;
