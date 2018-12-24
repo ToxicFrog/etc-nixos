@@ -21,6 +21,15 @@ in {
   users.users.git.createHome = lib.mkForce false;
   systemd.services.gitolite-init.after = ["local-fs.target"];
 
+  systemd.services.chromecast-off = {
+    startAt = ["*-*-* 01:00:00"];
+    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/unbind'';
+  };
+  systemd.services.chromecast-on = {
+    startAt = ["*-*-* 09:00:00"];
+    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/bind'';
+  };
+
   services = {
     fail2ban.enable = true;  # temporarily disabled due to doing lots and lots of disk
     apcupsd.enable = true;
