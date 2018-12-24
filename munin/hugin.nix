@@ -11,23 +11,8 @@ let
   user = "munin";
   group = "munin";
 in {
-  # users.users = [{
-  #   name = "hugin";
-  #   description = "Hugin alert sender";
-  #   group = "munin";
-  #   uid = config.ids.uids.hugin;
-  #   home = "/var/lib/hugin";
-  #   isSystemUser = true;
-  # }];
-
-  # users.groups = [{
-  #   name = "munin";
-  #   gid = config.ids.gids.munin;
-  # }];
-
-  systemd.services.munin-irc-notify = {
+  systemd.services.hugin = {
     description = "IRC backend for Munin notifications";
-    # path = with pkgs; [ ii coreutils ];
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
     script = ''
@@ -76,7 +61,7 @@ in {
           echo "$line"
         done
       } | ${pkgs.gnused}/bin/sed -E "s,^$, ,; s,^,/PRIVMSG $user :," \
-        | ${pkgs.pv}/bin/pv -q -L 8 -l -C \
+        | ${pkgs.pv}/bin/pv -q -L 4 -l -C \
         | while IFS="" read -r line; do
             # Gross hack here: ii doesn't properly read the input until the
             # fifo is closed. So if we send it the entire message at once it
