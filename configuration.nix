@@ -66,9 +66,11 @@ in {
     beets
     calibre
     digikam # for digitaglinktree
+    dnsutils
     unstable.dosage
     elinks
     ipfs
+    jq
     jshon
     ffmpeg-full
     lgogdownloader
