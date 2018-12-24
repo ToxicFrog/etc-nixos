@@ -99,37 +99,39 @@ function wifi_strength_dimensions {
   report | sed -n -E '
     /Station /,/connected time:/ {
       /Station / { s,.*Station ([0-9a-f]+) .*,\1,; p; }
-    }' | while read mac; do
-      local ip=$(report | sed -n -E "/^  mac_address: \"$mac\"/ { n; p; }" | cut -d\" -f2)
-      local name=$(
-        report \
-          | sed -n -E "/^ *ip_addresses: \"$ip\"/ { n; n; p; }" \
-          | cut -d\" -f2 \
-          | sed -E s,'-\*\*\*\*+$',"-${ip##*.}",)
-      local rename="name_${mac}"
-      if [[ ${!rename} ]]; then
-        name="${!rename}"
-      fi
-      if [[ $name ]]; then
-        echo "$mac $ts $name" >> "$SEENFILE.new"
-      elif [[ $ip ]]; then
-        echo "$mac $ts $ip" >> "$SEENFILE.new"
-      else
-        echo "$mac $ts $mac" >> "$SEENFILE.new"
-      fi
-    done
-    # Combine the new seenfile with the old, discarding old entries.
-    cat "$SEENFILE" >> "$SEENFILE.new"
-    local horizon=$(date -d "1 week ago" +%s)
-    <"$SEENFILE.new" sort --reverse | uniq -w 12 | while read mac ts name; do
-      if (( ts < horizon )); then continue; fi  # remove entries older than horizon
-      echo "$mac $ts $name"
-    done >"$SEENFILE"
+    }' \
+  | while read mac; do
+    local ip=$(report | sed -n -E "/^  mac_address: \"$mac\"/ { n; p; }" | cut -d\" -f2)
+    local name=$(
+      report \
+        | sed -n -E "/^ *ip_addresses: \"$ip\"/ { n; n; p; }" \
+        | cut -d\" -f2 \
+        | sed -E s,'-\*\*\*\*+$',"-${ip##*.}",)
+    local rename="name_${mac}"
+    if [[ ${!rename} ]]; then
+      name="${!rename}"
+    fi
+    if [[ $name ]]; then
+      echo "$mac $ts $name" >> "$SEENFILE.new"
+    elif [[ $ip ]]; then
+      echo "$mac $ts $ip" >> "$SEENFILE.new"
+    else
+      echo "$mac $ts $mac" >> "$SEENFILE.new"
+    fi
+  done
 
-    # Now generate dimensions
-    cat "$SEENFILE" | while read mac ts name; do
-      dimension "wifi_power_$mac" "$name" draw:LINE1 type:GAUGE
-    done
+  # Combine the new seenfile with the old, discarding old entries.
+  cat "$SEENFILE" >> "$SEENFILE.new"
+  local horizon=$(date -d "1 week ago" +%s)
+  <"$SEENFILE.new" sort --reverse --stable | uniq -w 12 | while read mac ts name; do
+    if (( ts < horizon )); then continue; fi  # remove entries older than horizon
+    echo "$mac $ts $name"
+  done >"$SEENFILE"
+
+  # Now generate dimensions
+  cat "$SEENFILE" | while read mac ts name; do
+    dimension "wifi_power_$mac" "$name" draw:LINE1 type:GAUGE
+  done
 }
 
 ### config implementation ###
