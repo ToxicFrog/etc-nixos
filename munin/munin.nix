@@ -15,6 +15,23 @@
     extraGlobalConfig = ''
       htmldir /srv/www/munin
       ssh_command /run/current-system/sw/bin/ssh
+
+      contact.irc.command /run/current-system/sw/bin/hugin "\#ancilla"
+      contact.irc.text === ''${var:host} :: ''${var:graph_title} ===\n\
+        ''${if:cfields === ToxicFrog: ''${var:host} :: ''${var:graph_title} CRITICAL ===\n}\
+        ''${loop:fofields \
+        3  ''${var:label}: ''${var:value}\
+        ''${if:extinfo : \n    ''${var:extinfo}}\n}\
+        ''${loop:wfields \
+        7  ''${var:label}: ''${var:value}\
+        1[''${var:wrange}]\
+        ''${if:extinfo : \n    ''${var:extinfo}}\n}\
+        ''${loop:cfields \
+        4  ''${var:label}: ''${var:value}\
+        1[''${var:crange}]\
+        ''${if:extinfo : \n    ''${var:extinfo}}\n}\
+        === END ===\n\
+        
     '';
     # Monitor ancilla using a local node, and the rest of the network via proxy
     # plugins.
