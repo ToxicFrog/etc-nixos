@@ -4,6 +4,10 @@
 
 let
   secrets = (import ../secrets/default.nix {});
+  hour = 60*60;
+  day = hour*24;
+  daily = day - hour;
+  weekly = day * 7 - hour;
   preamble = ''
     # Append an "+n" to duplicate archive names.
     # So durandal-2018d123 becomes durandal-2018d123+1 the second time.
@@ -15,6 +19,7 @@ let
   borgcfg = pkgs.copyPathToStore ../borg;
   borg = { name, ... } @ opts: ({
     archiveBaseName = name;
+    extraArgs = "--lock-wait=60";
     extraCreateArgs = builtins.concatStringsSep " " [
       "--stats"
       "--progress"
@@ -37,6 +42,7 @@ let
     readWritePaths = [
       "/backup/borg"
     ];
+    startAt = ["*-*-* 02,08,10,12,14:01:00"];
     dateFormat = "+%Yd%j";
   } // removeAttrs opts ["name"]);
   borg-sshfs = {
@@ -96,7 +102,7 @@ in {
   services.borgbackup.jobs = {
     ancilla = borg {
       name = "ancilla";
-      startAt = ["*-*-* 02:00:00"];
+      minAge = daily;
       preHook = ''
         ${preamble}
 
@@ -108,29 +114,29 @@ in {
       name = "durandal";
       path = "/.";
       touch = "home/.borgbackup";
-      startAt = "Mon *-*-* 02:00:00";
+      minAge = weekly;
     };
     "funkyhorror" = borg-sshfs {
       name = "funkyhorror";
       touch = ".borgbackup";
-      startAt = "Mon *-*-* 02:00:00";
+      minAge = weekly;
     };
     "godbehere.ca" = borg-sshfs {
       name = "godbehere.ca";
       touch = ".borgbackup";
-      startAt = "Mon *-*-* 02:00:00";
+      minAge = weekly;
     };
     "grandriverallbreedrescue.ca" = borg-sshfs {
       name = "GRABR.ca";
       host = "${secrets.grabr-user}@grandriverallbreedrescue.ca";
       touch = ".borgbackup";
-      startAt = "Mon *-*-* 02:00:00";
+      minAge = weekly;
     };
     thoth = borg-sshfs {
       name = "thoth";
       path = "/.";
       touch = "root/.borgbackup";
-      startAt = "*-*-* 02:00:00";
+      minAge = daily;
     };
   };
   systemd.services = borg-ordering [
