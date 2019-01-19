@@ -33,8 +33,8 @@ in {
     enable = true;
     services = singleton {
       name = "doomrl-server";
-      server = "${pkgs.telnet}/bin/in.telnetd";
-      serverArgs = "-h -L /opt/doomrl-server/doomrl-server";
+      server = "${pkgs.inetutils}/libexec/telnetd";
+      serverArgs = "-h -E /opt/doomrl-server/doomrl-server";
       user = "doomrl";
       protocol = "tcp";
       port = 3666;
