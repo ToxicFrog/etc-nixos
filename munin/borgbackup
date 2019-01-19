@@ -99,6 +99,10 @@ fi
 
 # for fetch, try to acquire the lock, and if we can't immediately abort rather
 # than flailing around
+# There is a race condition here in that we might acquire the lock, continue
+# on our way, and while we're in the middle of working on this another borg
+# process starts up and claims the lock, evicting us after we've only emitted
+# half of the metrics.
 borg with-lock "$BORG_REPO" true || exit 1
 
 export now=$(date +%s)
@@ -115,6 +119,11 @@ function fdiv3 {
 
 function values_for_prefix {
   local JSON="$(cat)"
+  if [[ ! $JSON ]]; then
+    # We weren't able to acquire the lock and/or there's no archives with this
+    # prefix.
+    return
+  fi
   local start=$(json_value ".archives[0].start" | date -f - +%s)
   echo "AGE ${1}_age.value $(( now - start ))"
   echo "AGERATIO ${1}_age_ratio.value $(fdiv3 $((now-start)) $(($2*3600)) )"
