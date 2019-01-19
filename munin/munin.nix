@@ -94,6 +94,7 @@
         env.name_404e36863091 auxilior
         env.name_54ab3aba8d0c lilypad
         env.name_58b0d4862ab5 kobo
+        env.name_f4f1e1dfab8f squeezebox
 
       [borgbackup]
         user root
