@@ -83,9 +83,4 @@ in {
     weechat
     gpodder unstable.youtube-dl sqlite  # for downloading podcasts
   ];
-
-  zramSwap = {
-    enable = true;
-    numDevices = 1;
-  };
 }

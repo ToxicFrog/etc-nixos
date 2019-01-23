@@ -31,10 +31,9 @@
       fsType = "zfs";
     };
 
-  swapDevices =
-    [
-      { device = "/dev/disk/by-label/internal-swap"; }
-    ];
+  swapDevices = [
+    { device = "/dev/disk/by-label/m2-swap"; }
+  ];
 
   nix.maxJobs = lib.mkDefault 4;
 }
