@@ -9,10 +9,6 @@
     ./secrets/homedirs.nix
   ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
-
   services.zfs.autoScrub = {
     enable = true;
     interval = "*-*-01 01:15:00";
