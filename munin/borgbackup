@@ -35,6 +35,8 @@ MIT
 
 =cut
 
+# TODO: warn if deduplicated size exceeds thresholds
+
 set -e
 source "${MUNIN_LIBDIR}/plugins/plugin.sh"
 is_multigraph

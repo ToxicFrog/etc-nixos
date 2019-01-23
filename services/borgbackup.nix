@@ -43,7 +43,7 @@ let
       "/backup/borg"
     ];
     startAt = ["*-*-* 02,08,10,12,14:01:00"];
-    dateFormat = "+%Yd%j";
+    dateFormat = "+%Y%m%d";
   } // removeAttrs opts ["name"]);
   borg-sshfs = {
       name, touch,
