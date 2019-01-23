@@ -27,34 +27,9 @@ in {
         };
       };
       "ancilla" = {
-        forceSSL = false;
-        enableACME = false;
-        # listen = [{ addr = "0.0.0.0"; port = 5634; ssl = false; }];
-        locations."/plex" = {
-          extraConfig = "return 301 http://192.168.86.34:32400/web;";
+        locations."/" = {
+          extraConfig = "return 301 https://ancilla.ancilla.ca/;";
         };
-        locations."/helix" = {
-          root = "/srv/www";
-        };
-        locations."/oculus" = {
-          root = "/srv/www";
-        };
-        # locations."/" = {
-        #   root = "/ancilla/media";
-        #   extraConfig = "autoindex on;";
-        # };
-      };
-      "ancilla.lan" = {
-        forceSSL = false;
-        enableACME = false;
-        # listen = [{ addr = "0.0.0.0"; port = 5634; ssl = false; }];
-        locations."/plex" = {
-          extraConfig = "return 301 http://192.168.86.34:32400/web;";
-        };
-        # locations."/" = {
-        #   root = "/ancilla/media";
-        #   extraConfig = "autoindex on;";
-        # };
       };
       "ancilla.ancilla.ca" = {
         forceSSL = true;
