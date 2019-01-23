@@ -24,19 +24,20 @@ in {
 
     # TODO: fix this so it can act as a reverse proxy.
     nginx.virtualHosts."ancilla".locations."/plex" = {
-      extraConfig = "return 301 http://192.168.86.34:32400/web;";
+      extraConfig = "return 301 https://plex.ancilla.ca/web/index.html;";
     };
     nginx.virtualHosts."ancilla.lan".locations."/plex" = {
-      extraConfig = "return 301 http://192.168.86.34:32400/web;";
+      extraConfig = "return 301 https://plex.ancilla.ca/web/index.html;";
     };
     nginx.virtualHosts."plex.ancilla.ca" = {
       forceSSL = true;
       enableACME = true;
+      basicAuth = secrets.plex-auth;
       extraConfig = ''
         #Forward real ip and host to Plex
-        proxy_set_header Host "192.168.86.34:32400";
+        proxy_set_header Host "127.0.0.1:32400";
         proxy_set_header Referer "";
-        proxy_set_header Origin "http://192.168.86.34:32400";
+        proxy_set_header Origin "http://127.0.0.1:32400";
         #proxy_set_header X-Real-IP $remote_addr;
         #When using ngx_http_realip_module change $proxy_add_x_forwarded_for to '$http_x_forwarded_for,$realip_remote_addr'
         #proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -55,7 +56,7 @@ in {
         proxy_buffering off;
       '';
       locations."/".extraConfig = ''
-        proxy_pass    http://192.168.86.34:32400;
+        proxy_pass    http://127.0.0.1:32400;
       '';
     };
     nginx.virtualHosts."music.ancilla.ca" = {
