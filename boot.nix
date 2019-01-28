@@ -21,11 +21,30 @@
     zfs.devNodes = "/dev/disk/by-path";
     initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
     extraModulePackages = [ ];
+
+    postBootCommands = ''
+      ls /srv /ancilla
+      zpool import -a -d -N /dev/disk/by-path
+      zfs mount -a
+      ls /srv /ancilla
+    '';
   };
-  systemd.targets.zfs = {
-    wantedBy = ["sysinit.target"];
-    wants = ["zfs-mount.service"];
-    before = ["local-fs.target" "multi-user.target" "sysinit.target" "network.target"];
-  };
-  systemd.services.zfs-mount.requires = ["zfs-import.target"];
+  # systemd.targets.zfs = {
+  #   wantedBy = ["sysinit.target"];
+  #   wants = ["zfs-mount.service"];
+  #   before = ["local-fs.target" "multi-user.target" "sysinit.target" "network.target"];
+  # };
+  # systemd.services.zfs-mount.requires = ["zfs-import.target"];
+  # systemd.services.zfs-zed = {
+  #   after = ["zfs-mount.service"];
+  #   unitConfig = {
+  #     DefaultDependencies = false;
+  #   };
+  # };
+  # systemd.services.zfs-share = {
+  #   after = ["zfs-mount.service"];
+  #   unitConfig = {
+  #     DefaultDependencies = false;
+  #   };
+  # };
 }
