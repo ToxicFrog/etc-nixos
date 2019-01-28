@@ -74,6 +74,7 @@ in {
     jshon
     ffmpeg-full
     lgogdownloader
+    lm_sensors
     nodejs  # for discord-ircd
     (python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     recoll  # log searching

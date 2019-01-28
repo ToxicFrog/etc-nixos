@@ -105,11 +105,15 @@
         env.BORG_CACHE_DIR /backup/borg/cache
         env.BORG_SECURITY_DIR /backup/borg/security
         env.BORG_KEYS_DIR /backup/borg/keys
+
+      [sensors_*]
+        env.sensors sensors -c /etc/sensors3.conf
     '';
     extraAutoPlugins = [
       /usr/src/munin-contrib/plugins/zfs
     ];
     disabledPlugins = [
+      "acpi"          # sensors_ works better
       "cpuspeed"      # so noisy it's useless
       "buddyinfo"     # don't care about memory fragmentation
       "meminfo"       # duplicate of above
@@ -120,4 +124,44 @@
       "zpool_iostat"  # TODO: replace with per-pool rather than per-disk iostat
     ];
   };
+  # concat with ${pkgs.lm-sensors}/etc/sensors3.conf
+  environment.etc."sensors3.conf".text = builtins.concatStringsSep "\n" [
+    (builtins.readFile "${pkgs.lm_sensors}/etc/sensors3.conf")
+    ''
+      chip "iwlwifi-*"
+      label temp1 "WiFi temperature"
+
+      chip "nct6795-*"
+      label fan2 "CPU Fan"
+      label fan3 "Case Fans"
+      # no corresponding headers on motherboard
+      ignore fan1
+      ignore fan4
+      ignore fan5
+
+      # no labels, not sure what any of these are or what their thresholds should
+      # be; some of them are probably calced wrong too.
+      ignore in1
+      ignore in4
+      ignore in5
+      ignore in6
+      ignore in9
+      ignore in10
+      ignore in11
+      ignore in12
+      ignore in13
+      ignore in14
+
+      # Reading 0 or fewer degrees
+      ignore temp6
+      ignore temp8
+      ignore temp9
+      ignore temp10
+
+      # thresholds are wrong
+      set temp1_max 115
+      set temp1_max_hyst 90
+      set in0_min 0.8
+    ''
+  ];
 }
