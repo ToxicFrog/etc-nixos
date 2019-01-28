@@ -4,6 +4,7 @@
 
 {
   users.extraUsers.deluge.home = lib.mkForce "/ancilla/torrents/deluge";
+  users.extraUsers.deluge.createHome = lib.mkForce false;
   systemd.services.deluged.requires = ["zfs-mount.service"];
   systemd.services.delugeweb.requires = ["deluged.service"];
   services = {

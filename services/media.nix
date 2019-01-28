@@ -5,8 +5,10 @@
 let
   secrets = (import ../secrets/default.nix {});
 in {
+{
+  users.users.airsonic.createHome = lib.mkForce false;
+
   services = {
-    # TODO move airsonic and plex to /srv
     airsonic = {
       enable = true;
       maxMemory = 256;
@@ -22,7 +24,6 @@ in {
       ];
     };
 
-    # TODO: fix this so it can act as a reverse proxy.
     nginx.virtualHosts."ancilla".locations."/plex" = {
       extraConfig = "return 301 https://plex.ancilla.ca/web/index.html;";
     };
