@@ -5,15 +5,20 @@
   boot = {
     loader.grub = {
       enable = true;
+      efiSupport = true;
+      efiInstallAsRemovable = true;
       version = 2;
       device = "/dev/disk/by-id/ata-KINGSTON_SA400S37240G_50026B77824F4828";
     };
+    # loader.systemd-boot.enable = true;
+    # loader.efi.canTouchEfiVariables = true;
 
     kernelParams = ["consoleblank=0"];
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = ["k10temp" "nct6775"];
 
     supportedFilesystems = ["zfs"];
     zfs.extraPools = ["ancilla" "backup" "internal"];
+    zfs.devNodes = "/dev/disk/by-path";
     initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
     extraModulePackages = [ ];
   };
