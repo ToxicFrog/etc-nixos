@@ -16,6 +16,7 @@ in {
     gcc
     gdb
     gitAndTools.gitFull
+    git-crypt
     gnumake
     # google-chrome
     htop
