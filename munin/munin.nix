@@ -161,7 +161,12 @@
       # thresholds are wrong
       set temp1_max 115
       set temp1_max_hyst 90
-      set in0_min 0.8
+      set in0_min 0.75
     ''
   ];
+  system.activationScripts.lmsensors = {
+    text = ''
+      ${pkgs.lm_sensors}/bin/sensors -c /etc/sensors3.conf -s
+    '';
+  };
 }
