@@ -31,25 +31,6 @@
       ${pkgs.zfs}/bin/zpool status
       ${pkgs.zfs}/bin/zfs mount -a
       echo "=== ZPOOL IMPORT COMPLETE ==="
-      ${pkgs.lm_sensors}/bin/sensors -c /etc/sensors3.conf -s
     '';
   };
-  # systemd.targets.zfs = {
-  #   wantedBy = ["sysinit.target"];
-  #   wants = ["zfs-mount.service"];
-  #   before = ["local-fs.target" "multi-user.target" "sysinit.target" "network.target"];
-  # };
-  # systemd.services.zfs-mount.requires = ["zfs-import.target"];
-  # systemd.services.zfs-zed = {
-  #   after = ["zfs-mount.service"];
-  #   unitConfig = {
-  #     DefaultDependencies = false;
-  #   };
-  # };
-  # systemd.services.zfs-share = {
-  #   after = ["zfs-mount.service"];
-  #   unitConfig = {
-  #     DefaultDependencies = false;
-  #   };
-  # };
 }

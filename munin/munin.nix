@@ -168,5 +168,6 @@
     text = ''
       ${pkgs.lm_sensors}/bin/sensors -c /etc/sensors3.conf -s
     '';
+    deps = [];
   };
 }
