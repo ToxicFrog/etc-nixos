@@ -19,6 +19,7 @@ in {
     git-crypt
     gnumake
     # google-chrome
+    hledger hledger-ui hledger-web
     htop
     jre
     kpcli
