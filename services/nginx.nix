@@ -21,10 +21,12 @@ in {
         locations."/".extraConfig = ''
           proxy_pass http://127.0.0.1:26657/;
         '';
-        locations."/comics" = {
-          root = "/ancilla/media";
-          extraConfig = "autoindex on;";
-        };
+        locations."/comics".extraConfig = ''
+          proxy_pass http://127.0.0.1:2202;
+        '';
+        locations."/comics/admin".extraConfig = ''
+          proxy_pass http://127.0.0.1:2203;
+        '';
       };
       "ancilla" = {
         locations."/" = {
