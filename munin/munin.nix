@@ -131,6 +131,10 @@
       chip "iwlwifi-*"
       label temp1 "WiFi temperature"
 
+      chip "amdgpu-pci-3800"
+      set temp1_max 80
+      set temp1_max_hyst 70
+
       chip "nct6795-*"
       label fan2 "CPU Fan"
       label fan3 "Case Fans"
@@ -164,10 +168,14 @@
       set in0_min 0.75
     ''
   ];
-  system.activationScripts.lmsensors = {
-    text = ''
-      ${pkgs.lm_sensors}/bin/sensors -c /etc/sensors3.conf -s
-    '';
-    deps = [];
+  systemd.services.lmsensors-load-thresholds = rec {
+    description = "Load sensor configuration and thresholds";
+    wantedBy = [ config.systemd.defaultUnit ];
+    after = [ "systemd-udev-settle.service" "local-fs.target" ] ++ wantedBy;
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.lm_sensors}/bin/sensors -c /etc/sensors3.conf -s";
+    };
   };
 }
