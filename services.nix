@@ -8,6 +8,7 @@ in {
   imports = [
     ./munin/munin.nix
     ./munin/hugin.nix
+    ./services/bitburner.nix
     ./services/bittorrent.nix
     ./services/borgbackup.nix
     ./services/bup.nix
