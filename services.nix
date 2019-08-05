@@ -36,8 +36,8 @@ in {
     apcupsd.enable = true;
     bitlbee = {
       enable = true;
-      plugins = with pkgs; [ bitlbee-facebook bitlbee-discord bitlbee-steam ];
-      libpurple_plugins = with pkgs; [ purple-hangouts ];
+      plugins = with pkgs; [ bitlbee-facebook bitlbee-steam ];
+      # libpurple_plugins = with pkgs; [ purple-hangouts ];
     };
 
     smartd = {
