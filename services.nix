@@ -32,6 +32,13 @@ in {
   };
 
   services = {
+    keybase.enable = true;
+    kbfs.enable = true;
+    deliantra-server = {
+      enable = true;
+      openFirewall = true;
+    };
+
     fail2ban.enable = true;  # temporarily disabled due to doing lots and lots of disk
     apcupsd.enable = true;
     bitlbee = {
