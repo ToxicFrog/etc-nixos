@@ -62,7 +62,6 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    alpine
     beets
     calibre
     digikam # for digitaglinktree
@@ -73,15 +72,19 @@ in {
     jq
     jshon
     ffmpeg-full
+    xxd pv exiftool fgallery imagemagick # for share
     lgogdownloader
+    tmuxinator
     lm_sensors
     nodejs  # for discord-ircd
-    (python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
+    #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     recoll  # log searching
     sshfs
     skicka  # for backup upload to grive
     timg
     weechat
-    gpodder unstable.youtube-dl sqlite  # for downloading podcasts
+    unstable.youtube-dl # for downloading podcasts
+    keybase keybase-gui # keybase chat
+    notmuch alot gmailieer # mail reading
   ];
 }
