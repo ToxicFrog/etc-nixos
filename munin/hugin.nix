@@ -29,6 +29,8 @@ in {
       User = "${user}";
       Group = "${group}";
       WorkingDirectory = "~";
+      Restart = "always";
+      RestartSec = 5;
     };
   };
 
