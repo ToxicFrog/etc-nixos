@@ -12,7 +12,7 @@ in {
     ./services/bittorrent.nix
     ./services/borgbackup.nix
     ./services/bup.nix
-    ./services/ipfs.nix
+    # ./services/ipfs.nix
     ./services/media.nix
     ./services/minecraft.nix
     ./services/nginx.nix
