@@ -82,7 +82,8 @@ if [[ "$1" == "config" ]]; then
     "--base 1024" "cdef:%,UN,PREV,%,IF"
   graph dedup_size "Deduplicated size" "deduplicated size (bytes)" \
     "The size of the most recent archive after duplication -- roughly, how much creating this archive increased the total size of the repo by." \
-    "--base 1024" "cdef:%,UN,PREV,%,IF"
+    "--base 1024" "cdef:%,UN,PREV,%,IF" \
+    "warning:1073741824" "critical:8589934592"
   graph duration "Backup duration" "duration (minutes)" \
     "How long it took each archive to be created." \
     "--base 1000 --units-exponent 0" "cdef:%,UN,PREV,%,60,/,IF"
@@ -149,18 +150,3 @@ function values_for_prefix {
 } | sort --key 1,1 --stable | cut -d' ' -f2-
 echo "multigraph borg_repo_size"
 echo "borg_repo_size.value $(borg info --json | jq -r .cache.stats.unique_csize)"
-
-# foreach repo: total size of repo
-# foreach prefix: age of most recent; total size of most recent; delta size of most recent; creation speed of most recent
-# per-prefix age *ratio*, i.e. actual age / expected age?
-# n.b. if a backup is running the repo is inaccessible
-# we need to smear across the inaccessible time:
-# cdef foo,un,prev,foo,if
-# which is (if (un foo) prev foo)
-# and will smear the last recorded value across periods of unknowns
-# pushes the result of the CDEF, so we need to do this *after* any calculations
-# so it's more like
-# foo un
-# prev
-# foo 3600 /
-# if
