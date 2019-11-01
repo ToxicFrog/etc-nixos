@@ -9,10 +9,10 @@ in {
       owner = "toxicfrog";
       repo = "doomrl-server";
       rev = "master";
-      sha256 = "1kxkk6jj2b6hym2kdw5ybl3qksgad80f8wjkky90fybclngca3cc";
+      sha256 = "02wfkj4zjqjlh2cyfrcqjb7q87hyqsrb4y0756lhw5ag53a5ddc6";
     };
 
-    nativeBuildInputs = with self; [gnumake];
+    nativeBuildInputs = with self; [gnumake git];
     buildInputs = with self; [SDL];
     deps = with self; [python3 telnet less];
 
@@ -20,10 +20,6 @@ in {
 
     buildPhase = ''make -C ttysound'';
     installPhase = ''
-      # ls -ltrAh
-      # pwd
-      # echo "out=$out"
-      # stat $out
       mkdir -p $out/share/
       cp -a . "$out/share/doomrl-server"
     '';
