@@ -5,7 +5,6 @@
 let
   secrets = (import ../secrets/default.nix {});
 in {
-{
   users.users.airsonic.createHome = lib.mkForce false;
 
   services = {

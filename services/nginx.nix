@@ -2,7 +2,7 @@
 # Note that some nginx configs live in their associated service files,
 # e.g. /maps is in minecraft.nix
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   secrets = (import ../secrets/default.nix {});
@@ -18,14 +18,14 @@ in {
         forceSSL = true;
         enableACME = true;
         basicAuth = secrets.library-auth;
-        locations."/".extraConfig = ''
-          proxy_pass http://127.0.0.1:26657/;
-        '';
+        locations."/".proxyPass = "http://127.0.0.1:26657/";
+        locations."/comics".proxyPass = "http://127.0.0.1:2202";
+        locations."/comics/admin".proxyPass = "http://127.0.0.1:2203";
+        locations."= /ubreader.js".alias = pkgs.copyPathToStore ./ubreader.js;
         locations."/comics".extraConfig = ''
-          proxy_pass http://127.0.0.1:2202;
-        '';
-        locations."/comics/admin".extraConfig = ''
-          proxy_pass http://127.0.0.1:2203;
+          sub_filter '</head>' '<script type="text/javascript" src="/ubreader.js"></script></head>';
+          sub_filter_last_modified on;
+          sub_filter_once on;
         '';
       };
       "ancilla" = {
