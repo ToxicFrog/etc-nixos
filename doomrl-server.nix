@@ -5,15 +5,15 @@ let
   server-path = "/srv/doomrl";
   config-file = ''
     doom_path ${pkgs.doomrl}/opt/doomrl
-    data_path /opt/doomrl-server
+    data_path ${pkgs.doomrl-server}/share/doomrl-server
     user_path ${server-path}
   '';
 in {
   security.acme.certs."phobos.ancilla.ca".email = "webmaster@ancilla.ca";
 
   # So that they appear in /run/current-system/sw.
-  environment.systemPackages = with pkgs; [doomrl doomrl-server];
-  environment.pathsToLink = [ "/share/doomrl-server" "/opt/doomrl" ];
+  #environment.systemPackages = with pkgs; [doomrl doomrl-server];
+  #environment.pathsToLink = [ "/share/doomrl-server" "/opt/doomrl" ];
 
   environment.etc."doomrl-server.conf" = {
     enable = true;
@@ -34,7 +34,7 @@ in {
     services = singleton {
       name = "doomrl-server";
       server = "${pkgs.inetutils}/libexec/telnetd";
-      serverArgs = "-h -E /opt/doomrl-server/doomrl-server";
+      serverArgs = "-h -E ${pkgs.doomrl-server}/share/doomrl-server/doomrl-server";
       user = "doomrl";
       protocol = "tcp";
       port = 3666;
@@ -46,8 +46,8 @@ in {
   # Websockify forwards requests from the web interface to the telnetd.
   services.networking.websockify = {
     enable = true;
-    sslCert = "${config.security.acme.directory}/phobos.ancilla.ca/fullchain.pem";
-    sslKey = "${config.security.acme.directory}/phobos.ancilla.ca/key.pem";
+    sslCert = "/var/lib/acme/phobos.ancilla.ca/fullchain.pem";
+    sslKey = "/var/lib/acme/phobos.ancilla.ca/key.pem";
     portMap = {
       "3667" = 3666;
     };
