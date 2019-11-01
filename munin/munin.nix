@@ -132,8 +132,8 @@
       label temp1 "WiFi temperature"
 
       chip "amdgpu-pci-3800"
-      set temp1_max 80
-      set temp1_max_hyst 70
+      set temp1_crit 80
+      set temp1_crit_hyst 70
 
       chip "nct6795-*"
       label fan2 "CPU Fan"
@@ -172,6 +172,7 @@
     description = "Load sensor configuration and thresholds";
     wantedBy = [ config.systemd.defaultUnit ];
     after = [ "systemd-udev-settle.service" "local-fs.target" ] ++ wantedBy;
+    restartTriggers = ["/etc/sensors3.conf"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
