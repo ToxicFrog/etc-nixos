@@ -10,8 +10,6 @@
     auth_basic off;
   '';
 
-
-
   # Minecraft user.
   users.users.minecraft = {
     isSystemUser = true;
@@ -24,7 +22,7 @@
     description = "Minecraft Server";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    enable = false;
+    enable = true;
     serviceConfig = {
       User = "minecraft";
       Group = "nogroup";

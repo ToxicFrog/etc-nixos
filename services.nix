@@ -35,9 +35,23 @@ in {
   services = {
     keybase.enable = true;
     kbfs.enable = true;
-    deliantra-server = {
+    crossfire-server = {
       enable = true;
       openFirewall = true;
+      etc.settings = ''
+        balanced_stat_loss true
+      '';
+      etc.dm_file = secrets.crossfire-dmfile;
+      package = pkgs.crossfire-server-latest;
+    };
+    deliantra-server = {
+      enable = false;
+      openFirewall = true;
+      config = ''
+        checkrusage: { vmsize: 2147483648 }
+        map_max_reset: 604800
+        map_default_reset: 86400
+      '';
     };
 
     fail2ban.enable = true;  # temporarily disabled due to doing lots and lots of disk
