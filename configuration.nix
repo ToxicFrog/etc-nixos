@@ -81,7 +81,7 @@ in {
     recoll  # log searching
     sshfs
     skicka  # for backup upload to grive
-    timg
+    timg tiv
     weechat
     unstable.youtube-dl # for downloading podcasts
     keybase keybase-gui # keybase chat
