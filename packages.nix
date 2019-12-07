@@ -8,7 +8,6 @@ in {
   environment.systemPackages = with pkgs; [
     atop
     binutils  # for strings and nm
-    bup
     dos2unix
     dtrx
     file
