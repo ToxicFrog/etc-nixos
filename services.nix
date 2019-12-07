@@ -35,7 +35,7 @@ in {
     keybase.enable = true;
     kbfs.enable = true;
     crossfire-server = {
-      enable = true;
+      enable = false;
       openFirewall = true;
       etc.settings = ''
         balanced_stat_loss true

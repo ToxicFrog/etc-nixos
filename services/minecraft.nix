@@ -22,7 +22,7 @@
     description = "Minecraft Server";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
-    enable = true;
+    enable = false;
     serviceConfig = {
       User = "minecraft";
       Group = "nogroup";
