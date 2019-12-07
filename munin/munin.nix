@@ -108,6 +108,13 @@
 
       [sensors_*]
         env.sensors sensors -c /etc/sensors3.conf
+        env.ignore_temp4 true
+
+      [zfs_*]
+        user root
+
+      [zpool_*]
+        user root
     '';
     extraAutoPlugins = [
       /usr/src/munin-contrib/plugins/zfs
@@ -129,11 +136,15 @@
     (builtins.readFile "${pkgs.lm_sensors}/etc/sensors3.conf")
     ''
       chip "iwlwifi-*"
-      label temp1 "WiFi temperature"
+      label temp1 "WiFi"
 
       chip "amdgpu-pci-3800"
-      set temp1_crit 80
-      set temp1_crit_hyst 70
+      label temp1 "GPU"
+      # driver doesn't permit setting temperature limits
+      # unfortunately driver also reports crit_hyst limit as 0C so the alarm will
+      # be firing forever
+      # set temp1_crit 80.0
+      # set temp1_crit_hyst 80.0
 
       chip "nct6795-*"
       label fan2 "CPU Fan"
