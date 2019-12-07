@@ -30,4 +30,11 @@ in {
       sed -Ei 's,^#define MAP_DEFAULTRESET.*,#define MAP_DEFAULTRESET 28800,' include/config.h
     '';
   });
+  # perl 5.30 breaks plugins
+  munin = super.munin.override {
+    perlPackages = super.perl528Packages;
+    rrdtool = super.rrdtool.override {
+      perl = super.perl528Packages.perl;
+    };
+  };
 }
