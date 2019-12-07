@@ -27,6 +27,7 @@
       echo "=== STARTING ZPOOL IMPORT ==="
       # Clean up borg-repo because the activation script creates it
       ${pkgs.findutils}/bin/find /backup/borg-repo -maxdepth 1 -type d -empty -delete
+      ${pkgs.findutils}/bin/find /srv -maxdepth 1 -type d -empty -delete
       ${pkgs.zfs}/bin/zpool import -a -N -d /dev/disk/by-path
       ${pkgs.zfs}/bin/zpool status
       ${pkgs.zfs}/bin/zfs mount -a
