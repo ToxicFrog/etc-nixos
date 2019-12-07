@@ -54,7 +54,15 @@ in {
     };
 
     fail2ban.enable = true;  # temporarily disabled due to doing lots and lots of disk
-    apcupsd.enable = true;
+    apcupsd = {
+      enable = true;
+      configText = ''
+        UPSTYPE usb
+        NISIP 127.0.0.1
+        BATTERYLEVEL 10
+        MINUTES 5
+      '';
+    };
     bitlbee = {
       enable = true;
       plugins = with pkgs; [ bitlbee-facebook bitlbee-steam ];
