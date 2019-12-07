@@ -15,13 +15,13 @@
     # loader.efi.canTouchEfiVariables = true;
 
     kernelParams = ["consoleblank=0"];
-    kernelModules = ["k10temp" "nct6775"];
+    kernelModules = ["k10temp" "nct6775" "netatop"];
 
     supportedFilesystems = ["zfs"];
     #zfs.extraPools = ["ancilla" "backup" "internal"];
     zfs.devNodes = "/dev/disk/by-path";
     initrd.availableKernelModules = [ "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc" ];
-    extraModulePackages = [ ];
+    extraModulePackages = [ pkgs.linuxPackages.netatop ];
 
     postBootCommands = ''
       echo "=== STARTING ZPOOL IMPORT ==="
