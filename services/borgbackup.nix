@@ -26,6 +26,7 @@ let
       "--exclude-caches"
       "--files-cache=mtime,size"
       "--exclude-if-present=.NOBACKUP"
+      "--compression=zstd"
       "--patterns-from=${borgcfg}/${name}.borg"
     ];
     repo = "/backup/borg-repo";
