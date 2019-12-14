@@ -54,22 +54,46 @@ in {
         echo "/j $user" > ~${user}/hugin/${server}/in
       }
 
-      userdir=$(echo $user | tr A-Z a-z)
-      {
-        while [[ $1 ]]; do
-          echo "$1"; shift
-        done
-        while read line; do
-          echo "$line"
-        done
-      } | ${pkgs.gnused}/bin/sed -E "s,^$, ,; s,^,/PRIVMSG $user :," \
-        | ${pkgs.pv}/bin/pv -q -L 4 -l -C \
-        | while IFS="" read -r line; do
-            # Gross hack here: ii doesn't properly read the input until the
-            # fifo is closed. So if we send it the entire message at once it
-            # ends up losing most of it.
-            printf "%s\n" "$line" > ~${user}/hugin/${server}/in
-          done
+      function emit {
+        # Gross hack here: ii doesn't properly read the input until the
+        # fifo is closed. So if we send it the entire message at once it
+        # ends up losing most of it.
+        local fmt="$1"; shift
+        printf "/PRIVMSG $user :$fmt\n" "$@" > ~${user}/hugin/${server}/in
+        sleep 1
+      }
+
+      function emit- {
+        echo "ERROR" >&2
+      }
+
+      function emit-CRIT {
+        emit '\x034\x02%16s %s\x02 \x0314[%s]\x15' "$label" "$value" "$limit"
+        [[ $extinfo ]] && emit '    (%s)' "$extinfo"
+      }
+
+      function emit-WARN {
+        emit '\x037\x02%16s %s\x02 \x0314[%s]\x15' "$label" "$value" "$limit"
+        [[ $extinfo ]] && emit '    (%s)' "$extinfo"
+      }
+
+      function emit-FOK {
+        emit '\x033\x02%16s %s\x02\x15' "$label" "$value"
+        [[ $extinfo ]] && emit '    (%s)' "$extinfo"
+      }
+
+      while [[ $1 ]]; do
+        emit "%s" "$1"; shift
+      done
+      export IFS=$'\t'
+      read host graph
+      emit "=== %s :: %s ===" "$host" "$graph"
+      while read level label value limit extinfo; do
+        level="$(echo "$level" | tr -d ' ')"
+        echo "LINE '$level' '$label' '$value' '$limit' '$extinfo'" >&2
+        emit-$level
+      done
+      emit '=== END ==='
     '')
   ];
 }
