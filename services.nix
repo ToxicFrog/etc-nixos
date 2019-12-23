@@ -138,4 +138,22 @@ in {
     serviceConfig.ExecStart = "${pkgs.curl}/bin/curl ${secrets.dyndns-url}";
     serviceConfig.Type = "oneshot";
   };
+
+  users.users.ubooquity = {
+    isSystemUser = true;
+    description = "Ubooquity comic server";
+    home = "/srv/ubooquity";
+    createHome = false;
+  };
+  systemd.services.ubooquity = {
+    description = "Ubooquity Comic Reader";
+    after = ["network-online.target" "local-fs.target"];
+    wantedBy = ["multi-user.target"];
+    serviceConfig = {
+      User = "ubooquity";
+      Group = "nogroup";
+      ExecStart = "${pkgs.jre}/bin/java -jar Ubooquity.jar --headless --remoteadmin";
+      WorkingDirectory = "/srv/ubooquity";
+    };
+  };
 }
