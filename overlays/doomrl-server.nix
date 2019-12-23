@@ -8,20 +8,26 @@ in {
     src = self.fetchFromGitHub {
       owner = "toxicfrog";
       repo = "doomrl-server";
-      rev = "master";
-      sha256 = "02wfkj4zjqjlh2cyfrcqjb7q87hyqsrb4y0756lhw5ag53a5ddc6";
+      rev = "6ad7e07cc8fe2b87b6492f00b4c354a2f0392654";
+      sha256 = "000fkj4zjqjlh2cyfrcqjb7q87hyqsrb4y0756lhw5ag53a5ddc6";
     };
 
-    nativeBuildInputs = with self; [gnumake git];
+    nativeBuildInputs = with self; [gnumake git lua5_3];
     buildInputs = with self; [SDL];
-    deps = with self; [python3 telnet less];
+    deps = with self; [python3 telnet less ncurses nano];
 
     phases = [ "unpackPhase" "buildPhase" "installPhase" ];
 
-    buildPhase = ''make -C ttysound'';
+    buildPhase = ''make -C ttysound DRL_SOUND_CONFIG=${self.doomrl}/opt/doomrl/soundhq.lua'';
     installPhase = ''
-      mkdir -p $out/share/
+      mkdir -p "$out/share"
       cp -a . "$out/share/doomrl-server"
+      mkdir -p "$out/share/doomrl-server/www/sfx/"
+      for sfx in ${self.doomrl}/opt/doomrl/wavhq/*.wav; do
+        flac="$(${self.coreutils}/bin/basename "$sfx" | ${self.gnused}/bin/sed -E "s,wav$,flac,")"
+        ${self.ffmpeg}/bin/ffmpeg -hide_banner -loglevel error -i "$sfx" "$out/share/doomrl-server/www/sfx/$flac"
+      done
+      ln -s ${self.doomrl}/opt/doomrl/mp3 "$out/share/doomrl-server/www/music"
     '';
   };
 }
