@@ -59,7 +59,9 @@ in {
         # fifo is closed. So if we send it the entire message at once it
         # ends up losing most of it.
         local fmt="$1"; shift
+        echo "EMIT /PRIVMSG $user :$fmt $@" >&2
         printf "/PRIVMSG $user :$fmt\n" "$@" > ~${user}/hugin/${server}/in
+        echo "EMIT DONE" >&2
         sleep 1
       }
 
@@ -83,15 +85,19 @@ in {
       }
 
       while [[ $1 ]]; do
+        echo "PREFIX $1" >&2
         emit "%s" "$1"; shift
       done
       export IFS=$'\t'
-      read host graph
+      while [[ ! $host ]]; do
+        read host graph
+        echo "READ '$host' '$graph'" >&2
+      done
       emit "=== %s :: %s ===" "$host" "$graph"
       while read level label value limit extinfo; do
         level="$(echo "$level" | tr -d ' ')"
         echo "LINE '$level' '$label' '$value' '$limit' '$extinfo'" >&2
-        emit-$level
+        emit-$level || echo 'FAIL' >&2
       done
       emit '=== END ==='
     '')

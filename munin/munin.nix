@@ -17,11 +17,11 @@
       ssh_command /run/current-system/sw/bin/ssh
 
       contact.irc.command /run/current-system/sw/bin/hugin "\#ancilla"
+      contact.irc.max_messages 1
       contact.irc.text ''${var:host}\t''${var:graph_title}\n\
         ''${loop:cfields CRIT\t''${var:label}\t''${var:value}\t''${var:crange}\t''${var:extinfo}\n}\
         ''${loop:wfields WARN\t''${var:label}\t''${var:value}\t''${var:wrange}\t''${var:extinfo}\n}\
-        ''${loop:fofields FOK\t''${var:label}\t''${var:value}\t-\t''${var:extinfo}\n}
-    '';
+        ''${loop:fofields FOK\t''${var:label}\t''${var:value}\t-\t''${var:extinfo}\n}'';
 
     # Monitor ancilla using a local node, and the rest of the network via proxy
     # plugins.
