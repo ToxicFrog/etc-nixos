@@ -57,8 +57,6 @@ in {
   services.nginx.virtualHosts."phobos.ancilla.ca" = {
     forceSSL = true;
     enableACME = true;
-    locations."/" = {
-      root = "${server-path}/www";
-    };
+    locations."/".root = "${server-path}/www";
   };
 }

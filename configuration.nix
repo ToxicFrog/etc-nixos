@@ -86,5 +86,6 @@ in {
     unstable.youtube-dl # for downloading podcasts
     keybase keybase-gui # keybase chat
     notmuch alot gmailieer # mail reading
+    doomrl
   ];
 }
