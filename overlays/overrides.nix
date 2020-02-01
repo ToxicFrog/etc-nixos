@@ -30,11 +30,35 @@ in {
       sed -Ei 's,^#define MAP_DEFAULTRESET.*,#define MAP_DEFAULTRESET 28800,' include/config.h
     '';
   });
-  # perl 5.30 breaks plugins
-  munin = super.munin.override {
-    perlPackages = super.perl528Packages;
-    rrdtool = super.rrdtool.override {
-      perl = super.perl528Packages.perl;
-    };
-  };
+  munin = super.munin.overrideAttrs (oldAttrs: {
+    # HACK HACK HACK
+    # perl -T breaks makeWrapper
+    postFixup = ''
+      echo "Removing references to /usr/{bin,sbin}/ from munin plugins..."
+      find "$out/lib/plugins" -type f -print0 | xargs -0 -L1 \
+          sed -i -e "s|/usr/bin/||g" -e "s|/usr/sbin/||g" -e "s|\<bc\>|${self.bc}/bin/bc|g"
+      if test -e $out/nix-support/propagated-build-inputs; then
+          ln -s $out/nix-support/propagated-build-inputs $out/nix-support/propagated-user-env-packages
+      fi
+
+      sed -E -i "s/perl -T/perl/" "$out"/www/cgi/*
+
+      for file in "$out"/bin/munindoc "$out"/sbin/munin-* "$out"/lib/munin-* "$out"/www/cgi/*; do
+          # don't wrap .jar files
+          case "$file" in
+              *.jar) continue;;
+          esac
+          wrapProgram "$file" \
+            --set PERL5LIB "$out/${self.perlPackages.perl.libPrefix}:${with self.perlPackages; makePerlPath [
+                  LogLog4perl IOSocketInet6 Socket6 URI DBFile DateManip
+                  HTMLTemplate FileCopyRecursive FCGI NetCIDR NetSNMP NetServer
+                  ListMoreUtils DBDPg LWP self.rrdtool CGIFast CGI
+                  ]}"
+      done
+    '';
+    #   postFixup = ''
+    #   sed -E -i "s/perl -T/perl/" "$out"/www/cgi/*
+
+    # '' + oldAttrs.postFixup;
+  });
 }
