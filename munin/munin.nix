@@ -9,12 +9,31 @@
 { config, pkgs, lib, ... }:
 
 {
+  services.fcgiwrap.enable = true;
+  services.fcgiwrap.user = "munin";
+  services.fcgiwrap.group = "nogroup";
+  services.nginx.virtualHosts."ancilla.ancilla.ca".locations."/munin-cgi/" = {
+    alias = "${pkgs.munin}/www/cgi/";
+    extraConfig = ''
+      fastcgi_split_path_info /munin-cgi/([^/]+)([^?]*);
+      fastcgi_param REQUEST_METHOD $request_method;
+      fastcgi_param CONTENT_TYPE $content_type;
+      fastcgi_param CONTENT_LENGTH $content_length;
+      fastcgi_param QUERY_STRING $query_string;
+      fastcgi_param SCRIPT_FILENAME ${pkgs.munin}/www/cgi/$fastcgi_script_name;
+      fastcgi_param CGI_DEBUG true;
+      fastcgi_param MUNIN_CONFIG /nix/store/0w3pc1g8aqvnsfbb3lp3r47zp6ascvb7-munin.conf;
+      fastcgi_param PATH_INFO $fastcgi_path_info;
+      fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
+    '';
+  };
   # Munin master to collect and graph metrics.
   services.munin-cron = {
     enable = true;
     extraGlobalConfig = ''
       htmldir /srv/www/munin
       ssh_command /run/current-system/sw/bin/ssh
+      cgitmpdir /var/lib/munin/cgi-tmp
 
       contact.irc.command /run/current-system/sw/bin/hugin "\#ancilla"
       contact.irc.max_messages 1
