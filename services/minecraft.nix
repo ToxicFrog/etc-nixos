@@ -21,8 +21,8 @@
   systemd.services.minecraft-server = {
     description = "Minecraft Server";
     after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
-    enable = false;
+    wantedBy = []; #[ "multi-user.target" ];
+    enable = true;
     serviceConfig = {
       User = "minecraft";
       Group = "nogroup";
