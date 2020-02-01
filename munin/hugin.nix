@@ -46,6 +46,9 @@ in {
       set -e
       [[ -e ~${user}/hugin/${server}/in ]] || exit 1
 
+      # If not already running under lock, re-execute self with lock acquired
+      [[ $FLOCKER != "$0" ]] && exec env FLOCKER="$0" flock -en "$0" "$0" "$@"
+
       while [[ $1 == -* ]]; do shift; done
       user=$1; shift
 
