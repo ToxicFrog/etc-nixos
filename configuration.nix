@@ -22,7 +22,7 @@ in {
   programs.zsh.enable = true;
 
   # Use a somewhat larger font on the tty.
-  i18n.consoleFont = "sun12x22";
+  console.font = "sun12x22";
 
   security.pki.certificateFiles = [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" ];
 
