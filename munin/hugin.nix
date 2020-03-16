@@ -44,20 +44,21 @@ in {
       #!${pkgs.zsh}/bin/zsh
 
       set -e
+      set -x
       [[ -e ~${user}/hugin/${server}/in ]] || exit 1
 
       # If not already running under lock, re-execute self with lock acquired
-      [[ $FLOCKER != "$0" ]] && exec env FLOCKER="$0" flock -en "$0" "$0" "$@"
+      [[ $FLOCKER != "$0" ]] && exec env FLOCKER="$0" flock -e -w 60 "$0" "$0" "$@"
 
       while [[ $1 == -* ]]; do shift; done
-      user=$1; shift
+      channel=$1; shift
 
       [[ -d ~${user}/hugin/${server}/$user ]] || {
         # Join the channel if not already in it.
-        echo "/j $user" > ~${user}/hugin/${server}/in
+        echo "/j $channel" > ~${user}/hugin/${server}/in
       }
 
-      function emit {
+      function old-emit {
         # Gross hack here: ii doesn't properly read the input until the
         # fifo is closed. So if we send it the entire message at once it
         # ends up losing most of it.
@@ -68,23 +69,35 @@ in {
         sleep 1
       }
 
+      function emit {
+        local fmt="$1"; shift
+        echo "EMIT :$fmt $@" >&2
+        printf "$fmt"'\n' "$@" > ~${user}/hugin/${server}/$channel/in
+      }
+
       function emit- {
         echo "ERROR" >&2
       }
 
       function emit-CRIT {
         emit '\x034\x02%16s %s\x02 \x0314[%s]\x15' "$label" "$value" "$limit"
-        [[ $extinfo ]] && emit '    (%s)' "$extinfo"
+        if [[ $extinfo ]]; then
+          emit '    (%s)' "$extinfo"
+        fi
       }
 
       function emit-WARN {
         emit '\x037\x02%16s %s\x02 \x0314[%s]\x15' "$label" "$value" "$limit"
-        [[ $extinfo ]] && emit '    (%s)' "$extinfo"
+        if [[ $extinfo ]]; then
+          emit '    (%s)' "$extinfo"
+        fi
       }
 
       function emit-FOK {
         emit '\x033\x02%16s %s\x02\x15' "$label" "$value"
-        [[ $extinfo ]] && emit '    (%s)' "$extinfo"
+        if [[ $extinfo ]]; then
+          emit '    (%s)' "$extinfo"
+        fi
       }
 
       while [[ $1 ]]; do
@@ -102,6 +115,7 @@ in {
         echo "LINE '$level' '$label' '$value' '$limit' '$extinfo'" >&2
         emit-$level || echo 'FAIL' >&2
       done
+      echo 'EOF'
       emit '=== END ==='
     '')
   ];
