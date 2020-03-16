@@ -62,8 +62,10 @@ let
       ssh ${host} touch "${path}/${touch}"
 
       # mount the backup source
+      # no -o reconnect because this hangs the entire backup if the host
+      # goes offline for a long period of time, rather than cleanly aborting.
       ${pkgs.sshfs}/bin/sshfs ${host}:${path} /mnt/backup \
-        -o ro,reconnect,workaround=rename
+        -o ro,workaround=rename
       cd /mnt/backup
     '';
     postHook = ''
