@@ -61,12 +61,17 @@ in {
     gc.options = "--delete-older-than 60d";
   };
 
+  security.acme = {
+    email = "webmaster@ancilla.ca";
+    acceptTerms = true;
+  };
+
   environment.systemPackages = with pkgs; [
     beets
     calibre
     digikam # for digitaglinktree
     dnsutils
-    unstable.dosage
+    dosage
     elinks
     ipfs
     jq
@@ -80,10 +85,11 @@ in {
     #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     recoll  # log searching
     sshfs
+    slashem9
     skicka  # for backup upload to grive
     timg tiv
     weechat
-    unstable.youtube-dl # for downloading podcasts
+    youtube-dl # for downloading podcasts
     keybase keybase-gui # keybase chat
     notmuch alot gmailieer # mail reading
     doomrl
