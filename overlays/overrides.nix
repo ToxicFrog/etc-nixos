@@ -23,6 +23,9 @@ in {
   #     ./airsonic-podcast-order.patch
   #   ];
   # });
+  # youtube-dl = super.youtube-dl.overrideAttrs (oldAttrs: {
+  #   patches = [./youtube-dl.patch];
+  # });
   crossfire-server-latest = super.crossfire-server-latest.overrideAttrs (oldAttrs: {
     # Reset maps every 8h rather than every 2h.
     postConfigure = ''
@@ -30,6 +33,13 @@ in {
       sed -Ei 's,^#define MAP_DEFAULTRESET.*,#define MAP_DEFAULTRESET 28800,' include/config.h
     '';
   });
+  # jackett = super.jackett.overrideAttrs (oldAttrs: {
+  #   version = "0.12.1669";
+  #   src = super.fetchurl {
+  #     url = "https://github.com/Jackett/Jackett/releases/download/v${version}/Jackett.Binaries.LinuxAMDx64.tar.gz";
+  #     sha256 = "0008zjd8abkr72sjbzm51npxsjbk6xklfqd7iyaq3j0l5hxh6b8w";
+  #   };
+  # });
   munin = super.munin.overrideAttrs (oldAttrs: {
     # HACK HACK HACK
     # perl -T breaks makeWrapper
@@ -56,9 +66,5 @@ in {
                   ]}"
       done
     '';
-    #   postFixup = ''
-    #   sed -E -i "s/perl -T/perl/" "$out"/www/cgi/*
-
-    # '' + oldAttrs.postFixup;
   });
 }
