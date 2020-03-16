@@ -25,8 +25,7 @@
     xinit = pkgs.writeScript "bitburner-xinit" ''
       ${pkgs.ratpoison}/bin/ratpoison &
       exec ${pkgs.google-chrome}/bin/google-chrome-stable \
-        --user-data-dir=$HOME/Games/Bitburner \
-        https://danielyxie.github.io/bitburner/
+        --user-data-dir=$HOME/Games/Bitburner
     '';
   in {
     description = "Headless Bitburner session running in VNC";
