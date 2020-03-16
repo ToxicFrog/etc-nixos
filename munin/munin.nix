@@ -84,6 +84,7 @@
     extraPlugins = {
       http_traxus_onhub = ./http__onhub;
       borgbackup = ./borgbackup;
+      certificates = ./certificates;
     };
     extraPluginConfig = ''
       [df]
@@ -96,6 +97,9 @@
 
       [df_inode]
         env.exclude none unknown rootfs iso9660 squashfs udf romfs ramfs debugfs cgroup_root devtmpfs tmpfs nilfs2 vfat
+
+      [certificates]
+        env.domains ancilla.ancilla.ca music.ancilla.ca library.ancilla.ca phobos.ancilla.ca plex.ancilla.ca
 
       [http_traxus_onhub]
         env.name_64bc0cf4a1d3 symbol-phone
