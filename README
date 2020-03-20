@@ -1,0 +1,5 @@
+These are the NixOS configuration files for ancilla.
+
+Note that the history in this repo has been rewritten several times to remove stray PII. There is no guarantee that any historical commit functions correctly, or even compiles at all.
+
+Some parts of the configuration also depend on patches to nixpkgs or nixos that may not have been merged (or even published) yet.
