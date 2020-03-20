@@ -9,7 +9,7 @@ in {
       owner = "toxicfrog";
       repo = "doomrl-server";
       rev = "6ad7e07cc8fe2b87b6492f00b4c354a2f0392654";
-      sha256 = "000fkj4zjqjlh2cyfrcqjb7q87hyqsrb4y0756lhw5ag53a5ddc6";
+      sha256 = "03cafza49cy02imc38zx4bfdkny3v7gfs4hgx7sarsbs4igk04qb";
     };
 
     nativeBuildInputs = with self; [gnumake git lua5_3];
