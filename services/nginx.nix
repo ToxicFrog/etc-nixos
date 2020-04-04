@@ -26,7 +26,6 @@ in {
           sub_filter '</head>' '<script type="text/javascript" src="/ubreader.js"></script></head>';
           sub_filter_last_modified on;
           sub_filter_once on;
-          auth_basic off;
         '';
       };
       "ancilla" = {
