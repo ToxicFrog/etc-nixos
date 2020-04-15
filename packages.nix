@@ -15,7 +15,7 @@ in {
     gcc
     gdb
     gitAndTools.gitFull
-    git-crypt
+    git-crypt git-secrets
     gnumake
     # google-chrome
     hledger hledger-ui hledger-web
