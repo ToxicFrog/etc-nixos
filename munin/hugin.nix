@@ -53,7 +53,7 @@ in {
       while [[ $1 == -* ]]; do shift; done
       channel=$1; shift
 
-      [[ -d ~${user}/hugin/${server}/$user ]] || {
+      [[ -d ~${user}/hugin/${server}/$channel ]] || {
         # Join the channel if not already in it.
         echo "/j $channel" > ~${user}/hugin/${server}/in
       }
@@ -63,8 +63,8 @@ in {
         # fifo is closed. So if we send it the entire message at once it
         # ends up losing most of it.
         local fmt="$1"; shift
-        echo "EMIT /PRIVMSG $user :$fmt $@" >&2
-        printf "/PRIVMSG $user :$fmt\n" "$@" > ~${user}/hugin/${server}/in
+        echo "EMIT /PRIVMSG $channel :$fmt $@" >&2
+        printf "/PRIVMSG $channel :$fmt\n" "$@" > ~${user}/hugin/${server}/in
         echo "EMIT DONE" >&2
         sleep 1
       }
