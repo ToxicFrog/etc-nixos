@@ -9,7 +9,7 @@
   services.ipfs = {
     dataDir = "/srv/ipfs";
     defaultMode = "offline";  # Run HTTP API but don't link to other nodes.
-    enable = true;
+    enable = false;
     enableGC = true;
     gatewayAddress = "/ip4/127.0.0.1/tcp/8558";
     # extraFlags = ["--enable-namesys-pubsub"];
@@ -21,24 +21,4 @@
   # current is hexification of "ancilla.ancilla.ca ipfs swarm 00"
   # TODO: set up two ipfs daemons, one private for generating file shares, one
   # public for accessing/seeding the global IPFS swarm
-
-  services.nginx.virtualHosts."ancilla.ancilla.ca" = {
-    locations."@empty".extraConfig = ''
-      return 200 "";
-    '';
-    locations."/ipfs/".extraConfig = ''
-      proxy_set_header        Host ancilla:8558;
-      auth_basic off;
-      proxy_pass http://127.0.0.1:8558;
-      proxy_read_timeout 15s;
-      error_page 504 =404 @empty;
-    '';
-    locations."/ipns/".extraConfig = ''
-      proxy_set_header        Host ancilla:8558;
-      auth_basic off;
-      proxy_pass http://127.0.0.1:8558;
-      proxy_read_timeout 15s;
-      error_page 504 =404 @empty;
-    '';
-  };
 }
