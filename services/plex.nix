@@ -5,15 +5,7 @@
 let
   secrets = (import ../secrets/default.nix {});
 in {
-  users.users.airsonic.createHome = lib.mkForce false;
-
   services = {
-    airsonic = {
-      enable = true;
-      maxMemory = 256;
-      home = "/srv/airsonic";
-    };
-
     plex = {
       enable = true;
       openFirewall = true;
@@ -55,25 +47,27 @@ in {
         proxy_redirect off;
         proxy_buffering off;
       '';
+      locations."= /".extraConfig = ''
+        return 301 https://plex.ancilla.ca/web/index.html;
+      '';
       locations."/".extraConfig = ''
         proxy_pass    http://127.0.0.1:32400;
       '';
     };
-    nginx.virtualHosts."music.ancilla.ca" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/".extraConfig = ''
-        proxy_set_header        Host $host;
-        proxy_set_header        X-Real-IP $remote_addr;
-        proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header        X-Forwarded-Proto $scheme;
-        proxy_set_header        X-Forwarded-Host $host;
-        proxy_pass              http://127.0.0.1:4040;
-        proxy_redirect          http:// https://;
-        proxy_read_timeout      600s;
-        proxy_send_timeout      600s;
-        add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' www.gstatic.com; img-src 'self' *.akamaized.net; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; frame-src 'self'; object-src 'none'";
-      '';
-    };
   };
+
+  # Automatically turn off Helix's USB ports, thus shutting off the Chromecast,
+  # every night, so that it doesn't wake the screen back up and blast the entire
+  # room with light when it reboots for updates at 2am every morning.
+  # Seriously, why can't you turn that off?
+  systemd.services.chromecast-off = {
+    startAt = ["*-*-* 01:00:00"];
+    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/unbind'';
+  };
+  systemd.services.chromecast-on = {
+    startAt = ["*-*-* 09:00:00"];
+    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/bind'';
+  };
+
+
 }

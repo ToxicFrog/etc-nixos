@@ -14,20 +14,6 @@ in {
     recommendedOptimisation = true;
     recommendedTlsSettings = true;
     virtualHosts = {
-      "library.ancilla.ca" = {
-        forceSSL = true;
-        enableACME = true;
-        basicAuth = secrets.library-auth;
-        locations."/".proxyPass = "http://127.0.0.1:26657/";
-        locations."/comics".proxyPass = "http://127.0.0.1:2202";
-        locations."/comics/admin".proxyPass = "http://127.0.0.1:2203";
-        locations."= /ubreader.js".alias = pkgs.copyPathToStore ./ubreader.js;
-        locations."/comics".extraConfig = ''
-          sub_filter '</head>' '<script type="text/javascript" src="/ubreader.js"></script></head>';
-          sub_filter_last_modified on;
-          sub_filter_once on;
-        '';
-      };
       "ancilla" = {
         locations."/" = {
           extraConfig = "return 301 https://ancilla.ancilla.ca/;";

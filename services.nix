@@ -11,9 +11,10 @@ in {
     ./services/bitburner.nix
     ./services/bittorrent.nix
     ./services/borgbackup.nix
-    # ./services/ipfs.nix
-    ./services/media.nix
+    ./services/library.nix
     ./services/minecraft.nix
+    ./services/music.nix
+    ./services/plex.nix
     ./services/nginx.nix
     ./services/smb.nix
     ./secrets/personal-services.nix
@@ -21,15 +22,6 @@ in {
 
   users.users.git.createHome = lib.mkForce false;
   systemd.services.gitolite-init.after = ["local-fs.target"];
-
-  systemd.services.chromecast-off = {
-    startAt = ["*-*-* 01:00:00"];
-    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/unbind'';
-  };
-  systemd.services.chromecast-on = {
-    startAt = ["*-*-* 09:00:00"];
-    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/bind'';
-  };
 
   services = {
     keybase.enable = true;
@@ -137,23 +129,5 @@ in {
     description = "Update afraid.org DNS records (service)";
     serviceConfig.ExecStart = "${pkgs.curl}/bin/curl ${secrets.dyndns-url}";
     serviceConfig.Type = "oneshot";
-  };
-
-  users.users.ubooquity = {
-    isSystemUser = true;
-    description = "Ubooquity comic server";
-    home = "/srv/ubooquity";
-    createHome = false;
-  };
-  systemd.services.ubooquity = {
-    description = "Ubooquity Comic Reader";
-    after = ["network-online.target" "local-fs.target"];
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      User = "ubooquity";
-      Group = "nogroup";
-      ExecStart = "${pkgs.jre}/bin/java -jar Ubooquity.jar --headless --remoteadmin";
-      WorkingDirectory = "/srv/ubooquity";
-    };
   };
 }
