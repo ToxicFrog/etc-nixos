@@ -43,7 +43,7 @@ let
     readWritePaths = [
       "/backup/borg"
     ];
-    startAt = ["*-*-* 02,08,10,12,14:01:00"];
+    startAt = ["*-*-* 02,04,06:01:00"];
     dateFormat = "+%Y%m%d";
   } // removeAttrs opts ["name"]);
   borg-sshfs = {
