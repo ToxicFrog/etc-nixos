@@ -30,10 +30,6 @@ in {
         proxy_set_header Host "127.0.0.1:32400";
         proxy_set_header Referer "";
         proxy_set_header Origin "http://127.0.0.1:32400";
-        #proxy_set_header X-Real-IP $remote_addr;
-        #When using ngx_http_realip_module change $proxy_add_x_forwarded_for to '$http_x_forwarded_for,$realip_remote_addr'
-        #proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        #proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Sec-WebSocket-Extensions $http_sec_websocket_extensions;
         proxy_set_header Sec-WebSocket-Key $http_sec_websocket_key;
         proxy_set_header Sec-WebSocket-Version $http_sec_websocket_version;
@@ -50,9 +46,7 @@ in {
       locations."= /".extraConfig = ''
         return 301 https://plex.ancilla.ca/web/index.html;
       '';
-      locations."/".extraConfig = ''
-        proxy_pass    http://127.0.0.1:32400;
-      '';
+      locations."/".proxyPass = "http://127.0.0.1:32400";
     };
   };
 
