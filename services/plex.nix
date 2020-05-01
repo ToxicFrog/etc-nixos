@@ -62,6 +62,4 @@ in {
     startAt = ["*-*-* 09:00:00"];
     script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/bind'';
   };
-
-
 }
