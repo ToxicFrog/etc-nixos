@@ -15,6 +15,8 @@ in {
   #environment.systemPackages = with pkgs; [doomrl doomrl-server];
   #environment.pathsToLink = [ "/share/doomrl-server" "/opt/doomrl" ];
 
+  networking.firewall.allowedTCPPorts = [3666 3667];
+
   environment.etc."doomrl-server.conf" = {
     enable = true;
     uid = 666;

@@ -43,11 +43,7 @@ in {
     allowedTCPPorts = [
       22          # sshd
       80 443      # httpd
-      3666 3667   # doomrl telnet and websocket
-      25 465 587  # smtp
-      143 993     # imap
       8900        # weechat
-      5634        # kodi media library
       22000       # syncthing transfers
     ];
     allowedUDPPorts = [
