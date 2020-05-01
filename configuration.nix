@@ -11,7 +11,7 @@ in {
     ./users.nix
     ./packages.nix
     ./doomrl-server.nix
-    ./services.nix
+    ./services/default.nix
     ./overlays/default.nix
     ./secrets/netmount.nix
   ];

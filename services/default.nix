@@ -3,22 +3,22 @@
 { config, pkgs, lib, ... }:
 
 let
-  secrets = (import ./secrets/default.nix {});
+  secrets = (import ../secrets/default.nix {});
 in {
   imports = [
-    ./munin/munin.nix
-    ./munin/hugin.nix
-    ./services/bitburner.nix
-    ./services/bittorrent.nix
-    ./services/borgbackup.nix
-    ./services/library.nix
-    ./services/minecraft.nix
-    ./services/music.nix
-    ./services/plex.nix
-    ./services/nginx.nix
-    ./services/smb.nix
-    ./services/tv.nix
-    ./secrets/personal-services.nix
+    ../munin/munin.nix
+    ../munin/hugin.nix
+    ../secrets/personal-services.nix
+    ./bitburner.nix
+    ./bittorrent.nix
+    ./borgbackup.nix
+    ./library.nix
+    ./minecraft.nix
+    ./music.nix
+    ./plex.nix
+    ./nginx.nix
+    ./smb.nix
+    ./tv.nix
   ];
 
   users.users.git.createHome = lib.mkForce false;
