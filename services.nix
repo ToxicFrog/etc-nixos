@@ -17,6 +17,7 @@ in {
     ./services/plex.nix
     ./services/nginx.nix
     ./services/smb.nix
+    ./services/tv.nix
     ./secrets/personal-services.nix
   ];
 
