@@ -12,6 +12,7 @@ in {
     ./bitburner.nix
     ./bittorrent.nix
     ./borgbackup.nix
+    ./kanboard.nix
     ./library.nix
     ./minecraft.nix
     ./music.nix
