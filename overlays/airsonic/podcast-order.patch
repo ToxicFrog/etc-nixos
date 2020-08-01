@@ -1,0 +1,45 @@
+From 844a4b733ac3cc9b0b1fb3e2826a82bf4d828949 Mon Sep 17 00:00:00 2001
+From: "B. Kelly" <bk@ancilla.ca>
+Date: Mon, 20 Jan 2020 18:08:08 -0500
+Subject: [PATCH] sort podcasts in ascending order
+
+---
+ .../src/main/java/org/airsonic/player/dao/PodcastDao.java | 2 +-
+ .../java/org/airsonic/player/dao/PodcastDaoTestCase.java  | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/airsonic-main/src/main/java/org/airsonic/player/dao/PodcastDao.java b/airsonic-main/src/main/java/org/airsonic/player/dao/PodcastDao.java
+index 69fbeb71..0db0e3d8 100644
+--- a/airsonic-main/src/main/java/org/airsonic/player/dao/PodcastDao.java
++++ b/airsonic-main/src/main/java/org/airsonic/player/dao/PodcastDao.java
+@@ -124,7 +124,7 @@ public class PodcastDao extends AbstractDao {
+      */
+     public List<PodcastEpisode> getEpisodes(int channelId) {
+         String sql = "select " + EPISODE_QUERY_COLUMNS + " from podcast_episode where channel_id = ? " +
+-                     "and status != ? order by publish_date desc";
++                     "and status != ? order by publish_date asc";
+         return query(sql, episodeRowMapper, channelId, PodcastStatus.DELETED.name());
+     }
+ 
+diff --git a/airsonic-main/src/test/java/org/airsonic/player/dao/PodcastDaoTestCase.java b/airsonic-main/src/test/java/org/airsonic/player/dao/PodcastDaoTestCase.java
+index c5681399..d60852a5 100644
+--- a/airsonic-main/src/test/java/org/airsonic/player/dao/PodcastDaoTestCase.java
++++ b/airsonic-main/src/test/java/org/airsonic/player/dao/PodcastDaoTestCase.java
+@@ -134,10 +134,10 @@ public class PodcastDaoTestCase extends DaoTestCaseBean2 {
+ 
+         List<PodcastEpisode> episodes = podcastDao.getEpisodes(channelId);
+         assertEquals("Error in getEpisodes().", 4, episodes.size());
+-        assertEpisodeEquals(a, episodes.get(0));
+-        assertEpisodeEquals(c, episodes.get(1));
+-        assertEpisodeEquals(b, episodes.get(2));
+-        assertEpisodeEquals(d, episodes.get(3));
++        assertEpisodeEquals(a, episodes.get(3));
++        assertEpisodeEquals(c, episodes.get(2));
++        assertEpisodeEquals(b, episodes.get(1));
++        assertEpisodeEquals(d, episodes.get(0));
+     }
+ 
+ 
+-- 
+2.24.1
+
