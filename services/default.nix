@@ -17,6 +17,7 @@ in {
     ./minecraft.nix
     ./music.nix
     ./plex.nix
+    ./nfs.nix
     ./nginx.nix
     ./smb.nix
     ./tv.nix
