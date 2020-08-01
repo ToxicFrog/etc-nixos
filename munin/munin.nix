@@ -140,6 +140,7 @@
       "diskstat_*"    # conflicts with diskstat
       "munin_stats"   # broken on NixOS
       "port_*"        # don't care about this either
+      "proc"          # doesn't work
       "zfs_arcstats"  # doesn't support ZoL
       "zpool_iostat"  # TODO: replace with per-pool rather than per-disk iostat
     ];
