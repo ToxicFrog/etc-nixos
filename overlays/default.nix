@@ -5,6 +5,9 @@
     (callPackage ./tiv/default.nix {})
     (callPackage ./slashem9/slashem9.nix {})
   ];
+  imports = [
+    ./modules/borgbackup.nix
+  ];
   nixpkgs.overlays = [
     (import ./doomrl.nix)
     (import ./doomrl-server.nix)
