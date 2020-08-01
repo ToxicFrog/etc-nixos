@@ -7,7 +7,7 @@ let
 in {
   services = {
     plex = {
-      enable = true;
+      enable = false;
       openFirewall = true;
       dataDir = "/srv/plex";
       extraPlugins = [
@@ -54,12 +54,12 @@ in {
   # every night, so that it doesn't wake the screen back up and blast the entire
   # room with light when it reboots for updates at 2am every morning.
   # Seriously, why can't you turn that off?
-  systemd.services.chromecast-off = {
-    startAt = ["*-*-* 01:00:00"];
-    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/unbind'';
-  };
-  systemd.services.chromecast-on = {
-    startAt = ["*-*-* 09:00:00"];
-    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/bind'';
-  };
+  # systemd.services.chromecast-off = {
+  #   startAt = ["*-*-* 01:00:00"];
+  #   script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/unbind'';
+  # };
+  # systemd.services.chromecast-on = {
+  #   startAt = ["*-*-* 09:00:00"];
+  #   script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@helix tee /sys/bus/usb/drivers/usb/bind'';
+  # };
 }

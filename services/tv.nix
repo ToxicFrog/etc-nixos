@@ -5,7 +5,8 @@
 let
   secrets = (import ../secrets/default.nix {});
 in {
-  networking.firewall.allowedTCPPorts = [1900]; # DLNA discovery
+  networking.firewall.allowedTCPPorts = [8096]; # DLNA media fetch
+  networking.firewall.allowedUDPPorts = [1900 7359]; # DLNA discovery
   services = {
     jellyfin.enable = true;
     nginx.virtualHosts."tv.ancilla.ca" = {
@@ -26,5 +27,18 @@ in {
         '';
       };
     };
+  };
+
+  # Automatically turn off Oculus's USB ports, thus shutting off the Chromecast,
+  # every night, so that it doesn't wake the screen back up and blast the entire
+  # room with light when it reboots for updates at 2am every morning.
+  # Seriously, why can't you turn that off?
+  systemd.services.oculus-chromecast-off = {
+    startAt = ["*-*-* 01:00:00"];
+    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@oculus tee /sys/bus/usb/drivers/usb/unbind'';
+  };
+  systemd.services.oculus-chromecast-on = {
+    startAt = ["*-*-* 09:00:00"];
+    script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@oculus tee /sys/bus/usb/drivers/usb/bind'';
   };
 }
