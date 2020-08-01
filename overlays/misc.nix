@@ -3,6 +3,7 @@ self: super:
 let
   unstable = (import <nixos-unstable> { config.allowUnfree = true; });
 in {
+  recoll = super.recoll.override { withGui = false; };
   fuse = super.fuse.overrideAttrs (oldAttrs: {
     # Very hacky workaround to make sure that mount.fuse can search PATH:
     postPatch = (oldAttrs.postPatch or "") + ''
