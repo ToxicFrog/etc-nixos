@@ -29,11 +29,6 @@ in {
   networking.hostName = "ancilla";
   networking.domain = "ancilla.ca";
   networking.hostId = "c4262b22";
-  networking.extraHosts = ''
-   192.168.86.101 thoth
-   192.168.86.147 lector
-   192.168.86.148 maple
-  '';
 
   networking.firewall = {
     allowPing = true;
