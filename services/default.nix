@@ -46,9 +46,12 @@ in {
         map_max_reset: 604800
         map_default_reset: 86400
       '';
+
+    fail2ban = {
+      enable = true;
+      ignoreIP = ["192.168.86.0/24"];
     };
 
-    fail2ban.enable = true;  # temporarily disabled due to doing lots and lots of disk
     apcupsd = {
       enable = true;
       configText = ''
