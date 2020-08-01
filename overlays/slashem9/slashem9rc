@@ -1,0 +1,192 @@
+# Example configuration file for slashem9.
+# Settings listed here are the defaults.
+# Uncomment and edit them to change them.
+# Note that most of these options can be changed in-game, but will not be saved
+# unless you edit this file.
+
+# Display introductory messages, news, and fancy startup graphics?
+#OPTIONS=legacy,news,splash_screen
+
+
+###########################
+#### Character Options ####
+###########################
+
+# Character creation
+#OPTIONS=name:me
+#OPTIONS=gender:female,race:human,role:Tourist,align:neutral
+#OPTIONS=pettype:random
+
+# Pet naming
+#OPTIONS=catname:,dogname:,ghoulname:,horsename:,wolfname:
+
+# What's your favourite food?
+#OPTIONS=fruit:slime mold
+
+
+##################################
+#### Gameplay & Input Options ####
+##################################
+
+# Automatically dig walls & pickup items?
+#OPTIONS=!autodig
+#OPTIONS=autopickup,pickup_burden:stressed,pickup_types:all
+#OPTIONS=pickup_thrown
+
+# Show messages about sounds your character hears?
+#OPTIONS=acoustics
+
+# If equipping a weapon, push old weapon to offhand slot?
+#OPTIONS=!pushweapon
+
+# Add manually fired ammo to quiver?
+#OPTIONS=quiver_fired
+
+# Display menu when escape key pressed
+# Do not rest on spacebar
+# Turn off numpad (1=on, 2=on with DOS compatibility)
+#OPTIONS=menu_on_esc,!rest_on_space,number_pad:0
+
+# Display more messages about stuff
+#OPTIONS=verbose
+
+####################
+#### UI options ####
+####################
+
+# Classic (2-line) or NH4 (3-line) status window? Hitpoint bar?
+#OPTIONS=classic_status,hitpointbar
+
+# On (1), off (2) or auto based on tty size (3)
+#OPTIONS=windowborders:1
+
+# Show various extra bits of data in the status window?
+#OPTIONS=!showexp,!showrace,!showrealtime,!showscore,!showweight,time
+
+# Show damage taken in log messages?
+#OPTIONS=!showdmg
+
+# Use a menu to select extended #commands rather than completion?
+# TURNING THIS ON CURRENTLY CRASHES SLASHEM
+#OPTIONS=!extmenu
+
+# Look at objects by right-clicking on them. Doesn't seem to work.
+#OPTIONS=clicklook
+
+# UI layout: message and status window positions, and whether to permanently display
+# inventory on the right side.
+#OPTIONS=align_message:top,align_status:bottom,perm_invent
+
+# How to render menu headings, and what filtering options to display
+#OPTIONS=menu_headings:inverse,menustyle:full
+
+# Full screen message history on ctrl-P?
+#OPTIONS=msghistory:20,msg_window:full
+
+# When looting a chest, display i/o/b prompts or a/b/c?
+#OPTIONS=!lootabc
+
+#### Inventory ####
+
+# Try to keep items on the same letters if you drop them and pick them back up
+# Don't display weight on inventory screen
+#OPTIONS=fixinv
+
+# Don't display item weight, but do display item icons in inventory
+#OPTIONS=!invweight,menu_glyphs
+
+# Sort inventory contents based on item type
+#OPTIONS=sortpack,packorder:$")[%?+!=/(*`0_]
+
+
+#### End of game UI ####
+
+#OPTIONS=tombstone,toptenwin,scores:3 top/2 around,disclose:ni na nv ng nc
+
+
+##########################
+#### Graphics Options ####
+##########################
+
+# Use ASCII, UTF-8, or UTF-8 restricted to Windows Glyph List 4?
+# aka "ascii", "utf8", and "utf8compat".
+#OPTIONS=graphics:utf8compat
+
+#OPTIONS=color,guicolor,lit_corridor,sparkle,!standout
+
+# Object hilighting: pets, objects with stairs under them, and piles of >1 objects.
+#OPTIONS=hilite_pet,hilite_hidden_stairs,hilite_obj_piles
+
+# Enable colourized inventory and status pane, see more detailed settings at end
+#OPTIONS=menucolors,statuscolors
+
+# Use precise timer for delays, and don't BEL
+#OPTIONS=timed_delay,silent
+
+# When running, update the display every 7 turns
+#OPTIONS=runmode:run
+
+#### Help & Safety ####
+
+# Periodically autosave
+#OPTIONS=checkpoint
+
+# Display extra help for some commands and for common mistakes
+#OPTIONS=help,cmdassist
+
+# Confirm before doing potentially dangerous things
+#OPTIONS=confirm,prayconfirm,safe_pet
+
+# Use Curses popups for some things?
+#OPTIONS=!msg_is_alert,!popup_dialog
+
+
+#### Graphics Overrides ####
+
+# Boulders
+#OPTIONS=boulder:`
+
+# Dungeon drawing and VFX. See in-game help for details.
+# If UTF8 graphics are on, some of these might be overriden anyways...
+#OPTIONS=dungeon:...
+#OPTIONS=effects:...
+#OPTIONS=monsters:...
+#OPTIONS=objects:...
+#OPTIONS=traps:...
+
+
+############################
+#### Menucolor Settings ####
+############################
+
+# Valid colours: black red green brown blue magenta cyan gray orange
+# lightgreen yellow lightblue lightmagenta lightcyan white
+# none bold dim underline blink inverse
+
+# These are example settings, not the defaults.
+# MENUCOLOR=".*"=white
+# MENUCOLOR="blessed|holy"=lightblue
+# MENUCOLOR="cursed|unholy"=red
+# MENUCOLOR="cursed .* (being worn)"=orange&underline
+# MENUCOLOR="uncursed"=gray
+# MENUCOLOR="cancellation"=yellow&bold&inverse
+# MENUCOLOR="tricks"=yellow&bold&inverse
+# MENUCOLOR="holding"=yellow&bold&inverse
+
+##############################
+#### Statuscolor Settings ####
+##############################
+
+# These are example settings, not the defaults.
+# STATUSCOLOR=hp%100:green,hp%66:yellow,hp%33:red
+# STATUSCOLOR=hp%15:red&inverse,hp%5:orange&inverse
+# STATUSCOLOR=pw%100:green,pw%66:yellow,pw%33:red
+# STATUSCOLOR=burdened:yellow,stressed:red,strained:red&inverse
+# STATUSCOLOR=overtaxed:orange,overloaded:orange&inverse
+# STATUSCOLOR=satiated:green,hungry:yellow,weak:red
+# STATUSCOLOR=fainting:red&inverse,fainted:orange&inverse
+# STATUSCOLOR=hallu:yellow,conf:cyan,stun:red
+# STATUSCOLOR=ill:orange&inverse,foodpois:orange&inverse
+# STATUSCOLOR=slime:lightgreen&inverse
+# STATUSCOLOR=held:red&inverse,blind:red
+

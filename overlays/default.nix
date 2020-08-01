@@ -1,5 +1,10 @@
-{ ... }:
+{ pkgs, ... }:
 {
+  environment.systemPackages = with pkgs; [
+    (callPackage ./timg/default.nix {})
+    (callPackage ./tiv/default.nix {})
+    (callPackage ./slashem9/slashem9.nix {})
+  ];
   nixpkgs.overlays = [
     (import ./doomrl.nix)
     (import ./doomrl-server.nix)

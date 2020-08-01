@@ -77,9 +77,7 @@ in {
     #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     recoll  # log searching
     sshfs
-    slashem9
     skicka  # for backup upload to grive
-    timg tiv
     weechat
     youtube-dl # for downloading podcasts
     keybase keybase-gui # keybase chat
