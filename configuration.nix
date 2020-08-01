@@ -26,7 +26,8 @@ in {
 
   security.pki.certificateFiles = [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" ];
 
-  networking.hostName = "ancilla.ancilla.ca";
+  networking.hostName = "ancilla";
+  networking.domain = "ancilla.ca";
   networking.hostId = "c4262b22";
   networking.extraHosts = ''
    192.168.86.101 thoth
