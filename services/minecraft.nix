@@ -5,7 +5,7 @@
   networking.firewall.allowedTCPPorts = [25565];
 
   # Dynmap reverse proxy.
-  services.nginx.virtualHosts."ancilla.ancilla.ca".locations."/maps/".extraConfig = ''
+  services.nginx.virtualHosts."minecraft.ancilla.ca".locations."/".extraConfig = ''
     proxy_pass http://127.0.0.1:8123/;
     auth_basic off;
   '';
@@ -28,7 +28,7 @@
       Group = "nogroup";
       Restart = "no";
       WorkingDirectory = "/srv/minecraft";
-      ExecStart = "${pkgs.jdk}/bin/java -Xms512M -Xmx1G -XX:+UseConcMarkSweepGC -jar spigot-1.11.2.jar";
+      ExecStart = "${pkgs.jdk}/bin/java -Xms512M -Xmx1G -XX:+UseConcMarkSweepGC -jar spigot-1.16.1.jar";
     };
   };
 }
