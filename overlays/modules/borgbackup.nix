@@ -206,7 +206,6 @@ let
   };
 
 in {
-  disabledModules = [ "services/backup/borgbackup.nix" ];
   meta.maintainers = with maintainers; [ dotlambda ];
   # meta.doc = ./borgbackup.xml;
 

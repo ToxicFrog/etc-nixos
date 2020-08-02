@@ -5,8 +5,13 @@
     (callPackage ./tiv/default.nix {})
     (callPackage ./slashem9/slashem9.nix {})
   ];
+  disabledModules = [
+    "services/backup/borgbackup.nix"
+    "security/acme.nix"
+  ];
   imports = [
     ./modules/borgbackup.nix
+    ./modules/acme.nix
   ];
   nixpkgs.overlays = [
     (import ./doomrl.nix)
