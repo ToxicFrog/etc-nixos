@@ -43,11 +43,6 @@ in stdenv.mkDerivation rec {
   nativeBuildInputs = [ flex bison git pkg-config ];
 
   postPatch = ''
-    # It doesn't currently build without warnings.
-    sed '
-      s,CFLAGS += -Werror,#CFLAGS += -Werror,
-      s,-O0,-O,
-    ' -i Makefile
     # Unicode character for rocks -- placeholder until per-object glyph
     # configuration is supported.
     sed -E "
