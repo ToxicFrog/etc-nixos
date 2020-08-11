@@ -83,5 +83,7 @@ in {
     keybase keybase-gui # keybase chat
     notmuch alot gmailieer # mail reading
     doomrl
+    timg tiv
+    slashem9
   ];
 }
