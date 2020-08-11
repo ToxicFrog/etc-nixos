@@ -3,6 +3,9 @@ self: super:
 let
   unstable = (import <nixos-unstable> { config.allowUnfree = true; });
 in {
+  libmysofa = super.libmysofa.overrideAttrs (oldAttrs: {
+    cmakeFlags = [ "-DBUILD_TESTS=OFF" "-DCODE_COVERAGE=OFF" ];
+  });
   fuse = super.fuse.overrideAttrs (oldAttrs: {
     # Very hacky workaround to make sure that mount.fuse can search PATH:
     postPatch = (oldAttrs.postPatch or "") + ''
