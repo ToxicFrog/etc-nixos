@@ -1,5 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, options, ... }:
 {
+  # Proxy NIX_PATH to point at the same overlays defined in nixpkgs.overlays
+  nix.nixPath = options.nix.nixPath.default ++ [ "nixpkgs-overlays=/etc/nixos/overlays/compat/" ];
   environment.systemPackages = with pkgs; [
     (callPackage ./timg/default.nix {})
     (callPackage ./tiv/default.nix {})
