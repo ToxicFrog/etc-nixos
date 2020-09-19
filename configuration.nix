@@ -67,6 +67,7 @@ in {
     elinks
     ipfs
     jq
+    rsync
     jshon
     ffmpeg-full
     xxd pv exiftool fgallery imagemagick # for share
@@ -85,5 +86,6 @@ in {
     doomrl
     timg tiv
     slashem9
+    jdk14_headless
   ];
 }
