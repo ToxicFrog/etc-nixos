@@ -1,0 +1,38 @@
+diff --git a/include/config.h b/include/config.h
+index 178cc46..2e0c917 100644
+--- a/include/config.h
++++ b/include/config.h
+@@ -422,11 +422,12 @@
+  * Comment out MAP_MAXRESET time if you always want to use the value
+  * in the map archetype.
+  */
++/* TF -- changed to 1 week so I can do longer dungeons */
+ 
+ /** Maximum time to reset. */
+-#define MAP_MAXRESET    7200
++#define MAP_MAXRESET    604800
+ /** Default time to reset. */
+-#define MAP_DEFAULTRESET       7200
++#define MAP_DEFAULTRESET       604800
+ 
+ /**
+  * MAX_OBJECTS is no hard limit.  If this limit is exceeded, Crossfire
+@@ -535,7 +536,7 @@
+ #ifdef WIN32 /* change define path tmp */
+ #define TMPDIR "tmp"
+ #else
+-#define TMPDIR "/tmp"
++#define TMPDIR "/srv/crossfire/tmp"
+ #endif
+ 
+ /**
+@@ -680,7 +681,8 @@
+  *
+  * Set to one hour as default
+  */
+-#define RESET_LOCATION_TIME     3600
++/* TF -- 2 days */
++#define RESET_LOCATION_TIME     172800
+ 
+ /**
+  * Interval between heartbeat requests. If a client hasn't sent a command

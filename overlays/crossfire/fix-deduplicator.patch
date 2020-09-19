@@ -1,0 +1,13 @@
+diff --git a/server/player.c b/server/player.c
+index 5945214..b6c1d61 100644
+--- a/server/player.c
++++ b/server/player.c
+@@ -794,7 +794,7 @@ void give_initial_items(object *pl, treasurelist *items) {
+ 
+             found = 0;
+             FOR_BELOW_PREPARE(op, tmp)
+-                if (tmp->type == op->type && tmp->name == op->name) {
++                if (object_can_merge(op, tmp)) {
+                     found = 1;
+                     break;
+                 }
