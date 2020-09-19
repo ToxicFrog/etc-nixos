@@ -9,6 +9,7 @@ in {
   networking.firewall.allowedUDPPorts = [1900 7359]; # DLNA discovery
   services = {
     jellyfin.enable = true;
+    jellyfin.package = pkgs.jellyfin;
     nginx.virtualHosts."tv.ancilla.ca" = {
       forceSSL = true;
       enableACME = true;
