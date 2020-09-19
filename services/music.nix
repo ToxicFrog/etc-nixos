@@ -8,7 +8,7 @@
   services = {
     airsonic = {
       enable = true;
-      maxMemory = 256;
+      maxMemory = 512;
       home = "/srv/airsonic";
     };
 
