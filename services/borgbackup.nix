@@ -118,6 +118,7 @@ in {
       path = "/.";
       touch = "home/.borgbackup";
       minAge = weekly;
+      startAt = ["*-*-* 02,04,06,09,10,11:01:00"];
     };
     "funkyhorror" = borg-sshfs {
       name = "funkyhorror";
