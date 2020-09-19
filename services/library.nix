@@ -15,7 +15,8 @@ in {
     locations."/".proxyPass = "http://127.0.0.1:26657/";
     locations."/comics".proxyPass = "http://127.0.0.1:2202";
     locations."/comics/admin".proxyPass = "http://127.0.0.1:2203";
-    locations."= /ubreader.js".alias = pkgs.copyPathToStore ./ubreader.js;
+    locations."= /ubreader.js".alias = ./ubooquity/ubreader.js;
+    locations."/u/".alias = "${./ubooquity}/";
     locations."/comics".extraConfig = ''
       sub_filter '</head>' '<script type="text/javascript" src="/ubreader.js"></script></head>';
       sub_filter_last_modified on;

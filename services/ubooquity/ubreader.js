@@ -246,6 +246,10 @@ function installPageSeekBar(_) {
   let bar = document.getElementById("progressbar");
   if (!bar) return; // Not currently reading a book.
 
+  // Adjust the lower margin so that the Chrome status bar doesn't cover actual
+  // content.
+  document.getElementById("contentCanvas").style = "padding: 0 0 2em 0;";
+
   // Install a wrapper around $scope.loadPage() that properly updates the
   // page counter and seek bar. This is called every time a new page is
   // loaded, so it should keep things in sync...
@@ -297,9 +301,37 @@ function enableResumeSupport(_) {
   localStorage.setItem('ubreader:resume', '/comics/' + dirID);
 }
 
+function getUser() {
+  let info = document.getElementById('userinfo');
+  if (!info) return localStorage.getItem('ubreader:user');
+
+  let user = info.innerText.match('Connected as (.*) - Log out')[1];
+  localStorage.setItem('ubreader:user', user);
+  return user;
+}
+
+// TODO -- this doesn't actually set the taskbar icon when using chromium.
+// Investigate using Konquerer instead, which reportedly supports this.
+function setFavicon(_) {
+  var link;
+  while (link = document.querySelector("link[rel*='icon']")) {
+    link.parentNode.removeChild(link);
+  }
+  link = document.createElement('link');
+  link.type = 'image/x-icon';
+  link.rel = 'shortcut icon';
+  link.href = '/u/' + getUser() + '.png';
+  document.getElementsByTagName('head')[0].appendChild(link);
+  document.title = getUser() + " - " + document.title;
+}
+
 // It sometimes takes a few hundred millis after closing a book for the read
 // status to update on the server, so we delay briefly before loading
 // the read status.
 window.addEventListener('load', _ => { setTimeout(updateAllReadStatus, 1000); });
 window.addEventListener('load', installPageSeekBar);
 window.addEventListener('load', enableResumeSupport);
+// window.addEventListener('load', _ => {
+//   document.getElementById("")
+// });
+window.addEventListener('load', setFavicon)
