@@ -25,7 +25,8 @@ in {
   # as a rescue system with more capability (probably) than the initrd.
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-label/BOOT";
+    device = "/dev/disk/by-uuid/5A92-D54D";
+    # device = "/dev/sdg1";
     fsType = "vfat";
   };
 
