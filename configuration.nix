@@ -4,6 +4,7 @@
 
 let
   unstable = (import <nixos-unstable> { config.allowUnfree = true; });
+  stable-old = (import <nixos-20.03> { config.allowUnfree = true; });
 in {
   imports = [
     ./hardware-configuration.nix
@@ -60,7 +61,7 @@ in {
 
   environment.systemPackages = with pkgs; [
     beets
-    calibre
+    stable-old.calibre
     digikam # for digitaglinktree
     dnsutils
     dosage

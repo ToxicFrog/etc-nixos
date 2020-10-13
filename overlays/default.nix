@@ -18,13 +18,6 @@
     (import ./misc.nix)
     (import ./skicka)
     (self: super: {
-      calibre = super.calibre.overrideAttrs (attrs: rec {
-        version = "4.22.0";
-        src = super.fetchurl {
-          url = "https://download.calibre-ebook.com/${version}/${attrs.pname}-${version}.tar.xz";
-          sha256 = "0d0wmd3ijk8px1d662igal4lfmpyzynfzs6ms1bb9nf42mq2pxai";
-        };
-      });
       weechat-unwrapped = super.weechat-unwrapped.override { perl = super.perl530; };
       timg = super.callPackage ./timg {};
       tiv = super.callPackage ./tiv {};
