@@ -122,6 +122,7 @@
       [sensors_*]
         env.sensors sensors -c /etc/sensors3.conf
         env.ignore_temp4 true
+        env.volt_warn_percent 20
 
       [zfs_*]
         user root
