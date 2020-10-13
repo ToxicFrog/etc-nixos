@@ -5,11 +5,9 @@
   # Turn off these modules and replace them with our own versions with unmerged fixes.
   disabledModules = [
     "services/backup/borgbackup.nix"
-    "security/acme.nix"
   ];
   imports = [
     ./modules/borgbackup.nix
-    ./modules/acme.nix
     ./modules/crossfire-server.nix
   ];
   # Actual overlays.
