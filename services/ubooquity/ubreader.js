@@ -248,7 +248,7 @@ function installPageSeekBar(_) {
 
   // Adjust the lower margin so that the Chrome status bar doesn't cover actual
   // content.
-  document.getElementById("contentCanvas").style = "padding: 0 0 2em 0;";
+  // document.getElementById("contentCanvas").style = "padding: 0 0 2em 0;";
 
   // Install a wrapper around $scope.loadPage() that properly updates the
   // page counter and seek bar. This is called every time a new page is
@@ -275,6 +275,13 @@ function installPageSeekBar(_) {
   let val = $scope.currPageNb + 1;
   let max = $scope.nbPages;
   bar.innerHTML = '<input id="pageseekbar" type="range" name="page" min="1" max="'+max+'" value="'+val+'" onchange="seekPage(this.value)" oninput="updatePageCounter(this.value)">';
+
+  // Delete the empty 'href' attributes from the hotspots on the read page
+  // so that FF/chrome don't helpfully display a URL bar and cut off part
+  // of the comic.
+  document.getElementById('leftbar').removeAttribute('href');
+  document.getElementById('centerbar').removeAttribute('href');
+  document.getElementById('rightbar').removeAttribute('href');
 }
 
 // Add "resume last comic" functionality.
