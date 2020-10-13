@@ -19,6 +19,7 @@
     (import ./skicka)
     (self: super: {
       weechat-unwrapped = super.weechat-unwrapped.override { perl = super.perl530; };
+      etcd = super.etcd_3_4;
       timg = super.callPackage ./timg {};
       tiv = super.callPackage ./tiv {};
       slashem9 = super.callPackage ./slashem9/slashem9.nix {};

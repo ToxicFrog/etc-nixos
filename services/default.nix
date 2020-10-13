@@ -64,6 +64,9 @@ in {
     #   '';
     # };
 
+    etcd.enable = true;
+    etcd.dataDir = "/srv/etcd";
+
     fail2ban = {
       enable = true;
       ignoreIP = ["192.168.86.0/24"];
