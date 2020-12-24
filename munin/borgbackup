@@ -23,7 +23,7 @@ permissions on the repo are you may also need to set user and group accordingly.
 
 =head1 AUTHOR
 
-Written by B. Kelly
+Written by Rebecca Kelly (ToxicFrog)
 
 =head1 LICENSE
 
@@ -100,13 +100,8 @@ if [[ "$1" == "config" ]]; then
   exit 0
 fi
 
-# for fetch, try to acquire the lock, and if we can't immediately abort rather
-# than flailing around
-# There is a race condition here in that we might acquire the lock, continue
-# on our way, and while we're in the middle of working on this another borg
-# process starts up and claims the lock, evicting us after we've only emitted
-# half of the metrics.
-borg with-lock "$BORG_REPO" true || exit 1
+# TODO: if the repo is in use, fail gracefully here rather than failing when
+# borg info tries to acquire the lock further down.
 
 export now=$(date +%s)
 
