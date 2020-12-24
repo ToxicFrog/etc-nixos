@@ -7,6 +7,9 @@ let
 in {
   networking.firewall.allowedTCPPorts = [8096]; # DLNA media fetch
   networking.firewall.allowedUDPPorts = [1900 7359]; # DLNA discovery
+  users.users.jellyfin.extraGroups = ["render"]; # HW video codecs
+  hardware.opengl.enable = true;
+  hardware.opengl.extraPackages = with pkgs; [libvdpau-va-gl vaapiVdpau];
   services = {
     jellyfin.enable = true;
     jellyfin.package = pkgs.jellyfin;
