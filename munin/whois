@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+: << =cut
+
+=head1 NAME
+
+whois -- monitors the expiration date of domains
+
+=head1 CONFIGURATION
+
+This graph only has one mandatory setting:
+
+[whois]
+  env.domains example.com example.net example.org
+
+It will whois each domain to get expiration information. Domains are considered
+to be WARN at one year and CRITICAL at one month.
+
+You can optionally specify a hostname for it and a whois binary:
+
+[whois]
+  env.host_name example.com
+  env.whois /usr/local/bin/whois
+
+It will report itself as belonging to the node "example.com".
+
+=head1 AUTHOR
+
+Written by ToxicFrog
+
+=head1 LICENSE
+
+MIT
+
+=head1 MAGIC MARKERS
+
+ #%# family=contrib
+
+=cut
+
+set -e
+# source "${MUNIN_LIBDIR}/plugins/plugin.sh"
+
+whois=${whois:=whois}
+
+if [[ "$1" = "config" ]]; then
+  [[ $host_name ]] && echo "host_name $host_name"
+  echo 'graph_title Domain Lifetime'
+  echo 'graph_args --base 1000 -l 0'
+  echo 'graph_scale no'
+  echo 'graph_vlabel lifetime in days'
+  echo 'graph_info Time remaining before domain expiration'
+  echo 'graph_category network'
+  for domain in $domains; do
+    name="${domain//./_}"
+    echo "$name.label $domain"
+    echo "$name.warning 128:"
+    echo "$name.critical 32:"
+  done
+  exit 0
+fi
+
+now=$(date +%s)
+for domain in $domains; do
+  name="${domain//./_}"
+  expires="$(date +%s -d $($whois $domain | grep 'Registry Expiry' | cut -d: -f2-))"
+  echo "$name.value $(( (expires - now) / (60*60*24) ))"
+done

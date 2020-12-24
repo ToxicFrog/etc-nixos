@@ -93,6 +93,7 @@
       http_traxus_onhub = ./http__onhub;
       borgbackup = ./borgbackup;
       certificates = ./certificates;
+      whois = ./whois;
     };
     extraPluginConfig = ''
       [df]
@@ -109,6 +110,11 @@
       [certificates]
         env.domains ancilla.ancilla.ca music.ancilla.ca library.ancilla.ca phobos.ancilla.ca tv.ancilla.ca
         env.host_name ancilla.ca
+
+      [whois]
+        env.domains ancilla.ca
+        env.host_name ancilla.ca
+        env.whois ${pkgs.whois}/bin/whois
 
       [http_traxus_onhub]
         env.name_64bc0cf4a1d3 symbol-phone
