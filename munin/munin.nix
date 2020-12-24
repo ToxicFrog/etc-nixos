@@ -65,6 +65,9 @@
       use_node_name no
       address localhost
 
+      [ancilla.ca;thoth]
+      use_node_name yes
+      address thoth.ancilla.ca
     '';
     # Light on dark theme.
     extraCSS = ''
