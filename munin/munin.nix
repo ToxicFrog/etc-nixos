@@ -94,6 +94,7 @@
       borgbackup = ./borgbackup;
       certificates = ./certificates;
       whois = ./whois;
+      zpool_health = ./zpool_health;
     };
     extraPluginConfig = ''
       [df]
@@ -141,6 +142,9 @@
 
       [zpool_*]
         user root
+
+      [zpool_health]
+        env.zpool ${pkgs.zfs}/bin/zpool
     '';
     extraAutoPlugins = [
       /usr/src/munin-contrib/plugins/zfs
