@@ -60,6 +60,11 @@
       [ancilla.ca;traxus]
       use_node_name no
       address localhost
+
+      [ancilla.ca;ancilla.ca]
+      use_node_name no
+      address localhost
+
     '';
     # Light on dark theme.
     extraCSS = ''
@@ -99,7 +104,8 @@
         env.exclude none unknown rootfs iso9660 squashfs udf romfs ramfs debugfs cgroup_root devtmpfs tmpfs nilfs2 vfat
 
       [certificates]
-        env.domains ancilla.ancilla.ca music.ancilla.ca library.ancilla.ca phobos.ancilla.ca plex.ancilla.ca
+        env.domains ancilla.ancilla.ca music.ancilla.ca library.ancilla.ca phobos.ancilla.ca tv.ancilla.ca
+        env.host_name ancilla.ca
 
       [http_traxus_onhub]
         env.name_64bc0cf4a1d3 symbol-phone
