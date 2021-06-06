@@ -170,10 +170,26 @@ in {
       touch = "root/.borgbackup";
       minAge = daily;
     };
+    pladix = borg-sshfs {
+      name = "pladix";
+      path = "/.";
+      touch = "root/.borgbackup";
+      minAge = weekly;
+      startAt = ["*-*-* 02,04,06,08,09,10,11,16,17,18,19:01:00"];
+    };
+    isis = borg-sshfs {
+      name = "isis";
+      path = "/.";
+      touch = "root/.borgbackup";
+      minAge = weekly;
+      startAt = ["*-*-* 02,04,06,08,09,10,11,19,20,21:01:00"];
+    };
   };
   systemd.services = borg-ordering [
     "ancilla"
     "thoth"
+    "isis"
+    "pladix"
     "durandal"
     "godbehere.ca"
     "grandriverallbreedrescue.ca"
