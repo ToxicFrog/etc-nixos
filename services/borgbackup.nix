@@ -26,7 +26,7 @@ let
       "--exclude-caches"
       "--files-cache=mtime,size"
       "--exclude-if-present=.NOBACKUP"
-      "--compression=zstd"
+      "--compression=auto,zstd"
       "--patterns-from=${borgcfg}/${name}.borg"
     ];
     repo = "/backup/borg-repo";
@@ -42,8 +42,9 @@ let
     };
     readWritePaths = [
       "/backup/borg"
+      "/backup/cache"
     ];
-    startAt = ["*-*-* 02,04,06:01:00"];
+    startAt = ["*-*-* 02,04,06,13:01:00"];
     dateFormat = "+%Y%m%d";
   } // removeAttrs opts ["name"]);
   borg-sshfs = {
@@ -65,13 +66,40 @@ let
       # no -o reconnect because this hangs the entire backup if the host
       # goes offline for a long period of time, rather than cleanly aborting.
       ${pkgs.sshfs}/bin/sshfs ${host}:${path} /mnt/backup \
-        -o ro,workaround=rename
+        -o ro,workaround=rename,reconnect,ServerAliveInterval=15
       cd /mnt/backup
     '';
     postHook = ''
       cd
-      ${pkgs.fuse}/bin/fusermount -u -z /mnt/backup
+      echo ${pkgs.fuse}/bin/fusermount -u -z /mnt/backup
     '';
+  } // removeAttrs opts ["host" "path" "touch"]);
+  borg-rsync = {
+      name, touch,
+      host ? opts.name,
+      path ? ".",
+      ...} @ opts: borg ({
+    preHook = ''
+      ${preamble}
+
+      # Workaround for borgbackup dropping cache entries for the most recently
+      # modified files in the backup dataset, c.f.
+      # https://borgbackup.readthedocs.io/en/stable/faq.html#i-am-seeing-a-added-status-for-an-unchanged-file
+      # This also means that if we can't ssh into the host we'll abort before
+      # trying to rsync it.
+      ssh ${host} touch "${path}/${touch}"
+
+      # copy the backup source locally
+      # we use this approach for some hosts where sshfs is unreliable
+      mkdir -p /backup/cache/${name}
+      cd /backup/cache/${name}
+      ${pkgs.rsync}/bin/rsync -aSHAX ${host}:${path}/ ./ || err=$?
+      if ! (( err == 0 || err == 23 || err == 24 )); then
+        # 23/24 are "some files not transferred" errors; on all other errors we should abort
+        exit $err
+      fi
+    '';
+    postHook = "";
   } // removeAttrs opts ["host" "path" "touch"]);
   name-to-service = name: {
     name = name;
@@ -120,17 +148,17 @@ in {
       minAge = weekly;
       startAt = ["*-*-* 02,04,06,09,10,11:01:00"];
     };
-    "funkyhorror" = borg-sshfs {
+    "funkyhorror" = borg-rsync {
       name = "funkyhorror";
       touch = ".borgbackup";
       minAge = weekly;
     };
-    "godbehere.ca" = borg-sshfs {
+    "godbehere.ca" = borg-rsync {
       name = "godbehere.ca";
       touch = ".borgbackup";
       minAge = weekly;
     };
-    "grandriverallbreedrescue.ca" = borg-sshfs {
+    "grandriverallbreedrescue.ca" = borg-rsync {
       name = "GRABR.ca";
       host = "${secrets.grabr-user}@grandriverallbreedrescue.ca";
       touch = ".borgbackup";
