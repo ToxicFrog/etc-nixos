@@ -1,0 +1,6 @@
+# Patterns for /ancilla/media/photos
+# Back up everything except /links, which just includes hardlinks to the actual
+# photos generated from tag information.
+
+R ancilla/media/photos
+! ancilla/media/photos/links

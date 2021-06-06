@@ -1,0 +1,8 @@
+# Patterns for /ancilla/media/comics
+# Excludes WIP, includes everything else.
+# At some point I might want to prune this down to exclude stuff I can easily
+# re-download from the publisher and only include stuff I cobbled together
+# myself, if I need the space.
+
+R ancilla/media/comics
+! ancilla/media/comics/WIP
