@@ -47,7 +47,7 @@ let
     last_backup_time="$(
       borg list $extraArgs -P ${cfg.archiveBaseName}- --last 1 --json \
         | ${pkgs.jq}/bin/jq -r ".archives[0].start" \
-        | date -f - +%s)"
+        | date -f - +%s || echo 0)"
     last_backup_time=''${last_backup_time:-0}
     last_backup_age=$(( now - last_backup_time ))
     if (( last_backup_age <= ${toString cfg.minAge} )); then
