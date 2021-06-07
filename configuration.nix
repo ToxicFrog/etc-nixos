@@ -25,6 +25,9 @@ in {
   # Use a somewhat larger font on the tty.
   console.font = "sun12x22";
 
+  # Enable whatis/apropos.
+  documentation.man.generateCaches = true;
+
   security.pki.certificateFiles = [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" ];
 
   networking.hostName = "ancilla";
