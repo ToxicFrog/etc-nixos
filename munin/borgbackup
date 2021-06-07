@@ -35,11 +35,16 @@ MIT
 
 =cut
 
-# TODO: warn if deduplicated size exceeds thresholds
+# TODO: use a munin state file to keep track of what the last values we saw for
+# backup age were, and if we can't acquire the lock emit those instead; this
+# keeps everything from getting wedged when borg itself hangs. We can use
+# MUNIN_STATEFILE for this, maybe.
 
 set -e
+shopt -s lastpipe
 source "${MUNIN_LIBDIR}/plugins/plugin.sh"
 is_multigraph
+touch $MUNIN_STATEFILE
 
 function dimension {
   local name="${1//./_}"
@@ -115,19 +120,33 @@ function fdiv3 {
   printf '%04d' $(( ($1 * 1000) / $2 )) | sed -E 's,(...)$,.\1,'
 }
 
+function update_statefile {
+  sed -E -i "/^$1\t/ d" $MUNIN_STATEFILE
+  # format: prefix start_time original_size stored_size duration
+  printf '%s\t%d\t%d\t%d\t%f\n' $1 $2 $3 $4 $5 >> $MUNIN_STATEFILE
+}
+
 function values_for_prefix {
   local JSON="$(cat)"
   if [[ ! $JSON ]]; then
     # We weren't able to acquire the lock and/or there's no archives with this
-    # prefix.
-    return
+    # prefix. Fetch the latest data from MUNIN_STATEFILE instead so backup
+    # age counters keep incrementing.
+    local start original_size deduplicated_size duration
+    sed -n -E "/^$1\t/ p" $MUNIN_STATEFILE \
+    | read _ start original_size deduplicated_size duration || true
+  else
+    local start=$(json_value ".archives[0].start" | date -f - +%s)
+    local original_size=$(json_value ".archives[0].stats.original_size")
+    local deduplicated_size=$(json_value ".archives[0].stats.deduplicated_size")
+    local duration=$(json_value ".archives[0].duration")
+    update_statefile $1 $start $original_size $deduplicated_size $duration
   fi
-  local start=$(json_value ".archives[0].start" | date -f - +%s)
   echo "AGE ${1}_age.value $(( now - start ))"
   echo "AGERATIO ${1}_age_ratio.value $(fdiv3 $((now-start)) $(($2*3600)) )"
-  echo "SIZE ${1}_total_size.value $(json_value ".archives[0].stats.original_size")"
-  echo "DEDUP ${1}_dedup_size.value $(json_value ".archives[0].stats.deduplicated_size")"
-  echo "TIME ${1}_duration.value $(json_value ".archives[0].duration")"
+  echo "SIZE ${1}_total_size.value ${original_size}"
+  echo "DEDUP ${1}_dedup_size.value ${deduplicated_size}"
+  echo "TIME ${1}_duration.value ${duration}"
 }
 
 {
