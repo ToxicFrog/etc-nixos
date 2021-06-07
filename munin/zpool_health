@@ -67,14 +67,14 @@ graph_args --base 1000 -l 0
 graph_scale no
 graph_vlabel device count
 graph_info A breakdown of all block devices used in zpools by health status
+graph_order ONLINE RESILV SLOW ERROR OFFLINE REMOVED UNAVAIL
 EOF
   dimension ONLINE type:GAUGE draw:AREA colour:00ff00
-  dimension SLOW type:GAUGE draw:AREA colour:0080ff warning:0:0
-  for status in DEGRADED ERROR; do
-    dimension $status type:GAUGE draw:AREA colour:ff8000 warning:0:0
-  done
-  for status in OFFLINE REMOVED UNAVAIL FAULTED; do
-    dimension $status type:GAUGE draw:AREA colour:ff0000 critical:0:0
+  dimension RESILV type:GAUGE draw:STACK colour:00ffff warning:0:0
+  dimension SLOW type:GAUGE draw:STACK colour:0080ff warning:0:0
+  dimension ERROR type:GAUGE draw:STACK colour:ff8000 warning:0:0
+  for status in OFFLINE FAULTED REMOVED UNAVAIL; do
+    dimension $status type:GAUGE draw:STACK colour:ff0000 critical:0:0
   done
   exit 0
 fi
@@ -85,7 +85,10 @@ declare -A disks=()
 $ZPOOL status -LsP $pools \
 | fgrep /dev/ \
 | sed -E 's,[ \t]+,\t,g' \
-| while read dev state rerr werr cerr slow; do
+| while read dev state rerr werr cerr slow resilv; do
+    if [[ $resilv && $state == ONLINE ]]; then
+      state="RESILV"
+    fi
     if (( slow )) && [[ $state == ONLINE ]]; then
       state="SLOW"
     fi
@@ -94,6 +97,7 @@ $ZPOOL status -LsP $pools \
     fi
     (( disks[$state]++ ))
 done
-for state in ONLINE SLOW DEGRADED ERROR OFFLINE REMOVED UNAVAIL FAULTED; do
+# applies at zpool level only: DEGRADED
+for state in ONLINE RESILV SLOW ERROR OFFLINE FAULTED REMOVED UNAVAIL; do
   echo "$state.value ${disks[$state]:=0}"
 done
