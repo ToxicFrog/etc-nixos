@@ -29,10 +29,12 @@ in {
     ncdu
     nox
     p7zip
+    phantomjs2
     posix_man_pages
     python
     ledger-autosync
     python3
+    recode
     sshfsFuse
     stdmanpages
     taskwarrior
@@ -40,6 +42,7 @@ in {
     unrar
     unzip
     wget
+    wring
     zip
   ];
 }
