@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# Monitor biometric data written by hand into /ancilla/biometrics.
+# Currently this means the cat weight so that we get a time-series of Suzie's
+# and Epsi's weight, but it's easy to extend just by dropping more files in there.
+
+set -e
+source "${MUNIN_LIBDIR}/plugins/plugin.sh"
+is_multigraph
+
+if [[ "$1" == "config" ]]; then
+  echo "host_name meatspace"
+  for conf in /ancilla/biometrics/*; do
+    cat "$conf" \
+    | sed -En '
+      /^## config ##$/,/^##/ {
+        /^#/ d
+        /^$/ d
+        p
+      }
+    '
+  done
+  exit 0
+fi
+
+for conf in /ancilla/biometrics/*; do
+  cat "$conf" \
+  | sed -En '
+    /^## values ##$/,/^##/ {
+      /^#/ d
+      /^$/ d
+      p
+    }
+  '
+done

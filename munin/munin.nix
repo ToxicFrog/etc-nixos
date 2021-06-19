@@ -8,7 +8,12 @@
 
 { config, pkgs, lib, ... }:
 
-{
+let
+  muninConf =
+    (builtins.head (builtins.match ".*--config (/nix/store/[^ ]+munin.conf).*"
+                config.systemd.services.munin-cron.serviceConfig.ExecStart));
+
+in {
   services.fcgiwrap.enable = true;
   services.fcgiwrap.user = "munin";
   services.fcgiwrap.group = "nogroup";
@@ -22,7 +27,7 @@
       fastcgi_param QUERY_STRING $query_string;
       fastcgi_param SCRIPT_FILENAME ${pkgs.munin}/www/cgi/$fastcgi_script_name;
       fastcgi_param CGI_DEBUG true;
-      fastcgi_param MUNIN_CONFIG /nix/store/0w3pc1g8aqvnsfbb3lp3r47zp6ascvb7-munin.conf;
+      fastcgi_param MUNIN_CONFIG ${muninConf};
       fastcgi_param PATH_INFO $fastcgi_path_info;
       fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
     '';
@@ -34,6 +39,20 @@
       htmldir /srv/www/munin
       ssh_command /run/current-system/sw/bin/ssh
       cgitmpdir /var/lib/munin/cgi-tmp
+
+      # TODO
+      # migrate to larger RRDs
+      # this probably means:
+      # - shut off munin
+      # - rrdtool dump on all RRDs
+      # - delete all RRDs (snapshot first!)
+      # - run munin once to generate new RRDs
+      # - rrdtool import to populate new RRDs
+      # question: will rrdtool import be able to do the thing given that the new
+      # RRDs will have a different step size (5m/1h/1d rather than 5m/30m/2h/1d)
+      # and RRA count?
+      #graph_data_size custom 2d, 30m for 9d, 2h for 45d, 1d for 450d
+      graph_data_size custom 1t, 1h for 1y, 1d for 10y
 
       contact.irc.command /run/current-system/sw/bin/hugin "\#ancilla"
       contact.irc.max_messages 1
@@ -49,17 +68,25 @@
       use_node_name yes
       address localhost
 
-      [ancilla.ca;helix]
+      [ancilla.ca;openwrt]
       use_node_name no
-      address ssh://root@helix/
+      address openwrt
 
-      [ancilla.ca;oculus]
-      use_node_name no
-      address ssh://root@oculus/
+      #[ancilla.ca;oculus]
+      #use_node_name no
+      #address ssh://root@oculus/
 
       [ancilla.ca;traxus]
       use_node_name no
       address localhost
+
+      [ancilla.ca;pladix]
+      use_node_name yes
+      address pladix
+
+      [ancilla.ca;isis]
+      use_node_name yes
+      address isis
 
       [ancilla.ca;ancilla.ca]
       use_node_name no
@@ -68,15 +95,21 @@
       [ancilla.ca;thoth]
       use_node_name yes
       address thoth.ancilla.ca
+
+      [ancilla.ca;meatspace]
+      use_node_name no
+      address localhost
     '';
     # Light on dark theme.
     extraCSS = ''
       html, body { background: #222222; }
       #header, #footer { background: #333333; }
       body, h1, h2, h3, p, span, div { color: #888888; }
+      /*
       img.i, img.iwarn, img.icrit, img.iunkn {
-        filter: invert(100%) hue-rotate(-30deg);
+        filter: invert(1) hue-rotate(180deg) saturate(2);
       }
+      */
       #legend th { border-bottom: 1px solid #bbbbbb; }
       #legend .oddrow { background-color: #222222; }
       #legend .oddrow td { border-bottom: 1px solid #666666; }
@@ -84,6 +117,14 @@
       #legend .evenrow td { border-bottom: 1px solid #666666; }
     '';
   };
+
+  # Hack to invert luminance of graphs after munin-cron generates them.
+  systemd.services.munin-cron.postStart = ''
+    cd /srv/www/munin
+    ${pkgs.findutils}/bin/find ancilla.ca -name '*.png' -newer .inverted -exec \
+      ${pkgs.imagemagick}/bin/mogrify -colorspace HSL -channel B -negate +channel -colorspace sRGB '{}' ';'
+    touch .inverted
+  '';
 
   # Local node. This monitors ancilla directly and fetches data from other systems
   # on the network.
@@ -95,6 +136,7 @@
       certificates = ./certificates;
       whois = ./whois;
       zpool_health = ./zpool_health;
+      biometrics = ./biometrics;
     };
     extraPluginConfig = ''
       [df]
@@ -113,7 +155,7 @@
         env.host_name ancilla.ca
 
       [whois]
-        env.domains ancilla.ca
+        env.domains ancilla.ca godbehere.ca
         env.host_name ancilla.ca
         env.whois ${pkgs.whois}/bin/whois
 
@@ -124,7 +166,7 @@
 
       [borgbackup]
         user root
-        env.backup_prefixes ancilla::24 thoth::24 durandal::168 godbehere.ca::168 funkyhorror::168 GRABR.ca::168
+        env.backup_prefixes ancilla::24 thoth::24 pladix::168 isis::168 durandal::168 godbehere.ca::168 funkyhorror::168 GRABR.ca::168
         env.BORG_REPO /backup/borg-repo
         env.BORG_PASSCOMMAND cat /backup/borg/passphrase
         env.BORG_CONFIG_DIR /backup/borg/config

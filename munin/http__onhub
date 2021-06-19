@@ -182,8 +182,17 @@ function wifi_strength_dimensions {
   # Combine the new seenfile with the old, discarding old entries.
   cat "$SEENFILE" >> "$SEENFILE.new"
   local horizon=$(date -d "1 week ago" +%s)
+  >&2 echo "Seenfile contents before filtering:"
+  >&2 cat $SEENFILE.new
+  >&2 echo "---------"
   <"$SEENFILE.new" sort --reverse --stable | uniq -w 12 | while read mac ts name; do
-    if (( ts < horizon )); then continue; fi  # remove entries older than horizon
+    >&2 echo "Checking seenfile entry $mac ($name)..."
+    if (( ts < horizon )); then
+      # remove entries older than horizon
+      >&2 echo "  -> deleting: ts $ts < $horizon"
+      continue;
+    fi
+    >&2 echo "  -> keeping as $(name-for-wifi $mac $name)"
     echo "$mac $ts $(name-for-wifi $mac $name)"
   done >"$SEENFILE"
 
