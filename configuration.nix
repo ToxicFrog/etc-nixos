@@ -69,12 +69,13 @@ in {
 
   environment.systemPackages = with pkgs; [
     beets
-    stable-old.calibre
+    #stable-old.calibre
+    unstable.calibre
     digikam # for digitaglinktree
     dnsutils
     dosage
     elinks
-    ipfs
+    # ipfs
     jq
     rsync
     jshon
@@ -84,6 +85,7 @@ in {
     tmuxinator
     lm_sensors
     nodejs  # for discord-ircd
+    qbittorrent-nox
     #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     recoll  # log searching
     sshfs
@@ -94,7 +96,9 @@ in {
     notmuch alot gmailieer # mail reading
     doomrl
     timg tiv
-    slashem9
-    jdk14_headless
+    #slashem9 build currently broken
+    clojure leiningen
+    jdk
+    #jdk #jdk14_headless
   ];
 }
