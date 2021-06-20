@@ -41,6 +41,13 @@ in {
             autoindex on;
           '';
         };
+        locations."/pub/" = {
+          root = "/srv/www";
+          extraConfig = ''
+            auth_basic off;
+            autoindex on;
+          '';
+        };
         # etcd
         locations."/v3/kv/".extraConfig = ''
           proxy_pass http://127.0.0.1:2379/v3/kv/;
