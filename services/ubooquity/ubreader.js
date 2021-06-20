@@ -60,9 +60,10 @@ function updateAllReadStatus(_) {
     let pagelabel = document.getElementById("pagelabel");
     pagelabel.innerHTML =
       (all_read ?
-        '<a href="#" onclick="markAllUnread()" style="font-size:40px;"><b>❎</b></a>'
-        : '<a href="#" onclick="markAllRead()" style="font-size:40px;"><b>✅</b></a>')
-      + '<a href="#" onclick="location.reload();" style="font-size:40px;"><b>🔄</b></a>'
+        '<a href="#" onclick="markAllUnread()" style="font-size:40px;"><b>✘</b></a>'
+
+        : '<a href="#" onclick="markAllRead()" style="font-size:40px;"><b>✔</b></a>')
+      + '<a href="#" onclick="location.reload();" style="font-size:40px;"><b>⟳</b></a>'
     pagelabel.setAttribute("class", "");
   })
 }
@@ -87,6 +88,10 @@ window.markAllUnread = function() {
       }
     });
   Promise.all(promises).then(_ => updateAllReadStatus());
+}
+
+function getBubble(cell) {
+  return cell.getElementsByClassName("numberblock")[0].innerText;
 }
 
 // Fetch and display read marker for one comic, identified by cell (the div
@@ -127,9 +132,9 @@ function updateReadStatus(cell, id) {
       // It's a book.
       cell.is_book = true;
       if (page <= 0) {
-        addBubble(cell, total + " 📕");
+        addBubble(cell, total + " 📕"); // CLOSED BOOK
       } else if (page < total) {
-        addBubble(cell, "<b>" + page + "/" + total + " 📖</b>");
+        addBubble(cell, "<b>" + page + "/" + total + " 📖</b>"); // OPEN BOOK
       } else {
         addBubble(cell, "✓");
       }
@@ -138,14 +143,18 @@ function updateReadStatus(cell, id) {
       // It's a directory.
       cell.is_book = false;
       if (page <= 0) {
-        addBubble(cell, (total>0? total:"?") + " 📁");
+        // We don't know how much stuff is in it -- but we should be able to
+        // tell from the contents of the bubble before we overwrite it.
+        // For now just slap down a "?".
+        if (total <= 0) total = getBubble(cell);
+        addBubble(cell, (total>0? total:"?") + " 📁"); // CLOSED FOLDER
       } else if (page < total) {
-        addBubble(cell, "<b>" + page + "/" + total + " 📂</b>");
+        addBubble(cell, "<b>" + page + "/" + total + " 📂</b>"); // OPEN FOLDER
       } else {
         addBubble(cell, total + " ✓"); //✔
       }
     }
-    return page == total;
+    return page == total && total > 0;
   })
 }
 
