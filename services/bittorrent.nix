@@ -3,10 +3,14 @@
 { config, pkgs, lib, ... }:
 
 {
-  users.extraUsers.deluge.home = lib.mkForce "/ancilla/torrents/deluge";
-  users.extraUsers.deluge.createHome = lib.mkForce false;
-  users.extraUsers.deluge.group = "deluge";
-  users.groups.deluge.gid = 83;
+  users.extraGroups.deluge.gid = 83;
+  users.extraUsers.deluge = {
+    home = lib.mkForce "/ancilla/torrents/deluge";
+    createHome = lib.mkForce false;
+    group = "deluge";
+    isSystemUser = true;
+  };
+
   systemd.services.qbittorrentd = {
     description = "QBittorrent daemon";
     wantedBy = ["multi-user.target"];
@@ -32,22 +36,21 @@
     { from = 8000; to = 8050; }
   ];
 
-    jackett.enable = true;
+  services.jackett.enable = true;
 
-    nginx.virtualHosts."ancilla.ancilla.ca".locations = {
-      "/qbt/".extraConfig = ''
-        proxy_pass              http://127.0.0.1:9091/;
-        add_header              X-Frame-Options SAMEORIGIN;
-        proxy_set_header        X-Forwarded-Host $http_host;
-        proxy_read_timeout      600s;
-        proxy_send_timeout      600s;
-        http2_push_preload      on;
-      '';
-      "/jackett/".extraConfig = ''
-        proxy_pass              http://127.0.0.1:9117;
-        proxy_read_timeout      600s;
-        proxy_send_timeout      600s;
-      '';
-    };
+  services.nginx.virtualHosts."ancilla.ancilla.ca".locations = {
+    "/qbt/".extraConfig = ''
+      proxy_pass              http://127.0.0.1:9091/;
+      add_header              X-Frame-Options SAMEORIGIN;
+      proxy_set_header        X-Forwarded-Host $http_host;
+      proxy_read_timeout      600s;
+      proxy_send_timeout      600s;
+      http2_push_preload      on;
+    '';
+    "/jackett/".extraConfig = ''
+      proxy_pass              http://127.0.0.1:9117;
+      proxy_read_timeout      600s;
+      proxy_send_timeout      600s;
+    '';
   };
 }

@@ -9,7 +9,7 @@ let
       paths = paths;
       preferLocalBuild = true;
       allowSubstitutes = false;
-      passAsFile = "paths";
+      passAsFile = ["paths"];
     } ''
       umask
       mkdir -p $out

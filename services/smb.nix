@@ -8,7 +8,6 @@
   networking.firewall.allowedUDPPorts = [ 137 138 ];
   services.samba = {
     enable = true;
-    syncPasswordsByPam = true;
     extraConfig = ''
     guest account = nobody
     map to guest = Bad User
