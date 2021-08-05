@@ -22,11 +22,6 @@ in {
   time.timeZone = lib.mkDefault "America/Toronto";
   programs.zsh.enable = true;
 
-  hardware.opengl = {
-    enable = true;
-    driSupport32Bit = true;
-  };
-
   # Use a somewhat larger font on the tty.
   console.font = "sun12x22";
 
@@ -95,6 +90,7 @@ in {
     keybase keybase-gui # keybase chat
     notmuch alot gmailieer # mail reading
     doomrl
+    unstable.steam
     timg tiv
     #slashem9 build currently broken
     clojure leiningen
