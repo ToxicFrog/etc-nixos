@@ -4,33 +4,50 @@
 
 let
   secrets = (import ../secrets/default.nix {});
+  unstable = (import <nixos-unstable> {});
 in {
   imports = [
     ../munin/munin.nix
     ../munin/hugin.nix
     ../secrets/personal-services.nix
-    ./bitburner.nix
     ./bittorrent.nix
     ./borgbackup.nix
     ./kanboard.nix
     ./library.nix
     ./minecraft.nix
+    ./matrix.nix
     ./music.nix
-    ./plex.nix
     ./nfs.nix
     ./nginx.nix
     ./smb.nix
     ./tv.nix
+    ./vncdesktop.nix
   ];
 
   users.users.git.createHome = lib.mkForce false;
   systemd.services.gitolite-init.after = ["local-fs.target"];
 
+  # CUPS
+  networking.firewall.allowedTCPPorts = [ 21 631 ];
   services = {
+    avahi = {
+      enable = true;
+      publish.enable = true;
+      publish.userServices = true;
+    };
+    printing = {
+      allowFrom = ["all"];
+      browsing = true;
+      defaultShared = true;
+      drivers = with pkgs; [ samsung-unified-linux-driver_1_00_37 ];
+      enable = true;
+      listenAddresses = ["*:631"];
+    };
+
     keybase.enable = false;
     kbfs.enable = false;
     crossfire-server = {
-      enable = true;
+      enable = false;
       openFirewall = true;
       etc.settings = ''
         # Reduce stats with depletion on death rather than editing the character sheet.
@@ -83,7 +100,7 @@ in {
     };
     bitlbee = {
       enable = true;
-      plugins = with pkgs; [ bitlbee-facebook bitlbee-steam ];
+      plugins = with pkgs; [ unstable.bitlbee-facebook unstable.bitlbee-steam ];
       # libpurple_plugins = with pkgs; [ purple-hangouts ];
     };
 
@@ -132,8 +149,44 @@ in {
       enable = true;
       forwardX11 = true;
       allowSFTP = true;
-      # permitRootLogin = "yes";
+      kexAlgorithms = lib.mkOptionDefault [
+        "diffie-hellman-group14-sha1"
+      ];
+      macs = lib.mkOptionDefault [
+        "hmac-sha1"
+      ];
+      extraConfig = ''
+        Match user scanner
+          ForceCommand ${pkgs.openssh}/libexec/sftp-server
+          X11Forwarding no
+          AllowTcpForwarding no
+      '';
     };
+
+    ssmtp = {
+      enable = true;
+      domain = "ancilla.ca";
+      hostName = "ancilla.ancilla.ca";
+      root = "root@ancilla.ca";
+      useTLS = true;
+      useSTARTTLS = true;
+      settings = {
+        mailhub = "smtp.distributel.com";
+        TLS_CA_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+      };
+    };
+  };
+
+  users.users.scanner = {
+    isSystemUser = true;
+    description = "ADS-1700W scanner receptron";
+    openssh.authorizedKeys.keys = [
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDujmZgyB8AO4rpcDokqM74EbD3Vm7gDvMHIliLzlWfqFEU3ItwkFQelHzYGDrZ/M9IE1jAvYjyZ7ylhyq/tYLmPkZMa42rzAO1yDRMy8dPC5g9kFFcswbFrqt4ExOlRgzdX/Dhz/zS6Fj46DpSBzfU7UWbBAR+gu5MVqUBo4ZY3QBmgj7Uhb1rTgPTIVSIlPUU/pPyXgA1FYgekcXP5Kl9Vpz6rNlDcnHBJNLr+X+fxKeidUSZRl+1rLwnlQTeWwscnCZpzPwfzLFc6bt6Tjtke0WxVKQI+q2D9jHxeF3Msw3iTioI05bDnkeYezd8azTcEGfqbt5IF79iUpJnRBF1 root@BR5CF3704E4CEA"
+      "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA1vSpVbx5fVJIK502nZl2ddk9VIbo7H06Up6eqk5brnFJG06gn9RtztFpIZaSUmDtdIlb9X0wSGGoiWGkwithc/79SvulOZD1X1DgNjjxIgXnNR1qlXm5ZjqjbWvL2NPKmyO7BP7IA1B0YkEj6sIQL7FWi7uIV/04qI/xSKPtGbhFtS+qoskv5p1GwhlJOuk3zKHJ7tue/CIiT8HEBl3OSGlQazItPOjLf4jkw7aE6Bl5pU8vbruUVry/SrXBo4AQw80H5Np6GCPrGj5eCDmsT4E+e5SZmaF414ih9YL6dtGXWWI2k13su9A3/OZ+UNx6Oz3iEoarkBPpap9VnhrbRQ== rebecca@thoth.ancilla.ca"
+    ];
+    home = "/ancilla/scans";
+    createHome = false;
+    useDefaultShell = true;
   };
 
   # Crank the inotify limit waaaaay up there for syncthing.

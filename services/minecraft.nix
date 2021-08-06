@@ -22,14 +22,14 @@
     description = "Minecraft Server";
     after = [ "network.target" ];
     wantedBy = []; #[ "multi-user.target" ];
-    enable = false;
+    enable = true;
     serviceConfig = {
       User = "minecraft";
       Group = "nogroup";
       Restart = "no";
       WorkingDirectory = "/srv/minecraft";
       # ExecStart = "${pkgs.jdk}/bin/java -Xms512M -Xmx1G -XX:+UseConcMarkSweepGC -jar spigot-1.16.1.jar";
-      ExecStart = "${pkgs.jdk14}/bin/java -Xms512M -Xmx2G -XX:+UseConcMarkSweepGC -jar paper.jar --universe worlds/";
+      ExecStart = "${pkgs.jdk}/bin/java -Xms512M -Xmx2G -XX:+UseConcMarkSweepGC -jar paper.jar --universe worlds/";
     };
   };
 }
