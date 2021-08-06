@@ -5,6 +5,9 @@
 {
   users.users.airsonic.createHome = lib.mkForce false;
 
+  disabledModules = ["services/misc/airsonic.nix"];
+  imports = [./airsonic-advanced.nix];
+
   services = {
     airsonic = {
       enable = true;
