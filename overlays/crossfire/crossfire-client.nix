@@ -1,4 +1,8 @@
-{ pkgs, stdenv, fetchsvn, version, rev, sha256 }:
+{ stdenv, lib, fetchsvn,
+  cmake, pkg-config, perl, vala,
+  gtk2, pcre, zlib, libpng, fribidi, harfbuzzFull, xorg, utillinuxMinimal, curl,
+  SDL, SDL_image, SDL_mixer, libselinux, libsepol,
+  version, rev, sha256 }:
 
 stdenv.mkDerivation rec {
   version = "r${toString rev}";
@@ -10,12 +14,12 @@ stdenv.mkDerivation rec {
     rev = rev;
   };
 
-  nativeBuildInputs = with pkgs; [cmake pkg-config perl vala];
-  buildInputs = with pkgs; [gtk2 pcre zlib libpng fribidi harfbuzzFull xorg.libpthreadstubs
+  nativeBuildInputs = [cmake pkg-config perl vala];
+  buildInputs = [gtk2 pcre zlib libpng fribidi harfbuzzFull xorg.libpthreadstubs
     xorg.libXdmcp utillinuxMinimal curl SDL SDL_image SDL_mixer libselinux libsepol];
   hardeningDisable = [ "format" ];
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "GTKv2 client for the Crossfire free MMORPG";
     homepage = "http://crossfire.real-time.com/";
     license = licenses.gpl2;

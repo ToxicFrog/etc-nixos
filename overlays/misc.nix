@@ -14,11 +14,11 @@ in {
         util/mount.fuse.c
     '';
   });
-  bitlbee = super.bitlbee.overrideAttrs (oldAttrs: {
-    name = "${oldAttrs.name}+purple";
-    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [self.pidgin];
-    configureFlags = oldAttrs.configureFlags ++ ["--purple=1" "--jabber=1"];
-  });
+#  bitlbee = super.bitlbee.overrideAttrs (oldAttrs: {
+#    name = "${oldAttrs.name}+purple";
+#    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [self.pidgin];
+#    configureFlags = oldAttrs.configureFlags ++ ["--purple=1" "--jabber=1"];
+#  });
   crossfire-server-latest = super.crossfire-server-latest.overrideAttrs (oldAttrs: {
     # Reset maps every 8h rather than every 2h.
     postConfigure = ''
