@@ -7,8 +7,8 @@ let
 in {
   # Needed for VNC
   fonts = {
+    fontDir.enable = true;
     enableDefaultFonts = true;
-    enableFontDir = true;
     enableGhostscriptFonts = true;
     fontconfig.cache32Bit = true;
     fonts = with pkgs; [
