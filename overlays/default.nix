@@ -26,11 +26,7 @@
     (import ./misc.nix)
     (import ./skicka)
     (self: super: {
-      weechat-unwrapped = super.weechat-unwrapped.override { perl = super.perl530; };
-      # jellyfin = super.jellyfin.override { ffmpeg = super.ffmpeg-full; };
       etcd = super.etcd_3_4;
-      timg = super.callPackage ./timg {};
-      tiv = super.callPackage ./tiv {};
       slashem9 = super.callPackage ./slashem9/slashem9.nix {};
       crossfire-arch = super.callPackage ./crossfire/crossfire-arch.nix {
         version = "latest"; rev = 21388;
@@ -75,7 +71,6 @@
         name = "airsonic-advanced-${version}";
         src = /srv/airsonic/airsonic-advanced-11.0.20210803.war;
       });
-      mavenix = super.callPackage /home/rebecca/src/mavenix {};
       jackett = super.jackett.overrideAttrs (oldAttrs: rec {
         version = "0.17.946";
         src = super.fetchurl {
@@ -102,6 +97,7 @@
         };
         nativeBuildInputs = with super; [ cmake pkg-config ];
       });
+      # jellyfin = super.jellyfin.override { ffmpeg = super.ffmpeg-full; };
       # jellyfin = super.jellyfin.overrideAttrs (oldAttrs: rec {
       #   version = "10.6.2";
       #   src = super.fetchurl {
