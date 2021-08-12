@@ -20,6 +20,7 @@ in {
     ./nfs.nix
     ./nginx.nix
     ./smb.nix
+    ./timelapse.nix
     ./tv.nix
     ./vncdesktop.nix
   ];
