@@ -5,6 +5,7 @@
 let
   secrets = (import ../secrets/default.nix {});
   unstable = (import <nixos-unstable> {});
+  localpkgs = (import /home/rebecca/devel/nixpkgs {});
 in {
   imports = [
     ../munin/munin.nix
@@ -48,34 +49,36 @@ in {
     keybase.enable = false;
     kbfs.enable = false;
     crossfire-server = {
-      enable = false;
+      enable = true;
       openFirewall = true;
-      etc.settings = ''
-        # Reduce stats with depletion on death rather than editing the character sheet.
-        stat_loss_on_death false
-        # Penalize newbies less and experienced players more.
-        balanced_stat_loss true
-        # Persist temp maps across runs.
-        #recycle_tmp_maps true
-        # Show HP bars for damaged entities.
-        always_show_hp damaged
-      '';
-      etc.news = ''
-        %Welcome to the ancilla crossfire server!
-        This server runs CF trunk, sometimes with local bugfixes. It also has a long map reset time (1 week).
-        It is still under construction and created characters will often be [u]deleted without warning[/u] while the server is still being set up. Don't get too attached!
+      configFiles = {
+        settings = ''
+          # Reduce stats with depletion on death rather than editing the character sheet.
+          stat_loss_on_death false
+          # Penalize newbies less and experienced players more.
+          balanced_stat_loss true
+          # Persist temp maps across runs.
+          #recycle_tmp_maps true
+          # Show HP bars for damaged entities.
+          always_show_hp damaged
+        '';
+        news = ''
+          %Welcome to the ancilla crossfire server!
+          This server runs CF trunk, sometimes with local bugfixes. It also has a long map reset time (1 week).
+          It is still under construction and created characters will often be [u]deleted without warning[/u] while the server is still being set up. Don't get too attached!
 
-        %Current test items
-        Extended spellbook names
-        Spell/skill descriptions in spellbooks/scrolls/wands/etc
-      '';
-      etc.dm_file = secrets.crossfire-dmfile;
-      package = pkgs.crossfire-server-latest;
+          %Current test items
+          Extended spellbook names
+          Spell/skill descriptions in spellbooks/scrolls/wands/etc
+        '';
+        dm_file = secrets.crossfire-dmfile;
+      };
     };
+
     # deliantra-server = {
-    #   enable = false;
+    #   enable = true;
     #   openFirewall = true;
-    #   config = ''
+    #   configFiles.config = ''
     #     checkrusage: { vmsize: 2147483648 }
     #     map_max_reset: 604800
     #     map_default_reset: 86400
