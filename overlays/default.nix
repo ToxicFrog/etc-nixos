@@ -41,9 +41,7 @@ in {
           ];
         };
       };
-      crossfire-server = localpkgs.crossfire-server;
-      deliantra-server = localpkgs.deliantra-server;
-      deliantra-data = localpkgs.deliantra-data;
+      # TODO: crossfire should still include the patches for compiled-in config changes
       youtube-dlc = super.youtube-dl.overrideAttrs (attrs: rec {
         name = "youtube-dl";
         pname = "youtube-dlc";
