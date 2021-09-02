@@ -1,5 +1,9 @@
 { pkgs, options, lib, ... }:
-{
+
+let
+  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
+  localpkgs = (import /home/rebecca/devel/nixpkgs {});
+in {
   # Proxy NIX_PATH to point at the same overlays defined in nixpkgs.overlays
   # TODO: this means that overlays only take effect on nixos-rebuild. It would be nice
   # if they took effect (for nix-shell etc) immediately...
@@ -16,7 +20,8 @@
   ];
   imports = [
     ./modules/borgbackup.nix
-    ./modules/crossfire-server.nix
+    /home/rebecca/devel/nixpkgs/nixos/modules/services/games/crossfire-server.nix
+    /home/rebecca/devel/nixpkgs/nixos/modules/services/games/deliantra-server.nix
   ];
   # Actual overlays.
   nixpkgs.overlays = [
@@ -28,20 +33,17 @@
     (self: super: {
       etcd = super.etcd_3_4;
       slashem9 = super.callPackage ./slashem9/slashem9.nix {};
-      crossfire-arch = super.callPackage ./crossfire/crossfire-arch.nix {
-        version = "latest"; rev = 21388;
-        sha256 = "0385icnzvxm2pkjrkr7bikm7vydwx94xqii9jzq3li864wmcq6rk";
+      weechat = super.weechat.override {
+        configure = { availablePlugins, ... }: {
+          scripts = with unstable.pkgs.weechatScripts; [
+            unstable.pkgs.weechatScripts.weechat-matrix
+            pkgs.weechatScripts.multiline
+          ];
+        };
       };
-      crossfire-maps = super.callPackage ./crossfire/crossfire-maps.nix {
-        version = "latest"; rev = 21388;
-        sha256 = "05g7lr4yzcb98q698b8h44h7rw6h1kbfbhn2nqkhn3ymr5j6fcr2";
-      };
-      crossfire-server-latest = super.callPackage ./crossfire/crossfire-server.nix {
-        version = "latest"; rev = 21388;
-        sha256 = "09chf8sqw5w7sm02k13kcrvh4fibsmj31cxp8gnprk9fcj581fc3";
-        maps = self.crossfire-maps;
-        arch = self.crossfire-arch;
-      };
+      crossfire-server = localpkgs.crossfire-server;
+      deliantra-server = localpkgs.deliantra-server;
+      deliantra-data = localpkgs.deliantra-data;
       youtube-dlc = super.youtube-dl.overrideAttrs (attrs: rec {
         name = "youtube-dl";
         pname = "youtube-dlc";
