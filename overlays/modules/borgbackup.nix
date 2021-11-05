@@ -45,7 +45,7 @@ let
     # Check if the backup is old enough.
     now=$(date +%s)
     last_backup_time="$(
-      borg list $extraArgs -P ${cfg.archiveBaseName}- --last 1 --json \
+      borg list $extraArgs --glob-archives "${cfg.archiveBaseName}-????????" --last 1 --json \
         | ${pkgs.jq}/bin/jq -r ".archives[0].start" \
         | date -f - +%s || echo 0)"
     last_backup_time=''${last_backup_time:-0}
@@ -108,7 +108,7 @@ let
           # Borg needs write access to repo if it is not remote
           ++ optional (isLocalPath cfg.repo) cfg.repo;
         PrivateTmp = cfg.privateTmp;
-      };
+      } // cfg.extraServiceConfig;
       environment = {
         BORG_REPO = cfg.repo;
         inherit (cfg) extraArgs extraInitArgs extraCreateArgs extraPruneArgs;
@@ -546,6 +546,16 @@ in {
               The latter is available as <literal>$exitStatus</literal>.
             '';
             default = "";
+          };
+
+          extraServiceConfig = mkOption {
+            type = types.attrs;
+            description = ''
+              Additional service configuration for the systemd service that
+              actually performs the backup, in the same format as
+              systemd.services.<name>.serviceConfig.
+            '';
+            default = {};
           };
 
           extraArgs = mkOption {

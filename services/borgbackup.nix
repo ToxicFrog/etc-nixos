@@ -66,13 +66,20 @@ let
       # no -o reconnect because this hangs the entire backup if the host
       # goes offline for a long period of time, rather than cleanly aborting.
       ${pkgs.sshfs}/bin/sshfs ${host}:${path} /mnt/backup \
-        -o ro,workaround=rename,reconnect,ServerAliveInterval=15
+        -o ro,workaround=rename,ServerAliveInterval=5,ServerAliveCountMax=5
       cd /mnt/backup
     '';
     postHook = ''
       cd
       echo ${pkgs.fuse}/bin/fusermount -u -z /mnt/backup
+      echo rsync -aP --bwlimit=1M --delete /backup/borg/repo 18392@ch-s011.rsync.net:borg-repo/
     '';
+    extraServiceConfig = {
+      # This will TERM after 3 hours and then KILL five minutes after that
+      # TODO: this doesn't address the issue where the lock is left held after KILL
+      TimeoutStartSec = 60*60*3;
+      TimeoutStopSec = 60*5;
+    };
   } // removeAttrs opts ["host" "path" "touch"]);
   borg-rsync = {
       name, touch,
