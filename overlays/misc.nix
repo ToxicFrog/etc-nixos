@@ -19,7 +19,7 @@ in {
 #    nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [self.pidgin];
 #    configureFlags = oldAttrs.configureFlags ++ ["--purple=1" "--jabber=1"];
 #  });
-  crossfire-server-latest = super.crossfire-server-latest.overrideAttrs (oldAttrs: {
+  crossfire-server = super.crossfire-server.overrideAttrs (oldAttrs: {
     # Reset maps every 8h rather than every 2h.
     postConfigure = ''
       sed -Ei 's,^#define MAP_MAXRESET.*,#define MAP_MAXRESET 28800,' include/config.h
