@@ -16,6 +16,10 @@ let
       archiveName="$archiveName+$archiveCount"
     fi
   '';
+  updatecache = ''
+    echo "Updating info cache for $archiveName..."
+    ${pkgs.borgbackup}/bin/borg info --json "::$archiveName" > /backup/borg/info-cache/$archiveName
+  '';
   borgcfg = pkgs.copyPathToStore ../borg;
   borg = { name, ... } @ opts: ({
     archiveBaseName = name;
@@ -73,6 +77,7 @@ let
       cd
       echo ${pkgs.fuse}/bin/fusermount -u -z /mnt/backup
       echo rsync -aP --bwlimit=1M --delete /backup/borg/repo 18392@ch-s011.rsync.net:borg-repo/
+      ${updatecache}
     '';
     extraServiceConfig = {
       # This will TERM after 3 hours and then KILL five minutes after that
@@ -106,7 +111,7 @@ let
         exit $err
       fi
     '';
-    postHook = "";
+    postHook = updatecache;
   } // removeAttrs opts ["host" "path" "touch"]);
   name-to-service = name: {
     name = name;
