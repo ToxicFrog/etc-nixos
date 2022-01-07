@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# Monitor wireless sensors deployed around the house.
+
+set -e
+#source "${MUNIN_LIBDIR}/plugins/plugin.sh"
+#is_multigraph
+
+if [[ "$1" == "config" ]]; then
+  cat <<EOF
+host_name meatspace
+
+multigraph house_temperature
+graph_title Room Temperature
+graph_category sensors
+graph_vlabel Temperature (°C)
+graph_info Recorded temperature
+graph_args --base 1000
+graph_scale no
+spider_habitat_t.label Spider Habitat
+office_t.label Office
+
+multigraph house_humidity
+graph_title Room Humidity
+graph_category sensors
+graph_vlabel Humidity (%RH)
+graph_info Recorded humidity
+graph_args --lower-limit 0 --upper-limit 100 --base 1000
+graph_scale no
+spider_habitat_h.label Spider Habitat
+office_h.label Office
+EOF
+  exit 0
+fi
+
+spiders="$(ssh root@crisp ./read-sensors)"
+office="$(ssh root@chip ./read-sensors)"
+
+cat <<EOF
+multigraph house_temperature
+spider_habitat_t.value $(echo "$spiders" | egrep ^temperature | cut -f2)
+office_t.value $(echo "$office" | egrep ^temperature | cut -f2)
+
+multigraph house_humidity
+spider_habitat_h.value $(echo "$spiders" | egrep ^humidity | cut -f2)
+EOF

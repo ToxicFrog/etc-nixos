@@ -137,6 +137,7 @@ in {
       whois = ./whois;
       zpool_health = ./zpool_health;
       biometrics = ./biometrics;
+      house_sensors = ./house_sensors;
     };
     extraPluginConfig = ''
       [df]
