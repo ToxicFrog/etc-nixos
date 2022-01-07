@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+: << =cut
+
+=head1 NAME
+
+http__prusaconnect -- plugin to scrape status information from a Prusa printer
+
+=head1 CONFIGURATION
+
+Currently no configuration settings. It will unconditionally warn when the print
+bed goes above 35°C. I may expose knobs for this in the future.
+
+=head1 AUTHOR
+
+Written by Rebecca Kelly
+
+=head1 LICENSE
+
+MIT
+
+=cut
+
+# source $MUNIN_LIBDIR/plugins/plugin.sh
+
+shopt -s lastpipe
+
+### settings ###
+
+myname="$(basename $0)"
+host_name="$(echo "$myname" | cut -d_ -f2)"
+
+### helper functions used by config ###
+
+HOME="${HOME:=/var/lib/munin}"
+
+# dimension name title fields...
+# e.g dimension recv rx draw:AREA type:DERIVE min:0
+function dimension {
+  name="$1"
+  echo "$name.label $2"
+  shift 2
+  while [[ "$1" ]]; do
+    local k="${1%:*}"
+    local v="${1#*:}"
+    if [[ $k == cdef ]]; then v="$name,$v"; fi
+    echo "$name.$k $v"
+    shift
+  done
+}
+
+### config implementation ###
+
+if [[ "$1" = "config" ]]; then
+  cat <<EOF
+host_name $host_name
+multigraph prusa_temperature
+graph_title Printer temperatures
+graph_category printing
+graph_vlabel temperature (°C)
+graph_info Temperature of the print bed and hotend.
+$(dimension temp_nozzle "Extruder" type:GAUGE draw:LINE2)
+temp_nozzle.info The temperature of the extruder.
+temp_nozzle.warning 100
+$(dimension temp_bed "Print Bed" type:GAUGE draw:LINE2)
+temp_bed.info The temperature of the print bed.
+temp_bed.warning 30
+
+multigraph prusa_z
+graph_title Extruder Z position
+graph_category printing
+graph_vlabel Height (mm)
+graph_info How high the extruder is above the print bed. May be negative if the bed is below the nominal zero point.
+graph_args --base 1000
+$(dimension pos_z_mm "Z-position" type:GAUGE draw:LINE2)
+pos_z_mm.info How high up the extruder is.
+EOF
+
+  exit 0
+fi
+
+### fetch implementation ###
+
+json="$(curl -s "http://${host_name}/api/telemetry")"
+
+cat <<EOF
+multigraph prusa_temperature
+temp_nozzle.value $(echo "$json" | jq .temp_nozzle)
+temp_bed.value $(echo "$json" | jq .temp_bed)
+multigraph prusa_z
+pos_z_mm.value $(echo "$json" | jq .pos_z_mm)
+EOF

@@ -68,6 +68,10 @@ in {
       use_node_name yes
       address localhost
 
+      [ancilla.ca;nanolathe]
+      use_node_name no
+      address localhost
+
       [ancilla.ca;octopi]
       use_node_name yes
       address octopi
@@ -132,6 +136,7 @@ in {
     enable = true;
     extraPlugins = {
       http_traxus_onhub = ./http__onhub;
+      http_nanolathe_prusaconnect = ./http__prusaconnect;
       borgbackup = ./borgbackup;
       certificates = ./certificates;
       whois = ./whois;
