@@ -68,13 +68,13 @@ in {
       use_node_name yes
       address localhost
 
+      [ancilla.ca;octopi]
+      use_node_name yes
+      address octopi
+
       [ancilla.ca;openwrt]
       use_node_name no
       address openwrt
-
-      #[ancilla.ca;oculus]
-      #use_node_name no
-      #address ssh://root@oculus/
 
       [ancilla.ca;traxus]
       use_node_name no
