@@ -167,6 +167,7 @@ in {
       [borgbackup]
         user root
         env.backup_prefixes ancilla::24 thoth::24 pladix::168 isis::168 durandal::168 godbehere.ca::168 funkyhorror::168 GRABR.ca::168
+        env.info_cache_dir /backup/borg/info-cache
         env.BORG_REPO /backup/borg-repo
         env.BORG_PASSCOMMAND cat /backup/borg/passphrase
         env.BORG_CONFIG_DIR /backup/borg/config
