@@ -55,6 +55,7 @@ in {
     useSandbox = true;
     gc.automatic = true;
     gc.options = "--delete-older-than 60d";
+    autoOptimiseStore = true;
   };
 
   security.acme = {
@@ -62,6 +63,7 @@ in {
     acceptTerms = true;
   };
 
+  # TODO a lot of this should be moved to packages.nix
   environment.systemPackages = with pkgs; [
     beets
     #stable-old.calibre
@@ -90,7 +92,7 @@ in {
     keybase keybase-gui # keybase chat
     notmuch alot gmailieer # mail reading
     doomrl
-    unstable.steam
+    #unstable.steam
     timg tiv
     #slashem9 build currently broken
     clojure leiningen
