@@ -8,14 +8,21 @@ borg_age -- monitors the age of Borg backups
 
 =head1 CONFIGURATION
 
-This graph only has one mandatory setting:
+This graph only has two mandatory settings:
 
 [borg_age]
   env.backup_prefixes server::24 laptop::24 desktop::72 vm::4 ...
+  env.info_cache_dir /path/to/borg/info/cache
 
 Each backup_prefix will be used to query the repo for backups starting with that
 prefix, and report the age of the newest one. The number after the :: is the
 target backup frequency for that system, in hours.
+
+The backup_info_cache_dir will be searched for 'borg info' cache files; they will
+be created as needed if missing, but doing so is very expensive, so it's recommended
+to instead create them as part of your backup process, with
+$ borg info --json ::$archive_name > $backup_info_cache_dir/$archive_name
+This directory should be both readable and writeable by munin.
 
 That said, you will probably also need to set env.BORG_REPO, and, if the repo
 is encrypted, env.BORG_PASSPHRASE or env.BORG_PASSCOMMAND. Depending on what the
@@ -149,6 +156,16 @@ function values_for_prefix {
   echo "TIME ${1}_duration.value ${duration}"
 }
 
+# Retrieve archive info from the JSON cache. If there's no cache hit, ask
+# borg for the info and store it in the cache. Note that asking borg for
+# info is very slow and on some configurations can time out.
+function borg_info_json {
+  if [[ ! -f "$info_cache_dir/$1" ]]; then
+    borg info "::$1" --json > "$info_cache_dir/$1"
+  fi
+  cat "$info_cache_dir/$1"
+}
+
 {
   echo "AGE multigraph borg_age"
   echo "AGERATIO multigraph borg_age_ratio"
@@ -158,8 +175,8 @@ function values_for_prefix {
   for prefix in $backup_prefixes; do
     freq="${prefix#*::}"
     prefix="${prefix%::*}"
-    borg info --prefix "$prefix" --last 1 --json \
-      | values_for_prefix "${prefix//./_}" "$freq"
+    archive="$(borg list --short --prefix "$prefix" | egrep -v '\.checkpoint$' | tail -n1)"
+    borg_info_json "$archive" | values_for_prefix "${prefix//./_}" "$freq"
   done
 } | sort --key 1,1 --stable | cut -d' ' -f2-
 echo "multigraph borg_repo_size"
