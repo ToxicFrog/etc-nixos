@@ -64,7 +64,7 @@ function report {
     # Probe the onhub.
     # This is very expensive (10+ seconds), so we only do it if the old state
     # is missing or more than two minutes old.
-    curl -s -f http://onhub.here/api/v1/diagnostic-report \
+    curl -s -f "http://${onhub_address}/api/v1/diagnostic-report" \
       | zcat > "$STATEFILE" || {
         echo "Error fetching state from onhub!"
         exit 1
