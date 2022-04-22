@@ -61,7 +61,6 @@ graph_vlabel temperature (°C)
 graph_info Temperature of the print bed and hotend.
 $(dimension temp_nozzle "Extruder" type:GAUGE draw:LINE2)
 temp_nozzle.info The temperature of the extruder.
-temp_nozzle.warning 100
 $(dimension temp_bed "Print Bed" type:GAUGE draw:LINE2)
 temp_bed.info The temperature of the print bed.
 temp_bed.warning 30
