@@ -1,3 +1,6 @@
+# deploy with:
+# NIXOS_CONFIG=systems/pladix/configuration.nix nixos-rebuild --target-host=pladix switch
+
 { config, pkgs, modulesPath, ... }:
 
 let

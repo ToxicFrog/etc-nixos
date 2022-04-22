@@ -2,6 +2,9 @@
 
 { config, pkgs, lib, ... }:
 
+let
+  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
+in
 {
   users.extraGroups.deluge.gid = 83;
   users.extraUsers.deluge = {
@@ -36,7 +39,10 @@
     { from = 8000; to = 8050; }
   ];
 
-  services.jackett.enable = true;
+  services.jackett = {
+    enable = true;
+    package = unstable.jackett;
+  };
 
   services.nginx.virtualHosts."ancilla.ancilla.ca".locations = {
     "/qbt/".extraConfig = ''

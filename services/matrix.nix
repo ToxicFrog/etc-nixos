@@ -3,14 +3,13 @@
 let
   unstable = (import <nixos-unstable> { config.allowUnfree = true; });
 in {
-  # imports = [ <nixos-unstable/nixos/modules/services/misc/dendrite.nix> ];
-
-  # services.dendrite.enable = true;
   users.users.matrix = {
     isSystemUser = true;
     description = "Matrix server";
     home = "/srv/matrix";
+    group = "matrix";
   };
+  users.groups.matrix = {};
 
   services.nginx.virtualHosts."matrix.ancilla.ca" = {
     enableACME = true;
@@ -23,13 +22,14 @@ in {
     after = [ "network.target" ];
     wantedBy = [];
     enable = true;
-    restartTriggers = ["/etc/matrix.conduit.toml"];
+    restartTriggers = ["/etc/matrix/conduit.toml"];
     environment = {
       CONDUIT_CONFIG = "/etc/matrix/conduit.toml";
+      RUST_MIN_STACK = "16777216";
     };
     serviceConfig = {
       User = "matrix";
-      Group = "nogroup";
+      Group = "matrix";
       Restart = "no";
       WorkingDirectory = "/srv/matrix";
       ExecStart = "/srv/matrix/conduit-bin";
@@ -85,7 +85,8 @@ in {
 
     trusted_servers = ["matrix.org"]
 
-    #cache_capacity = 1073741824 # in bytes, 1024 * 1024 * 1024
+    db_cache_capacity_mb = 200
+    pdu_cache_capacity = 10000
     #max_concurrent_requests = 100 # How many requests Conduit sends to other servers at the same time
     #workers = 4 # default: cpu core count * 2
 

@@ -7,7 +7,11 @@ let
   unstable = (import <nixos-unstable> {});
   localpkgs = (import /home/rebecca/devel/nixpkgs {});
 in {
+  disabledModules = [
+    "misc/locate.nix"
+  ];
   imports = [
+    <nixos-unstable/nixos/modules/misc/locate.nix>
     ../munin/munin.nix
     ../munin/hugin.nix
     ../secrets/personal-services.nix
@@ -48,8 +52,9 @@ in {
 
     keybase.enable = false;
     kbfs.enable = false;
+
     crossfire-server = {
-      enable = true;
+      enable = false;
       openFirewall = true;
       configFiles = {
         settings = ''
@@ -83,6 +88,8 @@ in {
     #     map_max_reset: 604800
     #     map_default_reset: 86400
     #   '';
+    #   package = localpkgs.deliantra-server;
+    #   dataDir = "${localpkgs.deliantra-data}";
     # };
 
     etcd.enable = true;
@@ -104,7 +111,7 @@ in {
     };
     bitlbee = {
       enable = true;
-      plugins = with pkgs; [ unstable.bitlbee-facebook unstable.bitlbee-steam ];
+      # plugins = with pkgs; [ unstable.bitlbee-facebook unstable.bitlbee-steam ];
       # libpurple_plugins = with pkgs; [ purple-hangouts ];
     };
 
@@ -145,8 +152,14 @@ in {
     tlp.enable = true;
     locate = {
       enable = true;
-      localuser = "root";
-      extraFlags = ["--dbformat=slocate"];
+      locate = pkgs.plocate;
+      # TODO: enable the cron job to update the plocatedb
+      # localuser = "root";
+      localuser = null
+;      # extraFlags = ["--dbformat=slocate"];
+      prunePaths = lib.mkOptionDefault [
+        "/ancilla/media/other"
+      ];
     };
 
     openssh = {

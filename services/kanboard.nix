@@ -45,8 +45,10 @@ in {
     description = "Kanboard user";
     home = dataDir;
     createHome = true;
+    group = "kanboard";
     # on home creation, we also have to create ~/data ~/plugins ~/files and make them writeable
   };
+  users.groups.kanboard = {};
 
   services.phpfpm.pools.kanboard = {
     user = user;

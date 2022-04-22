@@ -15,21 +15,23 @@
     isSystemUser = true;
     description = "Minecraft server user";
     home = "/srv/minecraft";
+    group = "minecraft";
   };
+  users.groups.minecraft = {};
 
   # Minecraft server process.
   systemd.services.minecraft-server = {
     description = "Minecraft Server";
     after = [ "network.target" ];
     wantedBy = []; #[ "multi-user.target" ];
-    enable = true;
+    enable = false;
     serviceConfig = {
       User = "minecraft";
-      Group = "nogroup";
+      Group = "minecraft";
       Restart = "no";
       WorkingDirectory = "/srv/minecraft";
       # ExecStart = "${pkgs.jdk}/bin/java -Xms512M -Xmx1G -XX:+UseConcMarkSweepGC -jar spigot-1.16.1.jar";
-      ExecStart = "${pkgs.jdk}/bin/java -Xms512M -Xmx2G -XX:+UseConcMarkSweepGC -jar paper.jar --universe worlds/";
+      ExecStart = "${pkgs.jdk11_headless}/bin/java -Xms512M -Xmx2G -jar paper.jar --universe worlds/";
     };
   };
 }
