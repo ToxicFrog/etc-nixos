@@ -33,7 +33,7 @@ in {
   };
 
   swapDevices = [
-    { device = "/dev/disk/by-label/m2-swap"; }
+    { device = "/dev/disk/by-label/nvme-swap-64"; }
   ];
 
   nix.maxJobs = lib.mkDefault 4;
