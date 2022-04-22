@@ -4,7 +4,9 @@
 
 { config, pkgs, ... }:
 
-{
+let
+  secrets = (import ../secrets/default.nix {});
+in {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -19,7 +21,7 @@
   networking.domain = "ancilla.ca";
   networking.wireless = {
     enable = true;  # Enables wireless support via wpa_supplicant.
-    networks."Traxus IV" = { psk = "basketofspiders"; };
+    networks = secrets.wifi;
     interfaces = ["wlan0"];
   };
 
