@@ -66,8 +66,6 @@ in {
   # TODO a lot of this should be moved to packages.nix
   environment.systemPackages = with pkgs; [
     beets
-    #stable-old.calibre
-    unstable.calibre
     digikam # for digitaglinktree
     dnsutils
     dosage
@@ -77,7 +75,7 @@ in {
     rsync
     jshon
     ffmpeg-full
-    xxd pv exiftool fgallery imagemagick # for share
+    xxd pv exiftool sigal imagemagick # for share
     lgogdownloader
     tmuxinator
     lm_sensors

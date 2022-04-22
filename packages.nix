@@ -8,6 +8,7 @@ in {
   environment.systemPackages = with pkgs; [
     atop
     binutils  # for strings and nm
+    calibre  # for calibre-server
     dos2unix
     dtrx
     file
@@ -19,7 +20,7 @@ in {
     gnumake
     # google-chrome
     hledger hledger-ui hledger-web
-    htop
+    unstable.htop
     jre
     kpcli
     ledger
