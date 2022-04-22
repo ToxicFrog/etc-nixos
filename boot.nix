@@ -1,6 +1,7 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
+  systemd.defaultUnit = lib.mkForce "multi-user.target";
   # Use the GRUB 2 boot loader.
   boot = {
     loader.grub = {
@@ -10,6 +11,11 @@
       version = 2;
       device = "nodev";
       # device = "/dev/disk/by-id/ata-KINGSTON_SA400S37240G_50026B77824F4828";
+      zfsSupport = true;
+      mirroredBoots = [
+        { path = "/boot"; devices = ["/dev/disk/by-id/ata-WDC_WDS500G2B0B_184220A01A66"]; }
+        { path = "/alt-boot"; devices = ["/dev/disk/by-id/nvme-WUS3BA138C7P3E3_A06F1084"]; }
+      ];
     };
     # loader.systemd-boot.enable = true;
     # loader.efi.canTouchEfiVariables = true;
@@ -32,6 +38,8 @@
       ${pkgs.zfs}/bin/zpool status
       ${pkgs.zfs}/bin/zfs mount -a
       echo "=== ZPOOL IMPORT COMPLETE ==="
+      # Enable compressed RAM.
+      echo Y > /sys/module/zswap/parameters/enabled
     '';
   };
 }
