@@ -8,6 +8,8 @@ let
     data_path ${pkgs.doomrl-server}/share/doomrl-server
     user_path ${server-path}
   '';
+  sslCert = "/var/lib/acme/phobos.ancilla.ca/fullchain.pem";
+  sslKey = "/var/lib/acme/phobos.ancilla.ca/key.pem";
 in {
   security.acme.certs."phobos.ancilla.ca".email = "webmaster@ancilla.ca";
 
@@ -29,7 +31,9 @@ in {
     description = "DoomRL-server user";
     home = "${server-path}";
     uid = 666;
+    group = "doomrl";
   };
+  users.groups.doomrl = {};
 
   services.xinetd = {
     enable = true;
@@ -48,12 +52,19 @@ in {
   # Websockify forwards requests from the web interface to the telnetd.
   services.networking.websockify = {
     enable = true;
-    sslCert = "/var/lib/acme/phobos.ancilla.ca/fullchain.pem";
-    sslKey = "/var/lib/acme/phobos.ancilla.ca/key.pem";
+    sslCert = sslCert;
+    sslKey = sslKey;
     portMap = {
       "3667" = 3666;
     };
   };
+  # Fix for pythonPackages aliasing to py2 rather than py3, since the py2 version
+  # of websockify no longer builds.
+  systemd.services."websockify@".script = lib.mkForce ''
+    IFS=':' read -a array <<< "$1"
+    ${pkgs.python39Packages.websockify}/bin/websockify --ssl-only \
+      --cert=${sslCert} --key=${sslKey} 0.0.0.0:''${array[0]} 0.0.0.0:''${array[1]}
+  '';
 
   # nginx serves the static doomRL website.
   services.nginx.virtualHosts."phobos.ancilla.ca" = {
