@@ -31,7 +31,7 @@ in {
       sha256 = hash;
     };
 
-    libPath = self.stdenv.lib.makeLibraryPath [
+    libPath = self.lib.makeLibraryPath [
       self.SDL
       self.xorg.libX11
       self.zlib

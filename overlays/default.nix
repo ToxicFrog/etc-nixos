@@ -20,8 +20,6 @@ in {
   ];
   imports = [
     ./modules/borgbackup.nix
-    /home/rebecca/devel/nixpkgs/nixos/modules/services/games/crossfire-server.nix
-    /home/rebecca/devel/nixpkgs/nixos/modules/services/games/deliantra-server.nix
   ];
   # Actual overlays.
   nixpkgs.overlays = [
@@ -33,57 +31,30 @@ in {
     (self: super: {
       etcd = super.etcd_3_4;
       slashem9 = super.callPackage ./slashem9/slashem9.nix {};
+      sigal = super.sigal.overrideAttrs (oldAttrs: rec {
+        version = "2.3-alpha";
+        src = super.fetchFromGitHub {
+          owner = "saimn";
+          repo = "sigal";
+          rev = "246aed53ff2d29d680cc81929e59f19023e463bb";
+          sha256 = "1nxznibyn5g9fd1aksfjmcqrjhghi1zfbyrdlb0sjaxkdsjn9mnv";
+        };
+        patchPhase = ''
+          sed -Ei 's,THEMES_PATH = ,THEMES_PATH = os.getenv("SIGAL_THEMES_PATH") or ,' sigal/writer.py
+        '';
+        propagatedBuildInputs = oldAttrs.propagatedBuildInputs ++ [self.python3Packages.setuptools];
+        pytestCheckPhase = "true"; # skip tests at HEAD
+      });
       weechat = super.weechat.override {
         configure = { availablePlugins, ... }: {
-          scripts = with unstable.pkgs.weechatScripts; [
-            unstable.pkgs.weechatScripts.weechat-matrix
-            pkgs.weechatScripts.multiline
-          ];
+          scripts = with pkgs.weechatScripts; [ weechat-matrix multiline ];
         };
       };
-      # TODO: crossfire should still include the patches for compiled-in config changes
-      youtube-dlc = super.youtube-dl.overrideAttrs (attrs: rec {
-        name = "youtube-dl";
-        pname = "youtube-dlc";
-        version = "2020.11.07";
-
-        src = super.fetchFromGitHub {
-          owner = "blackjack4494";
-          repo = "yt-dlc";
-          rev = "651bae3d231640fa9389d4e8d24412ad75f01843";
-          sha256 = "0zmp8yjz8kf0jwbf2cy3l0mf0252kcc4qwmnh6iq0bbilbknhhwv";
-        };
-        postInstall = ''
-          cd $out/bin
-          ln -s youtube-dlc youtube-dl
-        '';
-      });
-      youtube-dl = super.youtube-dl.overrideAttrs (attrs: rec {
-        version = "2021.03.25";
-        src = super.fetchurl {
-          url = "https://youtube-dl.org/downloads/latest/youtube-dl-2021.03.25.tar.gz";
-          sha256 = "0ps8ydx4hbj6sl0m760zdm9pvhccjmwvx680i4akz3lk4z9wy0x3";
-        };
-      });
       recoll = super.recoll.override { withGui = false; };
       airsonic = super.airsonic.overrideAttrs (_: rec {
         version = "11.0.20210803";
         name = "airsonic-advanced-${version}";
         src = /srv/airsonic/airsonic-advanced-11.0.20210803.war;
-      });
-      jackett = super.jackett.overrideAttrs (oldAttrs: rec {
-        version = "0.17.946";
-        src = super.fetchurl {
-          url = "https://github.com/Jackett/Jackett/releases/download/v${version}/Jackett.Binaries.Mono.tar.gz";
-          sha256 = "1cc3mslg8w2nv8kxg24c6grc742ia12rghrdl4narz44qcy7k682";
-        };
-        installPhase = ''
-          mkdir -p $out/{bin,share/${oldAttrs.pname}-${version}}
-          cp -r * $out/share/${oldAttrs.pname}-${version}
-          makeWrapper "${pkgs.mono}/bin/mono" $out/bin/Jackett \
-            --add-flags "$out/share/${oldAttrs.pname}-${version}/JackettConsole.exe" \
-            --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath (with pkgs; [ curl icu60 openssl zlib ])}
-        '';
       });
       openxcom = super.openxcom.overrideAttrs (oldAttrs: rec {
         version = "7.0-oxce-2021.03.13";
@@ -98,13 +69,29 @@ in {
         nativeBuildInputs = with super; [ cmake pkg-config ];
       });
       # jellyfin = super.jellyfin.override { ffmpeg = super.ffmpeg-full; };
-      # jellyfin = super.jellyfin.overrideAttrs (oldAttrs: rec {
-      #   version = "10.6.2";
-      #   src = super.fetchurl {
-      #     url = "https://repo.jellyfin.org/releases/server/portable/versions/stable/combined/${version}/jellyfin_${version}.tar.gz";
-      #     sha256 = "16yib2k9adch784p6p0whgfb6lrjzwiigg1n14cp88dx64hyhxhb";
-      #   };
-      # });
+      mympd = super.mympd.overrideAttrs (oldAttrs: rec {
+        version = "9.1.2";
+
+        src = super.fetchFromGitHub {
+          owner = "jcorporation";
+          repo = "myMPD";
+          rev = "v${version}";
+          sha256 = "0ir458zhahqy2y628wjn9cr1ppakqswy839nl3gd1gyh6mpld73i";
+        };
+        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [
+          super.perl
+          super.jq
+        ];
+        postConfigure = ''
+          (cd .. && MYMPD_BUILDDIR=build ./build.sh createassets)
+        '';
+        cmakeFlags = oldAttrs.cmakeFlags ++ [
+          "-DEMBEDDED_ASSETS=ON"
+        ];
+        buildInputs = oldAttrs.buildInputs ++ [
+          super.pcre2
+        ];
+      });
     })
   ];
 }
