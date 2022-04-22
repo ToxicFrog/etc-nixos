@@ -10,8 +10,9 @@
 # the idea of backing up the former two at some point, if I can't find a good
 # other place to back them up offsite.
 
-R ancilla/media/music/beets.db
-R ancilla/media/music/beets.db-journal
-R ancilla/media/music/genres.yaml
-R ancilla/media/music/Library
-R ancilla/media/music/Incoming
+R ancilla/media/music
+#R ancilla/media/music/beets.db
+#R ancilla/media/music/beets.db-journal
+#R ancilla/media/music/genres.yaml
+#R ancilla/media/music/Library
+#R ancilla/media/music/Incoming

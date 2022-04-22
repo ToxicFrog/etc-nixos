@@ -29,9 +29,11 @@ R ancilla/torrents
 ! **/core
 ! **/core.*
 ! srv/minecraft/dynmap-web/
+! srv/minecraft/*/dynmap/web/
 ! var/lib/jellyfin/transcodes/
 ! var/lib/jellyfin/transcoding-temp/
 ! ancilla/torrents/new/
 ! ancilla/torrents/buffer/
 ! ancilla/torrents/complete/
 ! srv/ipfs/blocks/
+! srv/www/munin/
