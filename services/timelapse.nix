@@ -2,10 +2,7 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  secrets = (import ../secrets/default.nix {});
-  unstable = (import <nixos-unstable> {});
-in {
+{
   # timelapse capture
   systemd.services.timelapse-garden = {
     description = "Capture a timelapse frame from the garden camera.";
@@ -34,14 +31,4 @@ in {
       chown -R rebecca:users garden
     '';
   };
-  # systemd.services.timelapse-reboot = {
-  #   description = "Reboot the timelapse device every night to reset the camera.";
-  #   after = ["network.target" "local-fs.target"];
-  #   wantedBy = ["multi-user.target"];
-  #   # Reboot at 3 past midnight daily
-  #   startAt = "00:03:00";
-  #   script = ''
-  #     ${pkgs.openssh}/bin/ssh pi@timelapse sudo reboot
-  #   '';
-  # };
 }
