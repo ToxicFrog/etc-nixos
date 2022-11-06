@@ -28,7 +28,11 @@ in {
 
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/5A92-D54D";
-    # device = "/dev/sdg1";
+    fsType = "vfat";
+  };
+
+  fileSystems."/alt-boot" = {
+    device = "/dev/disk/by-id/nvme-WUS3BA138C7P3E3_A06F1084-part1";
     fsType = "vfat";
   };
 
