@@ -27,7 +27,6 @@ in {
     (import ./doomrl-server.nix)
     (import ./dosbox-debug.nix)
     (import ./misc.nix)
-    (import ./skicka)
     (self: super: {
       etcd = super.etcd_3_4;
       slashem9 = super.callPackage ./slashem9/slashem9.nix {};
@@ -52,9 +51,12 @@ in {
       };
       recoll = super.recoll.override { withGui = false; };
       airsonic = super.airsonic.overrideAttrs (_: rec {
-        version = "11.0.20210803";
+        version = "11.0.0-SNAPSHOT.20220418221611";
         name = "airsonic-advanced-${version}";
-        src = /srv/airsonic/airsonic-advanced-11.0.20210803.war;
+        src = super.fetchurl {
+          url = "https://github.com/airsonic-advanced/airsonic-advanced/releases/download/11.0.0-SNAPSHOT.20220418221611/airsonic.war";
+          sha256 = "06mxx56c5i1d9ldcfznvib1c95066fc1dy4jpn3hska2grds5hgh";
+        };
       });
       openxcom = super.openxcom.overrideAttrs (oldAttrs: rec {
         version = "7.0-oxce-2021.03.13";
@@ -69,29 +71,6 @@ in {
         nativeBuildInputs = with super; [ cmake pkg-config ];
       });
       # jellyfin = super.jellyfin.override { ffmpeg = super.ffmpeg-full; };
-      mympd = super.mympd.overrideAttrs (oldAttrs: rec {
-        version = "9.1.2";
-
-        src = super.fetchFromGitHub {
-          owner = "jcorporation";
-          repo = "myMPD";
-          rev = "v${version}";
-          sha256 = "0ir458zhahqy2y628wjn9cr1ppakqswy839nl3gd1gyh6mpld73i";
-        };
-        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [
-          super.perl
-          super.jq
-        ];
-        postConfigure = ''
-          (cd .. && MYMPD_BUILDDIR=build ./build.sh createassets)
-        '';
-        cmakeFlags = oldAttrs.cmakeFlags ++ [
-          "-DEMBEDDED_ASSETS=ON"
-        ];
-        buildInputs = oldAttrs.buildInputs ++ [
-          super.pcre2
-        ];
-      });
     })
   ];
 }

@@ -21,6 +21,16 @@ in {
       sed -Ei 's,^#define MAP_DEFAULTRESET.*,#define MAP_DEFAULTRESET 28800,' include/config.h
     '';
   });
+  ffmpeg-full = super.ffmpeg-full.overrideAttrs (old: {
+    configureFlags = old.configureFlags ++ [
+      "--disable-libmodplug"
+      "--enable-libopenmpt"
+      "--enable-libgme"
+    ];
+    buildInputs = old.buildInputs ++ [
+      self.libopenmpt self.libgme
+    ];
+  });
   munin = super.munin.overrideAttrs (oldAttrs: {
     # HACK HACK HACK
     # perl -T breaks makeWrapper
