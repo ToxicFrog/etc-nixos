@@ -76,6 +76,8 @@ in {
         types {
           text/html html;
           text/plain txt mortem;
+          text/javascript js;
+          text/css css;
         }
       '';
     };
