@@ -172,7 +172,10 @@ in {
       macs = lib.mkOptionDefault [
         "hmac-sha1"
       ];
+      # Scanner only uses legacy key types, so we need to enable them here.
       extraConfig = ''
+        PubkeyAcceptedKeyTypes +ssh-dss,ssh-rsa
+        HostKeyAlgorithms +ssh-dss,ssh-rsa
         Match user scanner
           ForceCommand ${pkgs.openssh}/libexec/sftp-server
           X11Forwarding no
@@ -204,7 +207,9 @@ in {
     home = "/ancilla/scans";
     createHome = false;
     useDefaultShell = true;
+    group = "scanner";
   };
+  users.groups.scanner = {};
 
   # Crank the inotify limit waaaaay up there for syncthing.
   boot.kernel.sysctl = { "fs.inotify.max_user_watches" = 204800; };
