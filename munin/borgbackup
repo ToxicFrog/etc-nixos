@@ -161,7 +161,7 @@ function values_for_prefix {
 # info is very slow and on some configurations can time out.
 function borg_info_json {
   if [[ ! -f "$info_cache_dir/$1" ]]; then
-    borg info "::$1" --json > "$info_cache_dir/$1"
+    borg info "::$1" --json > "$info_cache_dir/$1.tmp" && mv "$info_cache_dir/$1.tmp" "$info_cache_dir/$1"
   fi
   cat "$info_cache_dir/$1"
 }
