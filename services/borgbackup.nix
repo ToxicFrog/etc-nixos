@@ -23,7 +23,7 @@ let
   borgcfg = pkgs.copyPathToStore ../borg;
   borg = { name, ... } @ opts: ({
     archiveBaseName = name;
-    extraArgs = "--lock-wait=60";
+    extraArgs = "--lock-wait=300";
     extraCreateArgs = builtins.concatStringsSep " " [
       "--stats"
       "--progress"
