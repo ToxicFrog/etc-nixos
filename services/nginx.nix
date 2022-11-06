@@ -48,6 +48,14 @@ in {
             autoindex on;
           '';
         };
+        locations."/tyria".return = "302 /tyria/";
+        locations."/tyria/".extraConfig = ''
+          proxy_pass    http://localhost:8099/;
+          add_header    'X-Base-URL' '/tyria';
+          sub_filter    'href="/' 'href="/tyria/';
+          sub_filter_last_modified on;
+          sub_filter_once off;
+        '';
         # etcd
         locations."/v3/kv/".extraConfig = ''
           proxy_pass http://127.0.0.1:2379/v3/kv/;
