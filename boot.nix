@@ -16,11 +16,12 @@
         { path = "/boot"; devices = ["/dev/disk/by-id/ata-WDC_WDS500G2B0B_184220A01A66"]; }
         { path = "/alt-boot"; devices = ["/dev/disk/by-id/nvme-WUS3BA138C7P3E3_A06F1084"]; }
       ];
+      splashImage = /ancilla/media/photos/DigiKam/Avatars/triop-rainbow-720x720.png;
     };
     # loader.systemd-boot.enable = true;
     # loader.efi.canTouchEfiVariables = true;
 
-    kernelParams = ["consoleblank=0"];
+    kernelParams = ["consoleblank=0" "nohibernate"];
     kernelModules = ["k10temp" "nct6775" "netatop"];
 
     supportedFilesystems = ["zfs"];
