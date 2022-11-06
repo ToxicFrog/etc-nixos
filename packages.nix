@@ -11,6 +11,7 @@ in {
     calibre  # for calibre-server
     dos2unix
     dtrx
+    ffmpeg-full
     file
     findutils
     gcc
@@ -45,5 +46,8 @@ in {
     wget
     wring
     zip
+    # dlique and hangbrain
+    # geckodriver is in ~/opt because it needs a special build
+    chromium chromedriver firefox
   ];
 }

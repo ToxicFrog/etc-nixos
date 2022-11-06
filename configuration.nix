@@ -74,7 +74,6 @@ in {
     jq
     rsync
     jshon
-    ffmpeg-full
     xxd pv exiftool sigal imagemagick # for share
     lgogdownloader
     tmuxinator
@@ -84,7 +83,6 @@ in {
     #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
     recoll  # log searching
     sshfs
-    skicka  # for backup upload to grive
     weechat
     youtube-dl # for downloading podcasts
     keybase keybase-gui # keybase chat
