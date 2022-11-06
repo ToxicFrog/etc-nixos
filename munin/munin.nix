@@ -143,6 +143,7 @@ in {
       zpool_health = ./zpool_health;
       biometrics = ./biometrics;
       house_sensors = ./house_sensors;
+      file_age = /usr/src/munin-contrib/plugins/disk/file_age;
     };
     extraPluginConfig = ''
       [df]
@@ -159,6 +160,12 @@ in {
       [certificates]
         env.domains ancilla.ancilla.ca music.ancilla.ca library.ancilla.ca phobos.ancilla.ca tv.ancilla.ca
         env.host_name ancilla.ca
+
+      [file_age]
+        env.file1_path /ancilla/media/photos/timelapse/garden/latest
+        env.file1_label Garden timelapse age
+        env.file1_warning 86400
+        env.file1_critical 172800
 
       [whois]
         env.domains ancilla.ca godbehere.ca
