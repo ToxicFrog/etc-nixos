@@ -13,33 +13,54 @@ in {
     # Proxy to Calibre library. TODO: move calibre service configuration into
     # nix rather than running it out of my homedir.
     locations."/".proxyPass = "http://127.0.0.1:26657/";
-    locations."/comics".proxyPass = "http://127.0.0.1:2202";
-    locations."/comics/admin".proxyPass = "http://127.0.0.1:2203";
-    locations."= /ubreader.js".alias = ./ubooquity/ubreader.js;
-    locations."/u/".alias = "${./ubooquity}/";
-    locations."/comics".extraConfig = ''
-      sub_filter '</head>' '<script type="text/javascript" src="/ubreader.js"></script></head>';
-      sub_filter_last_modified on;
-      sub_filter_once on;
-    '';
+    # Proxy to Codex comic library.
+    locations."/comics" = {
+      proxyPass = "http://127.0.0.1:9810/comics";
+      proxyWebsockets = true;
+      extraConfig = ''
+        sub_filter '</head>' '<link rel="stylesheet" href="/codex-extra.css" /><script src="/codex-extra.js" defer></script></head>';
+        sub_filter_last_modified on;
+        sub_filter_once on;
+      '';
+    };
+    locations."= /codex-extra.css".alias = ./codex-extra.css;
+    locations."= /codex-extra.js".alias = ./codex-extra.js;
   };
 
-  users.users.ubooquity = {
+  services.calibre-web = {
+    enable = false;
+    user = "rebecca";
+    group = "users";
+    options = {
+      calibreLibrary = "/home/rebecca/Books/Calibre";
+    };
+    listen.port = 26657;
+    listen.ip = "127.0.0.1";
+  };
+
+  users.users.codex = {
     isSystemUser = true;
-    description = "Ubooquity comic server";
-    home = "/srv/ubooquity";
+    description = "Codex comic server";
+    home = "/var/lib/codex";
     createHome = false;
+    group = "codex";
+    uid = 987;
   };
-
-  systemd.services.ubooquity = {
-    description = "Ubooquity Comic Reader";
-    after = ["network-online.target" "local-fs.target"];
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      User = "ubooquity";
-      Group = "nogroup";
-      ExecStart = "${pkgs.jre}/bin/java -jar Ubooquity.jar --headless --remoteadmin";
-      WorkingDirectory = "/srv/ubooquity";
+  users.groups.codex = { gid = 980; };
+  virtualisation.oci-containers.containers.codex = {
+    image = "ajslater/codex@sha256:a4736a520e7d711e0d72f0eae4067c3a5b064e034c908290de36d557c3ea4281";
+    user = "987:980";
+    ports = ["9810:9810"];
+    volumes = [
+      "/var/lib/codex:/config"
+      "/var/lib/codex:/.config"
+      #"/ancilla/media/comics/.codex-libraries:/comics:ro"
+      "/ancilla/media/comics:/ancilla/media/comics:ro"
+      "/ancilla/media/books:/ancilla/media/books:ro"
+    ];
+    environment = {
+      TZ = "America/Toronto";
+      LOGLEVEL = "DEBUG";
     };
   };
 }

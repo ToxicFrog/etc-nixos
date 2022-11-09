@@ -1,0 +1,81 @@
+/*
+In folder+filename view, folders are just shown as displayName, and files are
+shown as headerName (series+issue), displayName (title), and orderValue (filename).
+This hides the headerName and displayName when they appear together, leaving
+just the filename.
+*/
+div.headerName,
+div.headerName+div.displayName {
+  display: none;
+}
+div.orderValue {
+  color: white !important;
+}
+
+/* On touchscreen devices, always display metadata/menu buttons, since we can't hover. */
+@media (hover: none) {
+  div.cardCoverOverlayBottomRow {
+    opacity: 1.0 !important;
+  }
+
+  /* And put them in a black circle so we can see them even against light covers,
+     since we don't get the darkening of the whole cover without hovering. */
+  div.cardCoverOverlayBottomRow button {
+    border-radius: 10em;
+    background: black;
+    opacity: 0.6;
+  }
+}
+
+/* Make the progress bar a bit more obtrusive. */
+div.bookCoverProgress {
+  height: 0.2em !important;
+  background: #404040;
+}
+
+/* Unconditionally hide the scrollbars.
+   This is a workaround for a bug where if the comic reader is set to
+   "shrink to height" (even without the modifications below), the scrollbar
+   appears because the div containing the img is just a few px taller than
+   the img, even with all padding/bordering disabled. */
+html {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+}
+html::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+/* Make the "shrink to" options "fit to" instead */
+/*
+img.page.fitToScreen {
+  height: 100vh;
+  width: 100vw;
+  object-fit: contain;
+}
+*/
+
+img.page.fitToHeight {
+  height: 100vh;
+  object-fit: contain;
+}
+
+img.page.fitToWidth {
+  width: 100vw;
+  object-fit: contain;
+}
+
+/* NOTES
+If I want to tweak the read/unread flags, those are div.unreadFlag and div.mixedreadFlag -- a partially read folder will have both classes in a single div.
+They're in the div.bookCoverOverlayTopRow.
+The number of pages/subelements is div.childCount, also in the top row.
+
+The eye-icon used for opening the book is in div.cardCoverOverlay a.browserLink div.cardCoverOverlayTopMiddleRow span svg
+
+The progress bar is in div.browserCardCoverWrapper div.bookCoverProgress.v-progress-linear; we can tweak height and background to make it more obvious. 0.3em seems like a good setting.
+*/
+
+/* TODO
+file a bug report about progress bars:
+Also, individual files don't show up as "partially read" even if you're halfway through them
+*/
