@@ -10,25 +10,21 @@
     wantedBy = ["multi-user.target"];
     # every 5 minutes; at ~100kb/image (-j80) that works out to about 10GB/year
     # 15GB/year at -j90 (~150kb/image)
-    startAt = "*:00/5:00";
+    startAt = "01:02:00";
     script = ''
       set -e
       cd /ancilla/media/photos/timelapse
-      # Use . rather than : here so that bast et al can see it if they want
-      out="garden/$(date '+%Y/%m/%d/%H.%M.00').jpeg"
-      mkdir -p "$(dirname "$out")"
-      set +e
-      ${pkgs.openssh}/bin/ssh pi@timelapse ./snapshot > "$out.tmp"
-      set -e
-      if [[ -s "$out.tmp" ]]; then
-        mv "$out.tmp" "$out"
+      ${pkgs.rsync}/bin/rsync -rPhaSHAX -e ${pkgs.openssh}/bin/ssh --remove-source-files pi@timelapse:snapshots/ garden/
+      ${pkgs.openssh}/bin/ssh pi@timelapse find snapshots -type d -empty -delete
+      if [[ -f garden/$(date '+%Y/%m/%d/00.00.00').jpeg ]]; then
         touch garden/latest
       else
-        rm "$out.tmp"
-        >&2 echo "capture error -- camera produced zero-length file"
+        >&2 echo "timelapse error -- no snapshot for midnight found in latest update"
         exit 1
       fi
       chown -R rebecca:users garden
+      # need to figure out the closure for this -- exiftool and ffmpeg at least
+      #sudo -u rebecca ./build
     '';
   };
 }
