@@ -7,11 +7,7 @@ let
   unstable = (import <nixos-unstable> {});
   localpkgs = (import /home/rebecca/devel/nixpkgs {});
 in {
-  disabledModules = [
-    "misc/locate.nix"
-  ];
   imports = [
-    <nixos-unstable/nixos/modules/misc/locate.nix>
     ../munin/munin.nix
     ../munin/hugin.nix
     ../secrets/personal-services.nix
@@ -153,7 +149,6 @@ in {
     locate = {
       enable = true;
       locate = pkgs.plocate;
-      # TODO: enable the cron job to update the plocatedb
       # localuser = "root";
       localuser = null
 ;      # extraFlags = ["--dbformat=slocate"];
