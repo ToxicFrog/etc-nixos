@@ -29,19 +29,13 @@ in {
     (self: super: {
       etcd = super.etcd_3_4;
       slashem9 = super.callPackage ./slashem9/slashem9.nix {};
-      sigal = super.sigal.overrideAttrs (oldAttrs: rec {
-        version = "2.3-alpha";
-        src = super.fetchFromGitHub {
-          owner = "saimn";
-          repo = "sigal";
-          rev = "246aed53ff2d29d680cc81929e59f19023e463bb";
-          sha256 = "1nxznibyn5g9fd1aksfjmcqrjhghi1zfbyrdlb0sjaxkdsjn9mnv";
-        };
-        patchPhase = ''
-          sed -Ei 's,THEMES_PATH = ,THEMES_PATH = os.getenv("SIGAL_THEMES_PATH") or ,' sigal/writer.py
-        '';
-        propagatedBuildInputs = oldAttrs.propagatedBuildInputs ++ [self.python3Packages.setuptools];
-        pytestCheckPhase = "true"; # skip tests at HEAD
+      sigal = super.sigal.overrideAttrs (_: {
+        patches = [
+          (super.fetchpatch {
+            url = "https://github.com/saimn/sigal/commit/0bf932935b912f5a4b594182b347f4698a0052dc.patch";
+            sha256 = "sha256-h9m5o2RXkNiN36hF97iLCr6JP8+dcGYWM8N0sALFnvw=";
+          })
+        ];
       });
       weechat = super.weechat.override {
         configure = { availablePlugins, ... }: {
