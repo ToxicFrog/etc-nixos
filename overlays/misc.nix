@@ -3,17 +3,14 @@ self: super:
 let
   unstable = (import <nixos-unstable> { config.allowUnfree = true; });
 in {
-  libmysofa = super.libmysofa.overrideAttrs (oldAttrs: {
-    cmakeFlags = [ "-DBUILD_TESTS=OFF" "-DCODE_COVERAGE=OFF" ];
-  });
-  fuse = super.fuse.overrideAttrs (oldAttrs: {
-    # Very hacky workaround to make sure that mount.fuse can search PATH:
-    postPatch = (oldAttrs.postPatch or "") + ''
-      sed -i \
-        -e '/execl/i setenv("PATH", "/run/current-system/sw/bin", 1);' \
-        util/mount.fuse.c
-    '';
-  });
+  # fuse = super.fuse.overrideAttrs (oldAttrs: {
+  #   # Very hacky workaround to make sure that mount.fuse can search PATH:
+  #   postPatch = (oldAttrs.postPatch or "") + ''
+  #     sed -i \
+  #       -e '/execl/i setenv("PATH", "/run/current-system/sw/bin", 1);' \
+  #       util/mount.fuse.c
+  #   '';
+  # });
   crossfire-server = super.crossfire-server.overrideAttrs (oldAttrs: {
     # Reset maps every 8h rather than every 2h.
     postConfigure = ''

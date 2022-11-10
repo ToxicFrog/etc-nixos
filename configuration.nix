@@ -2,10 +2,7 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
-  stable-old = (import <nixos-20.03> { config.allowUnfree = true; });
-in {
+{
   imports = [
     ./hardware-configuration.nix
     ./boot.nix
@@ -59,7 +56,7 @@ in {
   };
 
   security.acme = {
-    email = "webmaster@ancilla.ca";
+    defaults.email = "webmaster@ancilla.ca";
     acceptTerms = true;
   };
 
@@ -80,7 +77,7 @@ in {
     lm_sensors
     nodejs  # for discord-ircd
     qbittorrent-nox
-    #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for mo and weeslack
+    #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for morg and weeslack
     recoll  # log searching
     sshfs
     weechat
@@ -88,9 +85,7 @@ in {
     keybase keybase-gui # keybase chat
     notmuch alot gmailieer # mail reading
     doomrl
-    #unstable.steam
     timg tiv
-    #slashem9 build currently broken
     clojure leiningen
     jdk
     #jdk #jdk14_headless

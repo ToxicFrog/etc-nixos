@@ -25,7 +25,6 @@ in {
   nixpkgs.overlays = [
     (import ./doomrl.nix)
     (import ./doomrl-server.nix)
-    (import ./dosbox-debug.nix)
     (import ./misc.nix)
     (self: super: {
       etcd = super.etcd_3_4;
@@ -70,7 +69,6 @@ in {
         };
         nativeBuildInputs = with super; [ cmake pkg-config ];
       });
-      # jellyfin = super.jellyfin.override { ffmpeg = super.ffmpeg-full; };
     })
   ];
 }

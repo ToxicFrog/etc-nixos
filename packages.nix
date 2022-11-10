@@ -21,7 +21,7 @@ in {
     gnumake
     # google-chrome
     hledger hledger-ui hledger-web
-    unstable.htop
+    htop
     jre
     kpcli
     ledger
@@ -31,13 +31,12 @@ in {
     ncdu
     nox
     p7zip
-    phantomjs2
     posix_man_pages
     python
     ledger-autosync
     python3
     recode
-    sshfsFuse
+    sshfs-fuse
     stdmanpages
     taskwarrior
     tmux

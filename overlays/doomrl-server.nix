@@ -14,7 +14,7 @@ in {
 
     nativeBuildInputs = with self; [gnumake git lua5_3];
     buildInputs = with self; [SDL];
-    deps = with self; [python3 telnet less ncurses nano];
+    deps = with self; [python3 inetutils less ncurses nano];
 
     phases = [ "unpackPhase" "buildPhase" "installPhase" ];
 

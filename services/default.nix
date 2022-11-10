@@ -182,18 +182,17 @@ in {
           AllowTcpForwarding no
       '';
     };
+  };
 
-    ssmtp = {
-      enable = true;
-      domain = "ancilla.ca";
-      hostName = "ancilla.ancilla.ca";
-      root = "root@ancilla.ca";
-      useTLS = true;
-      useSTARTTLS = true;
-      settings = {
-        mailhub = "smtp.distributel.com";
-        TLS_CA_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-      };
+  programs.msmtp = {
+    enable = true;
+    accounts.default = {
+      host = "smtp.distributel.com";
+      domain = "ancilla.ancilla.ca";
+      tls = "on";
+      tls_starttls = "on";
+      #tls_trust_file = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+      from = "%U@ancilla.ca";
     };
   };
 
