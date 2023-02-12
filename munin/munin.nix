@@ -81,8 +81,8 @@ in {
       address openwrt
 
       [ancilla.ca;traxus]
-      use_node_name no
-      address localhost
+      use_node_name yes
+      address traxus
 
       [ancilla.ca;pladix]
       use_node_name yes
@@ -135,7 +135,7 @@ in {
   services.munin-node = {
     enable = true;
     extraPlugins = {
-      http_traxus_onhub = ./http__onhub;
+      #http_traxus_onhub = ./http__onhub;
       http_nanolathe_prusaconnect = ./http__prusaconnect;
       borgbackup = ./borgbackup;
       certificates = ./certificates;
@@ -171,11 +171,6 @@ in {
         env.domains ancilla.ca godbehere.ca
         env.host_name ancilla.ca
         env.whois ${pkgs.whois}/bin/whois
-
-      [http_traxus_onhub]
-        env.name_64bc0cf4a1d3 symbol-phone
-        env.name_58b0d4862ab5 kobo
-        timeout 60
 
       [borgbackup]
         user root
