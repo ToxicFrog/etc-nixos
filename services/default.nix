@@ -14,10 +14,11 @@ in {
     ../secrets/personal-services.nix
     ./bittorrent.nix
     ./borgbackup.nix
-    ./kanboard.nix
+    # ./kanboard.nix
     ./library.nix
-    ./minecraft.nix
+    ./mastodon.nix
     ./matrix.nix
+    ./minecraft.nix
     ./music.nix
     ./nfs.nix
     ./nginx.nix
