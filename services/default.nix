@@ -8,6 +8,7 @@ let
   localpkgs = (import /home/rebecca/devel/nixpkgs {});
 in {
   imports = [
+    <nixos-unstable/nixos/modules/services/misc/atuin.nix>
     ../munin/munin.nix
     ../munin/hugin.nix
     ../secrets/personal-services.nix
@@ -31,12 +32,36 @@ in {
 
   # CUPS
   networking.firewall.allowedTCPPorts = [ 21 631 ];
+
   services = {
+    # A'Tuin shell history synchronization
+    atuin = {
+      enable = true;
+      openRegistration = false;
+      port = 28034; # Unicode for TURTLE is 0x128034
+    };
+    postgresql.package = pkgs.postgresql_15;
+    postgresql.ensureUsers = [{
+        name = "atuin";
+        ensurePermissions = {
+          "DATABASE atuin" = "ALL PRIVILEGES";
+          "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
+        };
+    }];
+    nginx.virtualHosts."atuin.ancilla.ca" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:28034/";
+      };
+    };
+
     avahi = {
       enable = true;
       publish.enable = true;
       publish.userServices = true;
     };
+
     printing = {
       allowFrom = ["all"];
       browsing = true;

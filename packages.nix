@@ -7,6 +7,7 @@ in {
   #environment.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
   environment.systemPackages = with pkgs; [
     atop
+    atuin
     binutils  # for strings and nm
     calibre  # for calibre-server
     dos2unix
