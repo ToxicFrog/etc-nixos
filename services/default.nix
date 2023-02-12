@@ -208,12 +208,14 @@ in {
   programs.msmtp = {
     enable = true;
     accounts.default = {
-      host = "smtp.distributel.com";
+      host = "smtp.thinktel.ca";
       domain = "ancilla.ancilla.ca";
       tls = "on";
-      tls_starttls = "on";
+      tls_starttls = "off";
       #tls_trust_file = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
       from = "%U@ancilla.ca";
+      user = secrets.msmtp-user;
+      password = secrets.msmtp-password;
     };
   };
 
