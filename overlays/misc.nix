@@ -34,12 +34,12 @@ in {
     postFixup = ''
       echo "Removing references to /usr/{bin,sbin}/ from munin plugins..."
       find "$out/lib/plugins" -type f -print0 | xargs -0 -L1 \
-          sed -i -e "s|/usr/bin/||g" -e "s|/usr/sbin/||g" -e "s|\<bc\>|${self.bc}/bin/bc|g"
+          ${self.gnused}/bin/sed -i -e "s|/usr/bin/||g" -e "s|/usr/sbin/||g" -e "s|\<bc\>|${self.bc}/bin/bc|g"
       if test -e $out/nix-support/propagated-build-inputs; then
           ln -s $out/nix-support/propagated-build-inputs $out/nix-support/propagated-user-env-packages
       fi
 
-      sed -E -i "s/perl -T/perl/" "$out"/www/cgi/*
+      ${self.gnused}/bin/sed -E -i "s/perl -T/perl/" "$out"/www/cgi/*
 
       for file in "$out"/bin/munindoc "$out"/sbin/munin-* "$out"/lib/munin-* "$out"/www/cgi/*; do
           # don't wrap .jar files
