@@ -14,13 +14,16 @@ div.orderValue {
 
 /* On touchscreen devices, always display metadata/menu buttons, since we can't hover. */
 @media (hover: none) {
-  div.cardCoverOverlayBottomRow {
+  div.cardControls {
     opacity: 1.0 !important;
+  }
+  span.v-icon.eye {
+    opacity: 0.0;
   }
 
   /* And put them in a black circle so we can see them even against light covers,
      since we don't get the darkening of the whole cover without hovering. */
-  div.cardCoverOverlayBottomRow button {
+  button.cardControlButton {
     border-radius: 10em;
     background: black;
     opacity: 0.6;
@@ -44,25 +47,6 @@ html {
 }
 html::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
-}
-
-/* Make the "shrink to" options "fit to" instead */
-/*
-img.page.fitToScreen {
-  height: 100vh;
-  width: 100vw;
-  object-fit: contain;
-}
-*/
-
-img.page.fitToHeight {
-  height: 100vh;
-  object-fit: contain;
-}
-
-img.page.fitToWidth {
-  width: 100vw;
-  object-fit: contain;
 }
 
 /* NOTES

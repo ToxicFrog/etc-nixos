@@ -48,7 +48,7 @@ in {
   };
   users.groups.codex = { gid = 980; };
   virtualisation.oci-containers.containers.codex = {
-    image = "ajslater/codex@sha256:a4736a520e7d711e0d72f0eae4067c3a5b064e034c908290de36d557c3ea4281";
+    image = "ajslater/codex@sha256:3835da1e461dd06081d69daadbaa5be50b027577a4e1ebb8553665ae2cadfc61";
     user = "987:980";
     ports = ["9810:9810"];
     volumes = [
@@ -60,7 +60,7 @@ in {
     ];
     environment = {
       TZ = "America/Toronto";
-      LOGLEVEL = "DEBUG";
+      LOGLEVEL = "INFO";
     };
   };
 }
