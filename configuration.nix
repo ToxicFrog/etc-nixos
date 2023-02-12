@@ -19,6 +19,11 @@
   time.timeZone = lib.mkDefault "America/Toronto";
   programs.zsh.enable = true;
 
+  i18n = {
+    defaultLocale = "en_CA.UTF-8";
+    extraLocaleSettings.LC_TIME = "en_DK.UTF-8";
+  };
+
   # Use a somewhat larger font on the tty.
   console.font = "sun12x22";
 
@@ -48,11 +53,14 @@
     ];
   };
 
-  nix = {
-    useSandbox = true;
-    gc.automatic = true;
-    gc.options = "--delete-older-than 60d";
-    autoOptimiseStore = true;
+  nix.gc = {
+    automatic = true;
+    options = "--delete-older-than 60d";
+  };
+  nix.settings = {
+    sandbox = true;
+    auto-optimise-store = true;
+    max-jobs = lib.mkDefault 4;
   };
 
   security.acme = {
