@@ -10,19 +10,13 @@ let
   ffprobe-subsong-wrapper = pkgs.writeShellScriptBin "ffprobe" ''
     exec ${pkgs.ffmpeg-full}/bin/ffprobe -subsong all "$@"
   '';
-  # airsonic-advanced-with-jdk17 = args@{ pkgs, ...}:
-  #   import <nixpkgs/nixos/modules/services/misc/airsonic.nix>
-  #     (args // { pkgs = pkgs // { jre8 = pkgs.jdk17; }; });
 in {
   users.users.airsonic.createHome = lib.mkForce false;
-
-  # disabledModules = ["services/misc/airsonic.nix"];
-  # imports = [airsonic-advanced-with-jdk17];
 
   services = {
     airsonic = {
       enable = true;
-      maxMemory = 1024;
+      maxMemory = 3072;
       jre = pkgs.jdk17;
       home = "/srv/airsonic";
       transcoders = [

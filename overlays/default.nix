@@ -44,11 +44,11 @@ in {
       };
       recoll = super.recoll.override { withGui = false; };
       airsonic = super.airsonic.overrideAttrs (_: rec {
-        version = "11.0.0-SNAPSHOT.20220418221611";
+        version = "11.0.2-kagemomiji";
         name = "airsonic-advanced-${version}";
         src = super.fetchurl {
-          url = "https://github.com/airsonic-advanced/airsonic-advanced/releases/download/11.0.0-SNAPSHOT.20220418221611/airsonic.war";
-          sha256 = "06mxx56c5i1d9ldcfznvib1c95066fc1dy4jpn3hska2grds5hgh";
+          url = "https://github.com/kagemomiji/airsonic-advanced/releases/download/11.0.2/airsonic.war";
+          sha256 = "PgErtEizHraZgoWHs5jYJJ5NsliDd9VulQfS64ackFo=";
         };
       });
       openxcom = super.openxcom.overrideAttrs (oldAttrs: rec {
