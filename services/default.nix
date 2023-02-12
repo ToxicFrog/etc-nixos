@@ -133,6 +133,7 @@ in {
     };
     bitlbee = {
       enable = true;
+      plugins = with pkgs; [ bitlbee-mastodon bitlbee-facebook ];
       # plugins = with pkgs; [ unstable.bitlbee-facebook unstable.bitlbee-steam ];
       # libpurple_plugins = with pkgs; [ purple-hangouts ];
     };
