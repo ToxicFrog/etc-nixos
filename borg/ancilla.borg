@@ -15,8 +15,10 @@ R ancilla/media/music/genres.yaml
 R ancilla/torrents
 
 ! **/tmp/
-! **/.cache/
 ! **/.bup/
+! ancilla/torrents/buffer/
+! ancilla/torrents/complete/
+! ancilla/torrents/new/
 ! home/*/Videos/
 ! home/*/Music/
 ! home/*/music/
@@ -25,15 +27,11 @@ R ancilla/torrents
 ! home/*/Games/**/*Cache*/
 ! home/*/.local/share/Steam/
 ! home/*/.local/share/Trash/
-! var/lib/**/proc/
-! **/core
-! **/core.*
+! srv/airsonic/lastfmcache/
+! srv/ipfs/blocks/
 ! srv/minecraft/dynmap-web/
 ! srv/minecraft/*/dynmap/web/
+! srv/www/munin/
+! var/lib/codex/cache/
 ! var/lib/jellyfin/transcodes/
 ! var/lib/jellyfin/transcoding-temp/
-! ancilla/torrents/new/
-! ancilla/torrents/buffer/
-! ancilla/torrents/complete/
-! srv/ipfs/blocks/
-! srv/www/munin/

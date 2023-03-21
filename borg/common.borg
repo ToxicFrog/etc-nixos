@@ -1,0 +1,13 @@
+! var/lib/**/proc/
+! **/.cache/
+! **/__pycache__/
+
+# Chrome and Firefox stuff that isn't tagged properly
+! **/CacheStorage/
+! **/cache2/
+! **/startupCache/
+! **/Code Cache/
+! **/ScriptCache/
+
+- **/core
+- **/core.*
