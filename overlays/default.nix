@@ -25,6 +25,7 @@ in {
   nixpkgs.overlays = [
     (import ./doomrl.nix)
     (import ./doomrl-server.nix)
+    (import ./dosage.nix)
     (import ./misc.nix)
     (self: super: {
       etcd = super.etcd_3_4;
