@@ -48,13 +48,12 @@ in {
   };
   users.groups.codex = { gid = 980; };
   virtualisation.oci-containers.containers.codex = {
-    image = "ajslater/codex@sha256:3835da1e461dd06081d69daadbaa5be50b027577a4e1ebb8553665ae2cadfc61";
+    image = "ajslater/codex@sha256:afd16cb5931ee9d049f211749927b11cc33fefaf405a87a22cb12f79411d6bde";
     user = "987:980";
     ports = ["9810:9810"];
     volumes = [
       "/var/lib/codex:/config"
       "/var/lib/codex:/.config"
-      #"/ancilla/media/comics/.codex-libraries:/comics:ro"
       "/ancilla/media/comics:/ancilla/media/comics:ro"
       "/ancilla/media/books:/ancilla/media/books:ro"
     ];
