@@ -16,7 +16,7 @@ in {
   services = {
     airsonic = {
       enable = true;
-      maxMemory = 3072;
+      maxMemory = 4096;
       jre = pkgs.jdk17;
       home = "/srv/airsonic";
       transcoders = [
