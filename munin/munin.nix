@@ -142,7 +142,7 @@ in {
       whois = ./whois;
       zpool_health = ./zpool_health;
       biometrics = ./biometrics;
-      house_sensors = ./house_sensors;
+      #house_sensors = ./house_sensors; # not currently online
       file_age = /usr/src/munin-contrib/plugins/disk/file_age;
     };
     extraPluginConfig = ''
@@ -211,6 +211,7 @@ in {
       "proc"          # doesn't work
       "zfs_arcstats"  # doesn't support ZoL
       "zpool_iostat"  # TODO: replace with per-pool rather than per-disk iostat
+      "zfs-filesystem-graph" # is actually a wildcard plugin and needs to be configured in extraPlugins
     ];
   };
   # concat with ${pkgs.lm-sensors}/etc/sensors3.conf
