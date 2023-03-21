@@ -19,6 +19,17 @@
   time.timeZone = lib.mkDefault "America/Toronto";
   programs.zsh.enable = true;
 
+  # Compatibility shim for running non-nixos binaries
+  programs.nix-ld.enable = true;
+  environment.variables = {
+      NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
+        pkgs.stdenv.cc.cc
+        pkgs.openssl
+        pkgs.openssl_1_1
+      ];
+      NIX_LD = lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
+  };
+
   i18n = {
     defaultLocale = "en_CA.UTF-8";
     extraLocaleSettings.LC_TIME = "en_DK.UTF-8";
