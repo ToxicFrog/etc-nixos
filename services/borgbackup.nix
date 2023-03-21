@@ -32,6 +32,7 @@ let
       "--exclude-if-present=.NOBACKUP"
       "--compression=auto,zstd"
       "--patterns-from=${borgcfg}/${name}.borg"
+      "--patterns-from=${borgcfg}/common.borg"
     ];
     repo = "/backup/borg-repo";
     paths = [];  # Paths are read from the --patterns-from file
