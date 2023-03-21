@@ -52,6 +52,7 @@ shopt -s lastpipe
 source "${MUNIN_LIBDIR}/plugins/plugin.sh"
 is_multigraph
 touch $MUNIN_STATEFILE
+mkdir -p "$info_cache_dir"
 
 function dimension {
   local name="${1//./_}"
@@ -139,6 +140,7 @@ function values_for_prefix {
     # We weren't able to acquire the lock and/or there's no archives with this
     # prefix. Fetch the latest data from MUNIN_STATEFILE instead so backup
     # age counters keep incrementing.
+    echo "Couldn't get info for $1, using cache instead" >&2
     local start original_size deduplicated_size duration
     sed -n -E "/^$1\t/ p" $MUNIN_STATEFILE \
     | read _ start original_size deduplicated_size duration || true
@@ -175,7 +177,7 @@ function borg_info_json {
   for prefix in $backup_prefixes; do
     freq="${prefix#*::}"
     prefix="${prefix%::*}"
-    archive="$(borg list --short --prefix "$prefix" | egrep -v '\.checkpoint$' | tail -n1)"
+    archive="$(borg list --short --glob-archives "${prefix}*" | egrep -v '\.checkpoint$' | tail -n1)"
     [[ $archive ]] || exit 1
     borg_info_json "$archive" | values_for_prefix "${prefix//./_}" "$freq"
   done
