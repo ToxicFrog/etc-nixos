@@ -10,6 +10,7 @@ in {
     atuin
     binutils  # for strings and nm
     calibre  # for calibre-server
+    chezmoi
     dos2unix
     dtrx
     ffmpeg-full
@@ -25,8 +26,9 @@ in {
     htop
     jre
     kpcli
-    ledger
+    #ledger
     leiningen
+    lsd
     luajit
     man-pages
     ncdu
@@ -37,6 +39,7 @@ in {
     ledger-autosync
     python3
     recode
+    rlwrap
     sshfs-fuse
     stdmanpages
     taskwarrior
