@@ -77,7 +77,7 @@ in {
     kbfs.enable = false;
 
     crossfire-server = {
-      enable = false;
+      enable = true;
       openFirewall = true;
       configFiles = {
         settings = ''
@@ -89,6 +89,8 @@ in {
           #recycle_tmp_maps true
           # Show HP bars for damaged entities.
           always_show_hp damaged
+          # Recover dirty maps after server restart
+          recycle_tmp_maps true
         '';
         news = ''
           %Welcome to the ancilla crossfire server!

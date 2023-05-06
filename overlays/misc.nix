@@ -2,7 +2,7 @@ self: super:
 
 let
   unstable = (import <nixos-unstable> { config.allowUnfree = true; });
-in {
+in rec {
   # fuse = super.fuse.overrideAttrs (oldAttrs: {
   #   # Very hacky workaround to make sure that mount.fuse can search PATH:
   #   postPatch = (oldAttrs.postPatch or "") + ''
@@ -11,12 +11,31 @@ in {
   #       util/mount.fuse.c
   #   '';
   # });
-  crossfire-server = super.crossfire-server.overrideAttrs (oldAttrs: {
-    # Reset maps every 8h rather than every 2h.
-    postConfigure = ''
-      sed -Ei 's,^#define MAP_MAXRESET.*,#define MAP_MAXRESET 28800,' include/config.h
-      sed -Ei 's,^#define MAP_DEFAULTRESET.*,#define MAP_DEFAULTRESET 28800,' include/config.h
+  crossfire-server =
+    (super.crossfire-server.override { arch = crossfire-arch; maps = crossfire-maps; })
+    .overrideAttrs (oldAttrs: {
+    version = "HEAD";
+    src = /home/rebecca/devel/crossfire-server;
+    preConfigure = ''
+      ln -sf ${crossfire-arch} lib/arch
+      ln -sf ${crossfire-maps} lib/maps
+      sh autogen.sh
     '';
+    # Reset maps every week rather than every 2h.
+    postConfigure = ''
+      sed -Ei 's,^#define MAP_MAXRESET .*,#define MAP_MAXRESET 604800,' include/config.h
+      sed -Ei 's,^#define MAP_DEFAULTRESET .*,#define MAP_DEFAULTRESET 604800,' include/config.h
+      sed -Ei 's,^#define TMPDIR .*,#define TMPDIR "tmp",' include/config.h
+    '';
+  });
+  crossfire-arch = super.crossfire-arch.overrideAttrs (oldAttrs: {
+    version = "HEAD";
+    # src = builtins.fetchGit "/home/rebecca/devel/crossfire-arch";
+    src = /home/rebecca/devel/crossfire-arch;
+  });
+  crossfire-maps = super.crossfire-maps.overrideAttrs (oldAttrs: {
+    version = "HEAD";
+    src = builtins.fetchGit "/home/rebecca/src/crossfire-maps";
   });
   factor-lang = super.factor-lang.overrideAttrs (old: {
     version = "0.99";
