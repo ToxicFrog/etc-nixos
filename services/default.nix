@@ -23,6 +23,7 @@ in {
     ./nfs.nix
     ./nginx.nix
     ./smb.nix
+    ./taskd.nix
     ./timelapse.nix
     ./tv.nix
     ./vncdesktop.nix
