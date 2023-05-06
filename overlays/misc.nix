@@ -41,12 +41,12 @@ in rec {
     version = "0.99";
     src = super.fetchFromGitHub {
       owner = "factor"; repo = "factor";
-      rev = "d5a2d1cf1b98b9ded7fa7330cdc0e58dd01551c1";
-      sha256 = "JDIr20fiGnsMwG1rdudTHO5TTAe5ZZmoJL4TRHv5geE=";
+      rev = "e70d0fd819eb8b9d5a15213428df22a73ce6b210";
+      sha256 = "sha256-cQl1jxhiNt9apAQNq1ICWkFlfr1MiRVmAPEZHdJZ6/o=";
     };
     bootstrap = super.fetchurl {
       url = "https://downloads.factorcode.org/images/master/boot.unix-x86.64.image";
-      sha256 = "2+dway20pYoHgTTNGASV5R6VtyPCOhj0ntm4wyuSdlA=";
+      sha256 = "sha256-jVy9ylkDPVkl51RraNSF9/PIpSSCVQh1kDgybHgLGGU=";
     };
     preBuild = ''
       cp $bootstrap boot.unix-x86.64.image
