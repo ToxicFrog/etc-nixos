@@ -112,7 +112,7 @@ let
         exit $err
       fi
     '';
-    postHook = updatecache;
+    postCreate = updatecache;
   } // removeAttrs opts ["host" "path" "touch"]);
   name-to-service = name: {
     name = name;
