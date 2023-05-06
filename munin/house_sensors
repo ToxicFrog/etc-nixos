@@ -2,7 +2,6 @@
 #
 # Monitor wireless sensors deployed around the house.
 
-set -e
 #source "${MUNIN_LIBDIR}/plugins/plugin.sh"
 #is_multigraph
 
@@ -33,6 +32,7 @@ EOF
   exit 0
 fi
 
+set +e
 spiders="$(ssh root@crisp ./read-sensors)"
 office="$(ssh root@chip ./read-sensors)"
 
