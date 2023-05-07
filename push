@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+#
+# Simple script for pushing configurations to other computers in the house.
+
+function die {
+	echo "$@" > /dev/stderr
+	exit 1
+}
+
+TARGET="$1"; shift
+ssh -o BatchMode=yes root@$TARGET true || die "Unable to ssh root@$TARGET noninteractively"
+
+nixos-rebuild -I nixos-config=/etc/nixos/systems/$TARGET/configuration.nix \
+	--build-host root@$TARGET --target-host root@$TARGET \
+	"$@"
