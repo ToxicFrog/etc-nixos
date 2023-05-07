@@ -4,11 +4,14 @@
 
 { config, pkgs, ... }:
 
-let unstable = import <nixos-unstable> {}; in
-{
+let
+  users = (import ../../secrets/users.nix { config = config; pkgs = pkgs; });
+in {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./packages.nix
+      ../../services/syncthing.nix
     ];
 
   # Bootloader.
@@ -18,10 +21,6 @@ let unstable = import <nixos-unstable> {}; in
 
   networking.hostName = "pladix"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -40,7 +39,7 @@ let unstable = import <nixos-unstable> {}; in
     sync.enable = true;
     nvidiaBusId = "PCI:1:0:0";
     intelBusId = "PCI:0:2:0";
-  }; 
+  };
 
   # Enable the KDE Plasma Desktop Environment.
   services.xserver.desktopManager.plasma5.enable = true;
@@ -66,7 +65,6 @@ let unstable = import <nixos-unstable> {}; in
     #extraPackages = with pkgs; [vaapiVdpau vaapiIntel];
     #extraPackages32 = with pkgs; [vaapiVdpau vaapiIntel];
   };
-
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -99,62 +97,8 @@ let unstable = import <nixos-unstable> {}; in
     extraGroups = [ "networkmanager" "wheel" "adbusers" ];
     shell = pkgs.zsh;
   };
-  users.users.root.shell = pkgs.zsh;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.packageOverrides = pkgs: {
-    steam = pkgs.steam.override {
-      extraPkgs = pkgs: with pkgs; [
-        libpng  # for dead cells
-      ];
-    };
-    waydroid = unstable.waydroid;
-  };
-  programs.steam.enable = true;
-  virtualisation.waydroid.enable = false;
-  programs.adb.enable = true;
-
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    # system tools
-    zip unzip ncdu htop xscreensaver wget ark git
-    # for gaming
-    jre retroarchBare stepmania lutris scummvm wine itch
-    steam.run steam
-    fluidsynth soundfont-fluid
-    caffeine-ng # power control for retroarch
-    antimicroX # controller support for keyboard-only games
-    appimage-run # for gdlauncher
-    opentyrian
-    gzdoom
-    # for dbgl
-    swt dosbox gsettings-desktop-schemas
-    # for exodos-ll
-    dosbox-staging dialog
-    # misc games
-    gnome.quadrapassel ltris lbreakout2
-    # for media playback
-    chromium ffmpeg-full
-    vulkan-tools vulkan-loader
-    vlc
-    #libsForQt5.phonon-backend-vlc
-    #libsForQt5.phonon-backend-gstreamer gst-plugins-good gst-plugins-ugly
-    # for fun
-    fortune
-    # for android stuff
-    waydroid
-  ];
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-11.5.0"
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  programs.zsh.enable = true;
-
-  # List services that you want to enable:
+  users.users.root = users.root;
+  users.users.alex = users.alex;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
@@ -181,5 +125,4 @@ let unstable = import <nixos-unstable> {}; in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
-
 }
