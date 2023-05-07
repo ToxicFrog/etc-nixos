@@ -7,6 +7,7 @@ in {
   users.mutableUsers = false;
   users.enforceIdUniqueness = false;
 
+  users.groups.linger = {};
   system.activationScripts.linger = ''
     rm -rf /var/lib/systemd/linger
     mkdir -p /var/lib/systemd/linger
