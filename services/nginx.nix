@@ -28,8 +28,13 @@ in {
           root = "/ancilla";
           extraConfig = "autoindex on;";
         };
-        locations."/syncthing/".extraConfig = ''
-          proxy_pass              http://127.0.0.1:8384/;
+        locations."/syncthing/bex/".extraConfig = ''
+          proxy_pass              http://127.0.0.1:21171/;
+          proxy_read_timeout      600s;
+          proxy_send_timeout      600s;
+        '';
+        locations."/syncthing/alex/".extraConfig = ''
+          proxy_pass              http://127.0.0.1:21148/;
           proxy_read_timeout      600s;
           proxy_send_timeout      600s;
         '';
