@@ -46,9 +46,12 @@
   services.munin-node = {
     enable = true;
     extraConfig = ''
-      cidr_allow 192.168.86.0/24
+      cidr_allow 192.168.1.0/24
     '';
   };
 
-
+  nix.settings.auto-optimise-store = true;
+  system.autoUpgrade = {
+    enable = false;
+  };
 }
