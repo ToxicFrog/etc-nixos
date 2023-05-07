@@ -10,7 +10,7 @@ in {
     atuin
     binutils  # for strings and nm
     calibre  # for calibre-server
-    chezmoi
+    unstable.chezmoi
     dos2unix
     dtrx
     ffmpeg-full
