@@ -23,6 +23,7 @@ in {
   ];
   # Actual overlays.
   nixpkgs.overlays = [
+    (import ./crossfire.nix)
     (import ./doomrl.nix)
     (import ./doomrl-server.nix)
     (import ./dosage.nix)
