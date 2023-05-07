@@ -4,33 +4,19 @@
 
 { config, pkgs, ... }:
 
-let
-  users = (import ../../secrets/users.nix { config = config; pkgs = pkgs; });
-in {
+{
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
-      ./packages.nix
+      ../alex-common/default.nix
       ../../services/syncthing.nix
     ];
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-
-  networking.hostName = "pladix"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-  hardware.bluetooth.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "America/Toronto";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_CA.utf8";
+  networking = {
+    hostName = "pladix";
+    domain = "ancilla.ca";
+    networkmanager.enable = true;
+  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -49,8 +35,8 @@ in {
     enable = true;
     user = "pladix";
   };
-  #systemd.services.display-manager.wants = [ "systemd-user-sessions.service" "multi-user.target" "network-online.target" ];
-  #systemd.services.display-manager.after = [ "systemd-user-sessions.service" "multi-user.target" "network-online.target" ];
+  # Enable touchpad support (enabled default in most desktopManager).
+  # services.xserver.libinput.enable = true;
 
   # Configure keymap in X11
   services.xserver = {
@@ -64,52 +50,6 @@ in {
     driSupport32Bit = true;
     #extraPackages = with pkgs; [vaapiVdpau vaapiIntel];
     #extraPackages32 = with pkgs; [vaapiVdpau vaapiIntel];
-  };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-  services.printing.drivers = with pkgs; [ samsung-unified-linux-driver_1_00_37 ];
-
-  # Enable sound with pipewire.
-  sound.enable = true;
-  hardware.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.pladix = {
-    isNormalUser = true;
-    description = "pladix role account";
-    extraGroups = [ "networkmanager" "wheel" "adbusers" ];
-    shell = pkgs.zsh;
-  };
-  users.users.root = users.root;
-  users.users.alex = users.alex;
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-  services.openssh.forwardX11 = true;
-
-  # Enable Munin system monitor
-  services.munin-node = {
-    enable = true;
-    extraConfig = ''
-      cidr_allow 192.168.86.0/24
-    '';
   };
 
   # Open ports in the firewall.

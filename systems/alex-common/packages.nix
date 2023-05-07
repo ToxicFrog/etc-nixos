@@ -1,15 +1,21 @@
 { config, pkgs, ... }:
 
-{
+let
+  unstable = import <nixos-unstable> { config.allowUnfree = true; };
+in {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: {
     steam = pkgs.steam.override {
       extraPkgs = pkgs: with pkgs; [
         libpng  # for dead cells
+        # pango harfbuzz libthai # previously needed
       ];
     };
   };
+  nixpkgs.overlays = [
+    (import ../../overlays/crossfire.nix)
+  ];
 
   programs.steam.enable = true;
   programs.adb.enable = true;
@@ -27,10 +33,11 @@
     appimage-run # for gdlauncher
     opentyrian
     gzdoom
+    crossfire-jxclient crossfire-editor
     # for dbgl
     swt dosbox gsettings-desktop-schemas
     # for exodos-ll
-    dosbox-staging dialog
+    unstable.dosbox-staging dialog
     # misc games
     gnome.quadrapassel ltris lbreakout2
     # for media playback
