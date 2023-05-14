@@ -258,4 +258,24 @@ in {
     serviceConfig.ExecStart = "${pkgs.curl}/bin/curl ${secrets.dyndns-url}";
     serviceConfig.Type = "oneshot";
   };
+
+  users.users.archiveteam = {
+    isSystemUser = true;
+    description = "ArchiveTeam Warrior";
+    home = "/var/lib/archiveteam";
+    createHome = true;
+    group = "archiveteam";
+  };
+  users.groups.archiveteam = {};
+
+  virtualisation.oci-containers.containers.archiveteam-warrior = {
+    image = "atdr.meo.ws/archiveteam/warrior-dockerfile:latest@sha256:044e9ca7d38cb8f59192534541a25ca3d3b1e3bcd2b0753ba7cc537efe4098c4";
+    ports = ["8010:8001"];
+    environment = {
+      TZ = "America/Toronto";
+      DOWNLOADER = "ToxicFrog";
+      SELECTED_PROJECT = "auto";
+      CONCURRENT_ITEMS = "6";
+    };
+  };
 }
