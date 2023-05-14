@@ -11,12 +11,16 @@ R data/Games/epic-games-store/drive_c/users
 R data/Games/epic-games-store/drive_c/ProgramData
 
 ! **/tmp/
+! **/.cache/
 ! **/.bup/
 ! home/*/Videos/
 ! home/*/Music/
 ! home/*/Pictures/
 ! home/*/Comics/
 ! home/*/Games/
-! home/*/.local/share/Steam/
+! **/Steam/steamapps/common/
 ! home/*/.local/share/lutris/
 ! home/*/.local/share/Trash/
+! var/lib/**/proc/
+! **/core
+! **/core.*
