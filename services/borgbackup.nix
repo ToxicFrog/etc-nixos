@@ -197,12 +197,20 @@ in {
       minAge = weekly;
       startAt = ["*-*-* 02,04,06,08,09,10,11,19,20,21:01:00"];
     };
+    lots-of-cats = borg-sshfs {
+      name = "lots-of-cats";
+      path = "/.";
+      touch = "root/.borgbackup";
+      minAge = weekly;
+      startAt = ["*-*-* 02,04,06,08,09,10,11,19,20,21:01:00"];
+    };
   };
   systemd.services = borg-ordering [
     "ancilla"
     "thoth"
     "isis"
     "pladix"
+    "lots-of-cats"
     "durandal"
     "godbehere.ca"
     "grandriverallbreedrescue.ca"
