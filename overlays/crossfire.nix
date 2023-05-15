@@ -7,6 +7,7 @@ rec {
     version = "HEAD";
     src = /home/rebecca/devel/crossfire-server;
     preConfigure = ''
+      rm -f lib/maps lib/arch
       ln -sf ${crossfire-arch} lib/arch
       ln -sf ${crossfire-maps} lib/maps
       sh autogen.sh
@@ -16,6 +17,11 @@ rec {
       sed -Ei 's,^#define MAP_MAXRESET .*,#define MAP_MAXRESET 604800,' include/config.h
       sed -Ei 's,^#define MAP_DEFAULTRESET .*,#define MAP_DEFAULTRESET 604800,' include/config.h
       sed -Ei 's,^#define TMPDIR .*,#define TMPDIR "tmp",' include/config.h
+    '';
+    # Point maps at /srv/crossfire so we can edit them live.
+    preFixup = ''
+      rm -f $out/share/crossfire/maps
+      ln -s /srv/crossfire/maps $out/share/crossfire/maps
     '';
   });
   crossfire-arch = super.crossfire-arch.overrideAttrs (oldAttrs: {
