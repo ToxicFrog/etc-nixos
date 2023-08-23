@@ -8,7 +8,6 @@
       enable = true;
       efiSupport = true;
       efiInstallAsRemovable = true;
-      version = 2;
       device = "nodev";
       # device = "/dev/disk/by-id/ata-KINGSTON_SA400S37240G_50026B77824F4828";
       zfsSupport = true;

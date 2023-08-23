@@ -44,7 +44,7 @@ in {
       #!${pkgs.zsh}/bin/zsh
 
       set -e
-      set -x
+      #set -x
       [[ -e ~${user}/hugin/${server}/in ]] || exit 1
 
       # If not already running under lock, re-execute self with lock acquired

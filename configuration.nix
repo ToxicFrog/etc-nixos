@@ -15,19 +15,18 @@
   ];
 
   system.stateVersion = "16.09";
-  boot.cleanTmpDir = true;
+  boot.tmp.cleanOnBoot = true;
   time.timeZone = lib.mkDefault "America/Toronto";
   programs.zsh.enable = true;
 
   # Compatibility shim for running non-nixos binaries
   programs.nix-ld.enable = true;
   environment.variables = {
-      NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
-        pkgs.stdenv.cc.cc
-        pkgs.openssl
-        pkgs.openssl_1_1
-      ];
-      NIX_LD = lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
+#      NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
+#        pkgs.stdenv.cc.cc
+#        pkgs.openssl
+#      ];
+      #NIX_LD = lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
   };
 
   i18n = {

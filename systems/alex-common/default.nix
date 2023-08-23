@@ -22,6 +22,7 @@
   services.printing.drivers = with pkgs; [ samsung-unified-linux-driver_1_00_37 ];
 
   # Enable sound with pipewire.
+  # TODO: systemwide?
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -37,6 +38,17 @@
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
+  # environment.etc."wireplumber/main.lua.d/99-disable-suspend.lua".text = ''
+  #   table.insert(alsa_monitor.rules, {
+  #     {
+  #       matches = {{{ "node.name", "matches", "alsa_output.*" }}};
+  #       apply_properties = {
+  #         ["node.pause-on-idle"] = false;
+  #         ["session.suspend-timeout-seconds"] = 0;
+  #       }
+  #     },
+  #   })
+  # '';
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
@@ -47,6 +59,7 @@
     enable = true;
     extraConfig = ''
       cidr_allow 192.168.1.0/24
+      cidr_allow fd85:f753:480f::/48
     '';
   };
 

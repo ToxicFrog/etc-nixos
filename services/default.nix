@@ -8,7 +8,6 @@ let
   localpkgs = (import /home/rebecca/devel/nixpkgs {});
 in {
   imports = [
-    <nixos-unstable/nixos/modules/services/misc/atuin.nix>
     ../munin/munin.nix
     ../munin/hugin.nix
     ../secrets/personal-services.nix
@@ -99,8 +98,7 @@ in {
           It is still under construction and created characters will often be [u]deleted without warning[/u] while the server is still being set up. Don't get too attached!
 
           %Current test items
-          Extended spellbook names
-          Spell/skill descriptions in spellbooks/scrolls/wands/etc
+          Spelldesc rewrite
         '';
         dm_file = secrets.crossfire-dmfile;
       };
@@ -190,15 +188,17 @@ in {
 
     openssh = {
       enable = true;
-      forwardX11 = true;
+      settings = {
+        X11Forwarding = true;
+        # Scanner only uses legacy key types, so we need to enable them here.
+        KexAlgorithms = lib.mkOptionDefault [
+          "diffie-hellman-group14-sha1"
+        ];
+        Macs = lib.mkOptionDefault [
+          "hmac-sha1"
+        ];
+      };
       allowSFTP = true;
-      kexAlgorithms = lib.mkOptionDefault [
-        "diffie-hellman-group14-sha1"
-      ];
-      macs = lib.mkOptionDefault [
-        "hmac-sha1"
-      ];
-      # Scanner only uses legacy key types, so we need to enable them here.
       extraConfig = ''
         PubkeyAcceptedKeyTypes +ssh-dss,ssh-rsa
         HostKeyAlgorithms +ssh-dss,ssh-rsa

@@ -21,10 +21,15 @@
   # Enable the X11 windowing system.
   services.xserver.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
-  hardware.nvidia.prime = {
-    sync.enable = true;
-    nvidiaBusId = "PCI:1:0:0";
-    intelBusId = "PCI:0:2:0";
+  hardware.nvidia = {
+    modesetting.enable = true;
+    open = true;
+    nvidiaSettings = true;
+    prime = {
+      sync.enable = true;
+      nvidiaBusId = "PCI:1:0:0";
+      intelBusId = "PCI:0:2:0";
+    };
   };
 
   # Enable the KDE Plasma Desktop Environment.
@@ -36,7 +41,7 @@
     user = "pladix";
   };
   # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+  services.xserver.libinput.enable = false;
 
   # Configure keymap in X11
   services.xserver = {
@@ -51,6 +56,14 @@
     #extraPackages = with pkgs; [vaapiVdpau vaapiIntel];
     #extraPackages32 = with pkgs; [vaapiVdpau vaapiIntel];
   };
+
+  environment.systemPackages = with pkgs; [
+    (retroarch.override {
+      cores = with libretro; [
+        dolphin mgba beetle-psx beetle-psx-hw bsnes snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
+      ];
+    })
+  ];
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
