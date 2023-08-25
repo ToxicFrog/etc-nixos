@@ -111,6 +111,10 @@ in {
       use_node_name yes
       address isis
 
+      [ancilla.ca;lots-of-cats]
+      use_node_name yes
+      address lots-of-cats
+
       [ancilla.ca;ancilla.ca]
       use_node_name no
       address localhost
