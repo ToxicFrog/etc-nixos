@@ -181,7 +181,7 @@ in {
         env.exclude none unknown rootfs iso9660 squashfs udf romfs ramfs debugfs cgroup_root devtmpfs tmpfs nilfs2 vfat
 
       [certificates]
-        env.domains ancilla.ancilla.ca atuin.ancilla.ca library.ancilla.ca music.ancilla.ca phobos.ancilla.ca tv.ancilla.ca
+        env.domains ancilla.ancilla.ca atuin.ancilla.ca home.ancilla.ca library.ancilla.ca music.ancilla.ca phobos.ancilla.ca tv.ancilla.ca ttlg.ancilla.ca www.ancilla.ca
         env.host_name ancilla.ca
 
       [file_age]
