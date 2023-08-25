@@ -164,8 +164,6 @@ in {
       certificates = ./certificates;
       whois = ./whois;
       zpool_health = ./zpool_health;
-      biometrics = ./biometrics;
-      #house_sensors = ./house_sensors; # not currently online
       file_age = /usr/src/munin-contrib/plugins/disk/file_age;
     };
     extraPluginConfig = ''
