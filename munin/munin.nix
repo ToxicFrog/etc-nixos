@@ -17,20 +17,36 @@ in {
   services.fcgiwrap.enable = true;
   services.fcgiwrap.user = "munin";
   services.fcgiwrap.group = "nogroup";
-  services.nginx.virtualHosts."ancilla.ancilla.ca".locations."/munin-cgi/" = {
-    alias = "${pkgs.munin}/www/cgi/";
-    extraConfig = ''
-      fastcgi_split_path_info /munin-cgi/([^/]+)([^?]*);
-      fastcgi_param REQUEST_METHOD $request_method;
-      fastcgi_param CONTENT_TYPE $content_type;
-      fastcgi_param CONTENT_LENGTH $content_length;
-      fastcgi_param QUERY_STRING $query_string;
-      fastcgi_param SCRIPT_FILENAME ${pkgs.munin}/www/cgi/$fastcgi_script_name;
-      fastcgi_param CGI_DEBUG true;
-      fastcgi_param MUNIN_CONFIG ${muninConf};
-      fastcgi_param PATH_INFO $fastcgi_path_info;
-      fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
-    '';
+  services.nginx.virtualHosts."ancilla.ancilla.ca".locations = {
+    "/munin/static/".alias = "/srv/www/munin/static/";
+    "/munin/" = {
+      alias = "/srv/www/munin/";
+      # In CGI mode, anything ending in HTML + the homepage need to be forwarded
+      # to munin-cgi-html.
+      # extraConfig = ''
+      #   # Anything ending in .../static/foo needs to be served from /munin/static
+      #   rewrite /static/(.*)$ /munin/static/$1 last;
+      #   rewrite ^/(.*)\.html$ /munin-cgi/munin-cgi-html/$1 last;
+      #   rewrite ^/$           /munin-cgi/munin-cgi/html/   last;
+      # '';
+    };
+    # Configuration for fcgi to handle dynamic page generation and dynazoom.
+    "/munin-cgi/" = {
+      alias = "${pkgs.munin}/www/cgi/";
+      extraConfig = ''
+        # split into [/munin-cgi/][script-name][/path/requested/by/client]
+        fastcgi_split_path_info /munin-cgi/([^/]+)([^?]*);
+        fastcgi_param REQUEST_METHOD $request_method;
+        fastcgi_param CONTENT_TYPE $content_type;
+        fastcgi_param CONTENT_LENGTH $content_length;
+        fastcgi_param QUERY_STRING $query_string;
+        fastcgi_param SCRIPT_FILENAME ${pkgs.munin}/www/cgi/$fastcgi_script_name;
+        fastcgi_param CGI_DEBUG true;
+        fastcgi_param MUNIN_CONFIG ${muninConf};
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+        fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
+      '';
+    };
   };
   # Munin master to collect and graph metrics.
   services.munin-cron = {
@@ -53,6 +69,8 @@ in {
       # and RRA count?
       #graph_data_size custom 2d, 30m for 9d, 2h for 45d, 1d for 450d
       graph_data_size custom 1t, 1h for 1y, 1d for 10y
+      graph_strategy cgi
+      html_strategy cron
 
       contact.irc.command /run/current-system/sw/bin/hugin "\#ancilla"
       contact.irc.max_messages 1
