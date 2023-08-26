@@ -10,6 +10,7 @@
       ./hardware-configuration.nix
       ../alex-common/default.nix
       ../../services/syncthing.nix
+      ./camera.nix
     ];
 
   networking = {
@@ -88,5 +89,27 @@
       BATTERYLEVEL 80
       MINUTES 30
     '';
+  };
+
+  services.mpd = {
+    enable = true;
+    network.listenAddress = "any";
+    user = "pladix"; group = "pladix";
+    extraConfig = ''
+      default_permissions "read,add,control,admin"
+      zeroconf_enabled "yes"
+      zeroconf_name "MPD @ %h"
+      audio_output {
+        type "pipewire"
+        name "local pipewire output"
+      }
+      input {
+        plugin "curl"
+      }
+    '';
+  };
+  systemd.services.mpd.environment = {
+    # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609
+    XDG_RUNTIME_DIR = "/run/user/1000"; # pladix
   };
 }
