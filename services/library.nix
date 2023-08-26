@@ -48,7 +48,7 @@ in {
   };
   users.groups.codex = { gid = 980; };
   virtualisation.oci-containers.containers.codex = {
-    image = "ajslater/codex@sha256:b12c8ff6525d0ecf7e4fe2ff4082d6b1627bef1d935a1c3007bdeedbb7101fdb"; # 1.3.10
+    image = "ajslater/codex@sha256:f6f239c5c8a028b570e27a163c5103461a22f9b790fb54a971afcbe08361f89c"; # 1.4.2
     user = "987:980";
     ports = ["9810:9810"];
     extraOptions = ["--memory=1g"];
