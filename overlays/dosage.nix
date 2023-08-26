@@ -13,6 +13,7 @@ self: super:
           a cls("KissItGoodbye", "challenge/kiss-it-goodbye", 443703),
           a cls("CircuitsAndVeins", "challenge/circuits-and-veins", 98905),
           a cls("Flowerpot", "challenge/flowerpot", 51856),
+          a cls("TheLastHuman", "challenge/the-last-human-in-a-crowded-galaxy", 403136),
         }
       ' dosagelib/plugins/webtoons.py
     '';
