@@ -6,6 +6,8 @@ rec {
     .overrideAttrs (oldAttrs: {
     version = "HEAD";
     src = /home/rebecca/devel/crossfire-server;
+    NIX_CFLAGS_COMPILE = "-g -O0";
+    NIX_CXXFLAGS_COMPILE = "-g -O0";
     preConfigure = ''
       rm -f lib/maps lib/arch
       ln -sf ${crossfire-arch} lib/arch
@@ -17,6 +19,7 @@ rec {
       sed -Ei 's,^#define MAP_MAXRESET .*,#define MAP_MAXRESET 604800,' include/config.h
       sed -Ei 's,^#define MAP_DEFAULTRESET .*,#define MAP_DEFAULTRESET 604800,' include/config.h
       sed -Ei 's,^#define TMPDIR .*,#define TMPDIR "tmp",' include/config.h
+      rm -f lib/.collect-stamp lib/crossfire.arc
     '';
     # Point maps at /srv/crossfire so we can edit them live.
     preFixup = ''
@@ -27,7 +30,7 @@ rec {
   crossfire-arch = super.crossfire-arch.overrideAttrs (oldAttrs: {
     version = "HEAD";
     src = builtins.fetchGit "/home/rebecca/devel/crossfire-arch";
-    #src = /home/rebecca/devel/crossfire-arch;
+    # src = /home/rebecca/devel/crossfire-arch;
   });
   crossfire-maps = super.crossfire-maps.overrideAttrs (oldAttrs: {
     version = "HEAD";
