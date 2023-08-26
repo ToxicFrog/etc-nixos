@@ -31,11 +31,11 @@ in {
     lsd
     luajit
     man-pages
+    nb micro
     ncdu
     nox
     p7zip
     posix_man_pages
-    python
     ledger-autosync
     python3
     recode
