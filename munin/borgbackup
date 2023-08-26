@@ -67,6 +67,10 @@ function dimension {
   done
 }
 
+function normalize-prefix {
+  echo "$@" | tr -d $' \n' | tr -c 'a-zA-Z0-9_' _
+}
+
 function graph {
   local name="$1"
   echo "multigraph borg_$1"
@@ -78,7 +82,7 @@ function graph {
   shift 5
   for prefix in $backup_prefixes; do
     local prefix="${prefix%::*}"
-    dimension "${prefix}_${name}" "${prefix}" "$@"
+    dimension "$(normalize-prefix $prefix)_${name}" "$(normalize-prefix $prefix)" "$@"
   done
 }
 
@@ -179,7 +183,7 @@ function borg_info_json {
     prefix="${prefix%::*}"
     archive="$(borg list --short --glob-archives "${prefix}*" | egrep -v '\.checkpoint$' | tail -n1)"
     [[ $archive ]] || exit 1
-    borg_info_json "$archive" | values_for_prefix "${prefix//./_}" "$freq"
+    borg_info_json "$archive" | values_for_prefix "$(normalize-prefix $prefix)" "$freq"
   done
 } | sort --key 1,1 --stable | cut -d' ' -f2-
 echo "multigraph borg_repo_size"
