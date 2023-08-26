@@ -43,5 +43,27 @@ in {
         '';
       };
     };
+
+    nginx.virtualHosts."staging.ancilla.ca" = {
+      forceSSL = true;
+      enableACME = true;
+      locations."/" = {
+        root = "/srv/www/airsonic-refix/";
+        tryFiles = "$uri $uri/ /index.html";
+      };
+      locations."/rest/" = {
+        proxyPass = "http://127.0.0.1:4040/";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_redirect          http:// https://;
+          proxy_read_timeout      600s;
+          proxy_send_timeout      600s;
+          proxy_buffering         off;
+          proxy_request_buffering off;
+          #proxy_set_header        Host $host;
+          client_max_body_size    0;
+        '';
+      };
+    };
   };
 }
