@@ -25,7 +25,7 @@ in {
     # system tools
     zip unzip ncdu htop xscreensaver wget ark git
     # for gaming
-    jre retroarchBare stepmania lutris scummvm wine itch
+    jre stepmania lutris scummvm wine itch
     steam.run steam
     fluidsynth soundfont-fluid
     caffeine-ng # power control for retroarch
@@ -34,6 +34,9 @@ in {
     opentyrian
     gzdoom
     crossfire-jxclient crossfire-editor
+    unstable.alephone
+    unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
+    unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
     # for dbgl
     swt dosbox gsettings-desktop-schemas
     # for exodos-ll
