@@ -178,6 +178,9 @@ in {
       [df_inode]
         env.exclude none unknown rootfs iso9660 squashfs udf romfs ramfs debugfs cgroup_root devtmpfs tmpfs nilfs2 vfat
 
+      [diskstats]
+        env.exclude docker-,mapper/docker-
+
       [certificates]
         env.domains ancilla.ancilla.ca atuin.ancilla.ca home.ancilla.ca library.ancilla.ca music.ancilla.ca phobos.ancilla.ca tv.ancilla.ca ttlg.ancilla.ca www.ancilla.ca
         env.host_name ancilla.ca
