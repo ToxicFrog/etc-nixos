@@ -35,3 +35,9 @@ R ancilla/torrents
 ! var/lib/codex/cache/
 ! var/lib/jellyfin/transcodes/
 ! var/lib/jellyfin/transcoding-temp/
+! var/lib/docker/
+! home/*/.config/dlique/
+! home/*/.config/hangbrain/
+
+# testing
+! var/lib/private/matrix-conduit/conduit.db
