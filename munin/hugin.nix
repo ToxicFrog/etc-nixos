@@ -80,28 +80,28 @@ in {
       }
 
       function emit-CRIT {
-        emit '\x034\x02%20s %s\x02 \x0314[%s]\x15' "$label" "$value" "$limit"
+        emit '\x034\x02%20s %s\x02 \x0314[%s]\x0F' "$label" "$value" "$limit"
         if [[ $extinfo ]]; then
           emit '    (%s)' "$extinfo"
         fi
       }
 
       function emit-WARN {
-        emit '\x037\x02%20s %s\x02 \x0314[%s]\x15' "$label" "$value" "$limit"
+        emit '\x037\x02%20s %s\x02 \x0314[%s]\x0F' "$label" "$value" "$limit"
         if [[ $extinfo ]]; then
           emit '    (%s)' "$extinfo"
         fi
       }
 
       function emit-UNKN {
-        emit '\x0313\x02%20s %s\x02 \x0314[MISSING]\x15' "$label" "$value"
+        emit '\x0313\x02%20s %s\x02 \x0314[MISSING]\x0F' "$label" "$value"
         if [[ $extinfo ]]; then
           emit '    (%s)' "$extinfo"
         fi
       }
 
       function emit-FOK {
-        emit '\x033\x02%20s %s\x02\x15' "$label" "$value"
+        emit '\x033\x02%20s %s\x02\x0F' "$label" "$value"
         if [[ $extinfo ]]; then
           emit '    (%s)' "$extinfo"
         fi
