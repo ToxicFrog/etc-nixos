@@ -18,11 +18,11 @@ in {
       enableACME = true;
       # basicAuth = secrets.plex-auth;
       locations."/" = {
-        proxyPass = "http://localhost:8096/";
+        proxyPass = "http://127.0.0.1:8096/";
         extraConfig = "proxy_buffering off;";
       };
       locations."/socket" = {
-        proxyPass = "http://localhost:8096/socket";
+        proxyPass = "http://127.0.0.1:8096/socket";
         extraConfig = ''
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
