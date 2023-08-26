@@ -78,4 +78,15 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "22.05"; # Did you read the comment?
+
+  services.apcupsd = {
+    enable = true;
+    configText = ''
+      UPSNAME apc700
+      UPSTYPE usb
+      NISIP 127.0.0.1
+      BATTERYLEVEL 80
+      MINUTES 30
+    '';
+  };
 }
