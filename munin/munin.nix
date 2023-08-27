@@ -159,11 +159,11 @@ in {
     enable = true;
     extraPlugins = {
       #http_traxus_onhub = ./http__onhub;
-      http_nanolathe_prusaconnect = ./http__prusaconnect;
-      borgbackup = ./borgbackup;
-      certificates = ./certificates;
-      whois = ./whois;
-      zpool_health = ./zpool_health;
+      http_nanolathe_prusaconnect = ./plugins/http__prusaconnect;
+      borgbackup = ./plugins/borgbackup;
+      certificates = ./plugins/certificates;
+      whois = ./plugins/whois;
+      zpool_health = ./plugins/zpool_health;
       file_age = /usr/src/munin-contrib/plugins/disk/file_age;
     };
     extraPluginConfig = ''
