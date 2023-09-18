@@ -43,35 +43,40 @@
   # Enable sound with pipewire.
   # TODO: systemwide?
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
-  # environment.etc."wireplumber/main.lua.d/99-disable-suspend.lua".text = ''
-  #   table.insert(alsa_monitor.rules, {
-  #     {
-  #       matches = {{{ "node.name", "matches", "alsa_output.*" }}};
-  #       apply_properties = {
-  #         ["node.pause-on-idle"] = false;
-  #         ["session.suspend-timeout-seconds"] = 0;
-  #       }
-  #     },
-  #   })
-  # '';
+  environment.etc."pipewire/pipewire-pulse.conf.d/99-pulse-tcp.conf".text = ''
+    pulse.properties = {
+      server.address = [
+        "unix:native"
+        {
+          address = "tcp:127.0.0.1:4713"
+          client.access = "allowed"
+        }
+      ]
+    }
+  '';
+  environment.etc."wireplumber/main.lua.d/99-disable-suspend.lua".text = ''
+    table.insert(alsa_monitor.rules,
+      {
+        matches = {{{ "node.name", "matches", "alsa_output.*" }}};
+        apply_properties = {
+          ["dither.noise"] = 1;
+          ["node.pause-on-idle"] = false;
+          ["session.suspend-timeout-seconds"] = 0;
+        }
+      }
+    )
+  '';
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-  services.openssh.forwardX11 = true;
+  services.openssh.settings.X11Forwarding = true;
 
   # Enable Munin system monitor
   services.munin-node = {
