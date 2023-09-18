@@ -11,7 +11,10 @@
     lockdPort = 4001;
     mountdPort = 4002;
     exports = ''
+      /ancilla/installs/games pladix.ancilla.ca(ro,all_squash,anonuid=1000,anongid=100)
       /ancilla/installs/games/Retroarch pladix.ancilla.ca(rw,all_squash,anonuid=1000,anongid=100)
+      /ancilla/installs/games/DOS pladix.ancilla.ca(rw,all_squash,anonuid=1000,anongid=100)
+      /ancilla/media (ro,all_squash,anonuid=1000,anongid=100)
     '';
       # /ancilla          192.168.86.0/24(rw,crossmnt,no_subtree_check)
       # /ancilla/installs 192.168.86.0/24(rw,crossmnt,no_subtree_check)
