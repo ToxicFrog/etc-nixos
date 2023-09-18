@@ -91,25 +91,13 @@
     '';
   };
 
-  services.mpd = {
-    enable = true;
-    network.listenAddress = "any";
-    user = "pladix"; group = "pladix";
-    extraConfig = ''
-      default_permissions "read,add,control,admin"
-      zeroconf_enabled "yes"
-      zeroconf_name "MPD @ %h"
-      audio_output {
-        type "pipewire"
-        name "local pipewire output"
-      }
-      input {
-        plugin "curl"
-      }
-    '';
-  };
-  systemd.services.mpd.environment = {
-    # https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/609
-    XDG_RUNTIME_DIR = "/run/user/1000"; # pladix
+  # This is a user service!!
+  # It needs to be enabled mutably using systemctl.
+  systemd.user.services.snapclient = {
+    wantedBy = [ "pipewire.service" ];
+    after = [ "pipewire.service" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla";
+    };
   };
 }
