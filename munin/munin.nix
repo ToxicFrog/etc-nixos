@@ -9,6 +9,7 @@
 { config, pkgs, lib, ... }:
 
 let
+  secrets = (import ../secrets/default.nix {});
   muninConf =
     (builtins.head (builtins.match ".*--config (/nix/store/[^ ]+munin.conf).*"
                 config.systemd.services.munin-cron.serviceConfig.ExecStart));
@@ -190,6 +191,9 @@ in {
         env.file1_label Garden timelapse age
         env.file1_warning 86400
         env.file1_critical 172800
+
+      [http_nanolathe_prusaconnect]
+        env.api_key ${secrets.printer-api-key}
 
       [whois]
         env.domains ancilla.ca godbehere.ca

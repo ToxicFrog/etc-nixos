@@ -8,8 +8,11 @@ http__prusaconnect -- plugin to scrape status information from a Prusa printer
 
 =head1 CONFIGURATION
 
-Currently no configuration settings. It will unconditionally warn when the print
-bed goes above 35°C. I may expose knobs for this in the future.
+[http_myprinter_prusaconnect]
+  env.api_key = 1234567890
+
+The hostname is read from the plugin symlink name, in the above example "myprinter".
+The API key can be gotten from the printer's physical display.
 
 =head1 AUTHOR
 
@@ -49,6 +52,8 @@ function dimension {
   done
 }
 
+if (( MUNIN_DEBUG )); then set -x; fi
+
 ### config implementation ###
 
 if [[ "$1" = "config" ]]; then
@@ -80,12 +85,14 @@ fi
 
 ### fetch implementation ###
 
-json="$(curl -s "http://${host_name}/api/telemetry")"
+json="$(curl -H "X-API-Key: ${api_key}" -s "http://${host_name}/api/printer")"
 
 cat <<EOF
 multigraph prusa_temperature
-temp_nozzle.value $(echo "$json" | jq .temp_nozzle)
-temp_bed.value $(echo "$json" | jq .temp_bed)
+temp_nozzle.value $(echo "$json" | jq .temperature.tool0.actual)
+temp_nozzle_target.value $(echo "$json" | jq .temperature.tool0.target)
+temp_bed.value $(echo "$json" | jq .temperature.bed.actual)
+temp_bed_target.value $(echo "$json" | jq .temperature.bed.target)
 multigraph prusa_z
-pos_z_mm.value $(echo "$json" | jq .pos_z_mm)
+pos_z_mm.value $(echo "$json" | jq '.telemetry["z-height"]')
 EOF
