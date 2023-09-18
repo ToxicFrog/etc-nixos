@@ -4,13 +4,14 @@
 
 {
   imports = [
-    ./hardware-configuration.nix
     ./boot.nix
-    ./users.nix
-    ./packages.nix
-    ./services/default.nix
+    ./hardware-configuration.nix
     ./overlays/default.nix
+    ./packages.nix
     ./secrets/netmount.nix
+    ./services/default.nix
+    ./users.nix
+    ./virtualization.nix
   ];
 
   system.stateVersion = "16.09";
