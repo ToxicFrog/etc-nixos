@@ -16,10 +16,6 @@ let
       archiveName="$archiveName+$archiveCount"
     fi
   '';
-  updatecache = ''
-    echo "Updating info cache for $archiveName..."
-    ${pkgs.borgbackup}/bin/borg info --json "::$archiveName" > /backup/borg/info-cache/$archiveName
-  '';
   borgcfg = pkgs.copyPathToStore ../borg;
   borg = { name, ... } @ opts: ({
     archiveBaseName = name;
@@ -51,6 +47,11 @@ let
     ];
     startAt = ["*-*-* 02,04,06,13:01:00"];
     dateFormat = "+%Y%m%d";
+    postCreate = ''
+      echo "Updating info cache for $archiveName..."
+      ${pkgs.borgbackup}/bin/borg info --json "::$archiveName" > /backup/borg/info-cache/$archiveName
+      ${pkgs.rsync}/bin/rsync -aSHAX --info=name0,progress2 --delete-after /backup/borg-repo/ rsync.net:borg-repo/
+    '';
   } // removeAttrs opts ["name"]);
   borg-sshfs = {
       name, touch,
@@ -73,12 +74,6 @@ let
       ${pkgs.sshfs}/bin/sshfs ${host}:${path} /mnt/backup \
         -o ro,workaround=rename,ServerAliveInterval=5,ServerAliveCountMax=5
       cd /mnt/backup
-    '';
-    postHook = ''
-      cd
-      echo ${pkgs.fuse}/bin/fusermount -u -z /mnt/backup
-      echo rsync -aP --bwlimit=1M --delete /backup/borg/repo 18392@ch-s011.rsync.net:borg-repo/
-      ${updatecache}
     '';
     extraServiceConfig = {
       # This will TERM after 3 hours and then KILL five minutes after that
@@ -112,7 +107,6 @@ let
         exit $err
       fi
     '';
-    postCreate = updatecache;
   } // removeAttrs opts ["host" "path" "touch"]);
   name-to-service = name: {
     name = name;
