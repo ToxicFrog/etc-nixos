@@ -26,6 +26,7 @@ rec {
       rm -f $out/share/crossfire/maps
       ln -s /srv/crossfire/maps $out/share/crossfire/maps
     '';
+    hardeningDisable = [ "all" ];
   });
   crossfire-arch = super.crossfire-arch.overrideAttrs (oldAttrs: {
     version = "HEAD";
