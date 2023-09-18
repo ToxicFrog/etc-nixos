@@ -16,10 +16,29 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.utf8";
+  i18n.supportedLocales = [ "all" ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
   services.printing.drivers = with pkgs; [ samsung-unified-linux-driver_1_00_37 ];
+
+  fonts = {
+    fontDir.enable = true;
+    enableDefaultFonts = true;
+    enableGhostscriptFonts = true;
+    fontconfig.cache32Bit = true;
+    fonts = with pkgs; [
+      corefonts
+      google-fonts
+      gentium
+      inconsolata-lgc
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+      symbola
+      unifont
+      unifont_upper
+    ];
+  };
 
   # Enable sound with pipewire.
   # TODO: systemwide?
