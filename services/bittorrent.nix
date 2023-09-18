@@ -31,13 +31,15 @@ in
     };
   };
 
-  # environment.systemPackages = with pkgs; [ transmission ];
   networking.firewall.allowedTCPPortRanges = [
     { from = 8000; to = 8050; }
   ];
   networking.firewall.allowedUDPPortRanges = [
     { from = 8000; to = 8050; }
   ];
+  # local peer discovery
+  networking.firewall.allowedTCPPorts = [6771];
+  networking.firewall.allowedUDPPorts = [6771];
 
   services.jackett = {
     enable = true;
