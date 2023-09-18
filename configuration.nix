@@ -8,7 +8,6 @@
     ./boot.nix
     ./users.nix
     ./packages.nix
-    ./doomrl-server.nix
     ./services/default.nix
     ./overlays/default.nix
     ./secrets/netmount.nix

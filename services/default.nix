@@ -13,7 +13,7 @@ in {
     ../secrets/personal-services.nix
     ./bittorrent.nix
     ./borgbackup.nix
-    # ./kanboard.nix
+    ./doomrl-server.nix
     ./library.nix
     ./mastodon.nix
     ./matrix.nix

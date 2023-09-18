@@ -14,8 +14,8 @@ in {
   security.acme.certs."phobos.ancilla.ca".email = "webmaster@ancilla.ca";
 
   # So that they appear in /run/current-system/sw.
-  #environment.systemPackages = with pkgs; [doomrl doomrl-server];
-  #environment.pathsToLink = [ "/share/doomrl-server" "/opt/doomrl" ];
+  environment.systemPackages = with pkgs; [doomrl-server];
+  environment.pathsToLink = [ "/share/doomrl-server" ];
 
   networking.firewall.allowedTCPPorts = [3666 3667];
 
@@ -50,21 +50,15 @@ in {
   };
 
   # Websockify forwards requests from the web interface to the telnetd.
-  services.networking.websockify = {
-    enable = true;
-    sslCert = sslCert;
-    sslKey = sslKey;
-    portMap = {
-      "3667" = 3666;
-    };
+  # Websockify module is busted, so re-create the configuration here
+  systemd.services."websockify@doomrl" = {
+    description = "Service to forward websocket connections on 3667 to doomrl-server on 3666";
+    script = ''
+      ${pkgs.python311Packages.websockify}/bin/websockify --ssl-only \
+        --cert=${sslCert} --key=${sslKey} 0.0.0.0:3667 0.0.0.0:3666
+    '';
+    wantedBy = [ "multi-user.target" ];
   };
-  # Fix for pythonPackages aliasing to py2 rather than py3, since the py2 version
-  # of websockify no longer builds.
-  systemd.services."websockify@".script = lib.mkForce ''
-    IFS=':' read -a array <<< "$1"
-    ${pkgs.python39Packages.websockify}/bin/websockify --ssl-only \
-      --cert=${sslCert} --key=${sslKey} 0.0.0.0:''${array[0]} 0.0.0.0:''${array[1]}
-  '';
 
   # nginx serves the static doomRL website.
   services.nginx.virtualHosts."phobos.ancilla.ca" = {
