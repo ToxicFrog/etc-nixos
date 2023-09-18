@@ -21,6 +21,7 @@ in {
     ./music.nix
     ./nfs.nix
     ./nginx.nix
+    ./smarthome.nix
     ./smb.nix
     ./syncthing.nix
     ./taskd.nix
