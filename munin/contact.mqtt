@@ -1,0 +1,11 @@
+{
+  "severity":"${var:worst}",
+  "message":"${var:graph_title}",
+  "metrics":[
+    ${loop:cfields {"severity":"CRITICAL", "name":"${var:label}", "value":"${var:value}", "limits":"${var:crange}", "info":"${var:extinfo}"},}
+    ${loop:wfields {"severity":"WARNING", "name":"${var:label}", "value":"${var:value}", "limits":"${var:wrange}", "info":"${var:extinfo}"},}
+    ${loop:ufields {"severity":"UNKNOWN", "name":"${var:label}", "value":"${var:value}", "info":"${var:extinfo}"},}
+    ${loop:fofields {"severity":"OK", "name":"${var:label}", "value":"${var:value}", "info":"${var:extinfo}"},}
+    {}
+  ]
+}

@@ -13,7 +13,9 @@ let
   muninConf =
     (builtins.head (builtins.match ".*--config (/nix/store/[^ ]+munin.conf).*"
                 config.systemd.services.munin-cron.serviceConfig.ExecStart));
-
+  readTemplate = name:
+    (builtins.replaceStrings ["\n"] ["\\\n"]
+      (lib.strings.removeSuffix "\n" (builtins.readFile ./contact.${name})));
 in {
   services.fcgiwrap.enable = true;
   services.fcgiwrap.user = "munin";
@@ -73,13 +75,12 @@ in {
       graph_strategy cgi
       html_strategy cron
 
-      contact.irc.command /run/current-system/sw/bin/hugin "\#ancilla"
-      contact.irc.max_messages 1
-      contact.irc.text ''${var:host}\t''${var:graph_title}\n\
-        ''${loop:cfields CRIT\t''${var:label}\t''${var:value}\t''${var:crange}\t''${var:extinfo}\n}\
-        ''${loop:wfields WARN\t''${var:label}\t''${var:value}\t''${var:wrange}\t''${var:extinfo}\n}\
-        ''${loop:ufields UNKN\t''${var:label}\t''${var:value}\t''${var:wrange}\t''${var:extinfo}\n}\
-        ''${loop:fofields FOK\t''${var:label}\t''${var:value}\t-\t''${var:extinfo}\n}'';
+      contact.mqtt.command ${pkgs.mosquitto}/bin/mosquitto_pub \
+        --topic hugin/munin/''${var:host} --stdin-file
+      contact.mqtt.max_messages 1
+      contact.mqtt.text ${readTemplate "mqtt"}
+
+    '';
 
     # Monitor ancilla using a local node, and the rest of the network via proxy
     # plugins.

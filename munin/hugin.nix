@@ -8,122 +8,68 @@ let
   server = "nsvm.ancilla.ca";
   nick = "hugin";
   name = "ancilla notification daemon";
+  channel = "#ancilla";
   user = "munin";
   group = "munin";
+  serviceConfig = {
+    User = "${user}";
+    Group = "${group}";
+    WorkingDirectory = "~";
+    Restart = "always";
+    RestartSec = 5;
+  };
+  hugin = pkgs.writeScriptBin "hugin" (builtins.readFile ./hugin.sh);
 in {
-  systemd.services.hugin = {
+  systemd.services.hugin-ii = {
     description = "IRC backend for Munin notifications";
+    inherit serviceConfig;
+    startLimitBurst = 3;
+    startLimitIntervalSec = 10;
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
     script = ''
+      echo "Connecting..."
       ${pkgs.ii}/bin/ii \
         -i hugin \
         -s ${server} \
         -n ${nick} \
-        -f "${name}"
+        -f "${name}" &
+      while [[ ! -e "hugin/${server}/in" ]]; do
+        sleep 1
+      done
+      echo "Joining..."
+      while [[ ! -e "hugin/${server}/${channel}/in" ]]; do
+        echo "/JOIN ${channel}" > ~${user}/hugin/${server}/in
+        sleep 5
+      done
+      wait
+    '';
+    postStart = ''
+      while [[ ! -e "hugin/${server}/${channel}/in" ]]; do
+        sleep 1
+      done
+      echo "Ready!"
     '';
     postStop = ''
       ${pkgs.coreutils}/bin/rm -rf hugin
     '';
-    serviceConfig = {
-      User = "${user}";
-      Group = "${group}";
-      WorkingDirectory = "~";
-      Restart = "always";
-      RestartSec = 5;
-    };
   };
 
-  environment.systemPackages = [
-    # Usage: cat message | hugin user-or-channel headers...
-    # The headers, if present, will be prepended to the message, before even
-    # the INCOMING MESSAGE banner. You can use this to notify specific
-    # users, add a timestamp, etc.
-    # TODO: add Munin postprocessor to make the output prettier?
-    (pkgs.writeScriptBin "hugin" ''
-      #!${pkgs.zsh}/bin/zsh
-
-      set -e
-      #set -x
-      [[ -e ~${user}/hugin/${server}/in ]] || exit 1
-
-      # If not already running under lock, re-execute self with lock acquired
-      [[ $FLOCKER != "$0" ]] && exec env FLOCKER="$0" flock -e -w 60 "$0" "$0" "$@"
-
-      while [[ $1 == -* ]]; do shift; done
-      channel=$1; shift
-
-      [[ -d ~${user}/hugin/${server}/$channel ]] || {
-        # Join the channel if not already in it.
-        echo "/j $channel" > ~${user}/hugin/${server}/in
-      }
-
-      function old-emit {
-        # Gross hack here: ii doesn't properly read the input until the
-        # fifo is closed. So if we send it the entire message at once it
-        # ends up losing most of it.
-        local fmt="$1"; shift
-        echo "EMIT /PRIVMSG $channel :$fmt $@" >&2
-        printf "/PRIVMSG $channel :$fmt\n" "$@" > ~${user}/hugin/${server}/in
-        echo "EMIT DONE" >&2
-        sleep 1
-      }
-
-      function emit {
-        local fmt="$1"; shift
-        echo "EMIT :$fmt $@" >&2
-        printf "$fmt"'\n' "$@" > ~${user}/hugin/${server}/$channel/in
-      }
-
-      function emit- {
-        echo "ERROR: $*" >&2
-      }
-
-      function emit-CRIT {
-        emit '\x034\x02%20s %s\x02 \x0314[%s]\x0F' "$label" "$value" "$limit"
-        if [[ $extinfo ]]; then
-          emit '    (%s)' "$extinfo"
-        fi
-      }
-
-      function emit-WARN {
-        emit '\x037\x02%20s %s\x02 \x0314[%s]\x0F' "$label" "$value" "$limit"
-        if [[ $extinfo ]]; then
-          emit '    (%s)' "$extinfo"
-        fi
-      }
-
-      function emit-UNKN {
-        emit '\x0313\x02%20s %s\x02 \x0314[MISSING]\x0F' "$label" "$value"
-        if [[ $extinfo ]]; then
-          emit '    (%s)' "$extinfo"
-        fi
-      }
-
-      function emit-FOK {
-        emit '\x033\x02%20s %s\x02\x0F' "$label" "$value"
-        if [[ $extinfo ]]; then
-          emit '    (%s)' "$extinfo"
-        fi
-      }
-
-      while [[ $1 ]]; do
-        echo "PREFIX $1" >&2
-        emit "%s" "$1"; shift
-      done
-      export IFS=$'\t'
-      while [[ ! $host ]]; do
-        read host graph
-        echo "READ '$host' '$graph'" >&2
-      done
-      emit "=== %s :: %s ===" "$host" "$graph"
-      while read level label value limit extinfo; do
-        level="$(echo "$level" | tr -d ' ')"
-        echo "LINE '$level' '$label' '$value' '$limit' '$extinfo'" >&2
-        emit-$level || echo 'FAIL' >&2
-      done
-      echo 'EOF'
-      emit '=== END ==='
-    '')
-  ];
+  systemd.services.hugin-mqtt = {
+    description = "MQTT listener for Munin notifications";
+    inherit serviceConfig;
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target" "hugin-ii.service" "mosquitto.service"];
+    partOf = ["hugin-ii.service"];
+    requires = ["hugin-ii.service"];
+    path = with pkgs; [ zsh jq mosquitto ];
+    environment = { HUGIN_COLOUR = "irc"; };
+    script = ''
+      export PATH
+      export HUGIN_COLOUR
+      # hack hack hack -- prevent /etc/zshenv from overwriting PATH
+      export __NIXOS_SET_ENVIRONMENT_DONE=1
+      ${hugin}/bin/hugin 'hugin/#' > 'hugin/${server}/${channel}/in'
+    '';
+  };
 }
