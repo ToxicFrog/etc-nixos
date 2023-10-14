@@ -3,7 +3,8 @@ R root
 R var/lib
 R boot
 R home
-R etc
+R etc/nixos
+R var/cache/locatedb
 ! **/tmp/
 ! **/.cache/
 ! **/.bup/
