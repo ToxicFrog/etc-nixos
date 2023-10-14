@@ -47,10 +47,16 @@ in {
     };
   };
 
-  systemd.services.gonic.serviceConfig.BindReadOnlyPaths =
-      [ "-/etc/resolv.conf" ];
-  systemd.services.gonic.serviceConfig.BindPaths =
-      [ "-/run/snapserver/music" ];
+  systemd.services.gonic.serviceConfig.BindReadOnlyPaths = lib.mkForce [
+    "-/etc/resolv.conf"
+    "-/etc/ssl/certs/ca-certificates.crt"
+    builtins.storeDir
+    config.services.gonic.settings.music-path
+  ];
+  systemd.services.gonic.serviceConfig.BindPaths = [
+    "-/run/snapserver/music"
+    config.services.gonic.settings.podcast-path
+  ];
   services.gonic = {
     enable = true;
     settings = {
