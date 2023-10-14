@@ -8,8 +8,10 @@ in {
   # TODO: this means that overlays only take effect on nixos-rebuild. It would be nice
   # if they took effect (for nix-shell etc) immediately...
   nix.nixPath =
-    # let trampoline = ./compat;
-    options.nix.nixPath.default ++ [ "nixpkgs-overlays=/etc/nix-overlays/compat" ];
+    options.nix.nixPath.default ++ [
+      "nixpkgs-overlays=/etc/nix-overlays/compat"
+      "nixpkgs-devel=/home/bex/devel/nixpkgs"
+    ];
   # Copy this into /etc/nix-overlays so everyone can read it.
   environment.etc.nix-overlays = {
     source = ./../overlays;
