@@ -14,9 +14,4 @@ in {
     createHome = true;
     extraGroups = users.alex.extraGroups ++ [ "adbusers" ];
   };
-
-  # TODO: kind of gross, should pull lingering out into its own library
-  users.groups.linger = {};
-  system.activationScripts.linger
-    = (import ../../users.nix { config = config; pkgs = pkgs; }).system.activationScripts.linger;
 }

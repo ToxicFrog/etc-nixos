@@ -1,8 +1,6 @@
-{ config, pkgs, ... }:
+{ config, pkgs, unstable, ... }:
 
-let
-  unstable = import <nixos-unstable> { config.allowUnfree = true; };
-in {
+{
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: {

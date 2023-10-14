@@ -1,5 +1,5 @@
 # General configuration shared between all of the systems that are primarily
-# used by alex -- isis, pladix, and excavatorix.
+# used by alex -- isis, pladix, and lots-of-cats.
 
 { config, pkgs, ... }:
 
@@ -7,6 +7,7 @@
   imports = [
     ./packages.nix
     ./users.nix
+    ../../overlays/default.nix
   ];
 
   hardware.bluetooth.enable = true;
