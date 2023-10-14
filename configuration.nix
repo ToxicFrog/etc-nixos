@@ -72,6 +72,9 @@
     auto-optimise-store = true;
     max-jobs = lib.mkDefault 4;
   };
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
 
   security.acme = {
     defaults.email = "webmaster@ancilla.ca";
