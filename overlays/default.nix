@@ -1,9 +1,5 @@
 { pkgs, options, lib, ... }:
-
-let
-  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
-  localpkgs = (import /home/rebecca/devel/nixpkgs {});
-in {
+{
   # Proxy NIX_PATH to point at the same overlays defined in nixpkgs.overlays
   # TODO: this means that overlays only take effect on nixos-rebuild. It would be nice
   # if they took effect (for nix-shell etc) immediately...
@@ -16,12 +12,9 @@ in {
   environment.etc.nix-overlays = {
     source = ./../overlays;
   };
-  # Turn off these modules and replace them with our own versions with unmerged fixes.
-  disabledModules = [
-    "services/backup/borgbackup.nix"
-  ];
+  # Overlays for nixos itself, e.g. module replacements
   imports = [
-    ./modules/borgbackup.nix
+    ./nixos.nix
   ];
   # Actual overlays.
   nixpkgs.overlays = [
