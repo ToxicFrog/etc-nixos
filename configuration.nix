@@ -80,7 +80,6 @@
 
   # TODO a lot of this should be moved to packages.nix
   environment.systemPackages = with pkgs; [
-    beets
     digikam # for digitaglinktree
     dnsutils
     dosage
@@ -93,19 +92,12 @@
     lgogdownloader
     tmuxinator
     lm_sensors
-    nodejs  # for discord-ircd
     qbittorrent-nox
-    #(python27.withPackages (ps: [ps.mutagen ps.websocket_client])) # for morg and weeslack
-    recoll  # log searching
-    sshfs
     weechat
-    youtube-dl # for downloading podcasts
-    keybase keybase-gui # keybase chat
-    notmuch alot gmailieer # mail reading
+    # keybase keybase-gui # keybase chat
+    # notmuch alot gmailieer # mail reading
     doomrl
     timg tiv
     clojure leiningen
-    jdk
-    #jdk #jdk14_headless
   ];
 }

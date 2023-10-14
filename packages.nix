@@ -8,12 +8,13 @@ in {
   environment.systemPackages = with pkgs; [
     atop
     atuin
+    beets-unstable
     binutils  # for strings and nm
     calibre  # for calibre-server
     unstable.chezmoi
     dos2unix
     dtrx
-    ffmpeg-full
+    ffmpeg-vgz
     file
     findutils
     gcc
@@ -39,8 +40,9 @@ in {
     ledger-autosync
     python3
     recode
+    (recoll.override { withGui = false; })  # log searching
     rlwrap
-    sshfs-fuse
+    sshfs sshfs-fuse
     stdmanpages
     taskwarrior
     tmux
@@ -48,6 +50,7 @@ in {
     unzip
     wget
     wring
+    unstable.yt-dlp
     zip
     # dlique and hangbrain
     # geckodriver is in ~/opt because it needs a special build
