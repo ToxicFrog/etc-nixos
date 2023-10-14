@@ -27,16 +27,12 @@ in rec {
     '';
     patches = [];
   });
-  ffmpeg-full = super.ffmpeg-full.overrideAttrs (old: {
-    configureFlags = old.configureFlags ++ [
-      "--disable-libmodplug"
-      "--enable-libopenmpt"
-      "--enable-libgme"
-    ];
-    buildInputs = old.buildInputs ++ [
-      self.libopenmpt self.libgme
-    ];
+  libgme-vgz = super.game-music-emu.overrideAttrs (old: {
+    cmakeFlags = [ "-DENABLE_UBSAN=OFF" ];
+    buildInputs = [ self.zlib ];
   });
+  ffmpeg-vgz = (super.ffmpeg-full.overrideAttrs { pname = "ffmpeg-vgz"; })
+    .override { game-music-emu = self.libgme-vgz; };
   munin = super.munin.overrideAttrs (oldAttrs: {
     # HACK HACK HACK
     # perl -T breaks makeWrapper

@@ -8,7 +8,7 @@
 
 let
   ffprobe-subsong-wrapper = pkgs.writeShellScriptBin "ffprobe" ''
-    exec ${pkgs.ffmpeg-full}/bin/ffprobe -subsong all "$@"
+    exec ${pkgs.ffmpeg-vgz}/bin/ffprobe -subsong all "$@"
   '';
 in {
   users.users.airsonic.createHome = lib.mkForce false;
@@ -23,8 +23,8 @@ in {
     jre = pkgs.jdk17;
     home = "/srv/airsonic";
     transcoders = [
-      "${pkgs.ffmpeg-full}/bin/ffmpeg"
-      #"${pkgs.ffmpeg-full}/bin/ffprobe"
+      "${pkgs.ffmpeg-vgz}/bin/ffmpeg"
+      #"${pkgs.ffmpeg-vgz}/bin/ffprobe"
       "${ffprobe-subsong-wrapper}/bin/ffprobe"
     ];
   };
