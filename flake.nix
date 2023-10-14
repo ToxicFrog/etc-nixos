@@ -7,14 +7,14 @@
     nixpkgs-local.url = "/home/rebecca/devel/nixpkgs";
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-local }@args: {
+  outputs = { self, nixpkgs, nixpkgs-unstable, nixpkgs-local }@inputs: {
     nixosConfigurations = let
       mkSystem = modules:
         nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
           inherit modules;
           specialArgs = {
-            inherit nixpkgs-unstable nixpkgs-local;
+            inherit inputs;
             unstable = (import nixpkgs-unstable { inherit system; config.allowUnfree = true; }).pkgs;
           };
         };

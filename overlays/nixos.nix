@@ -1,4 +1,4 @@
-{ pkgs, options, lib, nixpkgs-unstable, ... }:
+{ pkgs, options, lib, inputs, ... }:
 
 {
   disabledModules = [
@@ -7,6 +7,6 @@
   ];
   imports = [
     ./modules/borgbackup.nix
-    "${nixpkgs-unstable}/nixos/modules/config/users-groups.nix"
+    "${inputs.nixpkgs-unstable}/nixos/modules/config/users-groups.nix"
   ];
 }
