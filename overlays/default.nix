@@ -31,22 +31,14 @@ in {
     (import ./dosage.nix)
     (import ./misc.nix)
     (self: super: {
-      etcd = super.etcd_3_4;
+      etcd = super.etcd_3_4; # todo: try upgrading to latest stable (3.5)
       slashem9 = super.callPackage ./slashem9/slashem9.nix {};
-      sigal = super.sigal.overrideAttrs (_: {
-        patches = [
-          (super.fetchpatch {
-            url = "https://github.com/saimn/sigal/commit/0bf932935b912f5a4b594182b347f4698a0052dc.patch";
-            sha256 = "sha256-h9m5o2RXkNiN36hF97iLCr6JP8+dcGYWM8N0sALFnvw=";
-          })
-        ];
-      });
       weechat = super.weechat.override {
         configure = { availablePlugins, ... }: {
           scripts = with pkgs.weechatScripts; [ weechat-matrix multiline ];
         };
       };
-      recoll = super.recoll.override { withGui = false; };
+      # This gets regular updates but I need to replace it with gonic if and when I can.
       airsonic = super.airsonic.overrideAttrs (_: rec {
         version = "11.0.2-kagemomiji";
         name = "airsonic-advanced-${version}";
