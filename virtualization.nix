@@ -17,4 +17,7 @@
 
      '';
   };
+  # We have to force this to run after br0 is created, or br0 never gets an
+  # address :(
+  systemd.services.dhcpcd.after = [ "br0-netdev.service" ];
 }
