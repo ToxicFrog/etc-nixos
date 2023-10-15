@@ -27,7 +27,7 @@ in {
     ./taskd.nix
     ./timelapse.nix
     ./tv.nix
-    ./vncdesktop.nix
+    # ./vncdesktop.nix
   ];
 
   users.users.git.createHome = lib.mkForce false;
@@ -175,7 +175,7 @@ in {
         + "\nHandleHibernateKey=ignore"
         + "\nHandlePowerKey=ignore";
 
-    tlp.enable = true;
+    # tlp.enable = true;
     locate = {
       enable = true;
       locate = pkgs.plocate;
