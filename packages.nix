@@ -1,8 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, unstable, ... }:
 
-let
-  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
-in {
+{
   nixpkgs.config.allowUnfree = true;
   #environment.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
   environment.systemPackages = with pkgs; [

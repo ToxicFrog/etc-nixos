@@ -1,4 +1,4 @@
-{ pkgs, options, lib, ... }:
+{ pkgs, options, lib, inputs, ... }:
 {
   # Proxy NIX_PATH to point at the same overlays defined in nixpkgs.overlays
   # TODO: this means that overlays only take effect on nixos-rebuild. It would be nice
@@ -18,9 +18,9 @@
   ];
   # Actual overlays.
   nixpkgs.overlays = [
-    (import ./crossfire.nix)
+    (import ./crossfire.nix inputs)
     (import ./doomrl.nix)
-    (import ./doomrl-server.nix)
+    (import ./doomrl-server.nix inputs.doomrl-server)
     (import ./dosage.nix)
     (import ./misc.nix)
     (self: super: {

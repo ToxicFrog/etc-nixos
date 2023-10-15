@@ -1,11 +1,11 @@
-self: super:
+inputs: self: super:
 
 rec {
   crossfire-server =
     (super.crossfire-server.override { arch = crossfire-arch; maps = crossfire-maps; })
     .overrideAttrs (oldAttrs: {
     version = "HEAD";
-    src = /home/rebecca/devel/crossfire-server;
+    src = inputs.crossfire-server;
     NIX_CFLAGS_COMPILE = "-g -O0";
     NIX_CXXFLAGS_COMPILE = "-g -O0";
     preConfigure = ''
@@ -30,12 +30,11 @@ rec {
   });
   crossfire-arch = super.crossfire-arch.overrideAttrs (oldAttrs: {
     version = "HEAD";
-    src = builtins.fetchGit "/home/rebecca/devel/crossfire-arch";
-    # src = /home/rebecca/devel/crossfire-arch;
+    src = inputs.crossfire-arch;
   });
   crossfire-maps = super.crossfire-maps.overrideAttrs (oldAttrs: {
     version = "HEAD";
-    src = builtins.fetchGit "/home/rebecca/src/crossfire-maps";
+    src = inputs.crossfire-maps;
   });
   crossfire-jxclient = super.callPackage ./crossfire-jxclient.nix {};
   crossfire-editor = super.callPackage ./crossfire-editor.nix {};

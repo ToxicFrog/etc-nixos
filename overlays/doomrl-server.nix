@@ -1,11 +1,11 @@
-self: super:
+src: self: super:
 
 let
   server-path = "/srv/doomrl";
 in {
   doomrl-server = self.stdenv.mkDerivation {
     name = "doomrl-server";
-    src = self.fetchFromGitHub {
+    src = if src != null then src else self.fetchFromGitHub {
       owner = "toxicfrog";
       repo = "doomrl-server";
       rev = "6ad7e07cc8fe2b87b6492f00b4c354a2f0392654";

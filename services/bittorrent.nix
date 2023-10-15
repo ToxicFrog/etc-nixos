@@ -1,10 +1,7 @@
-# Configuration for bittorrent daemons -- deluge and jackett.
+# Configuration for bittorrent daemons -- qbittorrentd and jackett.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, unstable, ... }:
 
-let
-  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
-in
 {
   users.extraGroups.deluge.gid = 83;
   users.extraUsers.deluge = {

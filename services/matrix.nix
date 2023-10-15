@@ -1,8 +1,6 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, unstable, ... }:
 
-let
-  unstable = (import <nixos-unstable> { config.allowUnfree = true; });
-in {
+{
   services.matrix-conduit = {
     enable = true;
     extraEnvironment = {

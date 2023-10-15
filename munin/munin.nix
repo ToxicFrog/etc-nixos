@@ -6,7 +6,7 @@
 # then edit the authorized_keys on the rpi and add: command="munin/micronode"
 # in front of the key munin will be using.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 let
   secrets = (import ../secrets/default.nix {});
@@ -166,7 +166,7 @@ in {
       certificates = ./plugins/certificates;
       whois = ./plugins/whois;
       zpool_health = ./plugins/zpool_health;
-      file_age = /usr/src/munin-contrib/plugins/disk/file_age;
+      file_age = "${inputs.munin-contrib}/plugins/disk/file_age";
     };
     extraPluginConfig = ''
       [df]
@@ -226,8 +226,9 @@ in {
       [zpool_health]
         env.zpool ${pkgs.zfs}/bin/zpool
     '';
+    # TODO: extraAutoPlugins should do this automatically in the module
     extraAutoPlugins = [
-      /usr/src/munin-contrib/plugins/zfs
+      "${inputs.munin-contrib}/plugins/zfs"
     ];
     disabledPlugins = [
       "acpi"          # sensors_ works better

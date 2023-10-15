@@ -1,5 +1,74 @@
 {
   "nodes": {
+    "crossfire-arch": {
+      "flake": false,
+      "locked": {
+        "lastModified": 0,
+        "narHash": "sha256-BPJw9mGv17D6ZVHTyW0SQyfx/Z7sN9U3g7Arxyps9jA=",
+        "path": "/home/rebecca/devel/crossfire-arch",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/rebecca/devel/crossfire-arch",
+        "type": "path"
+      }
+    },
+    "crossfire-maps": {
+      "flake": false,
+      "locked": {
+        "lastModified": 0,
+        "narHash": "sha256-23i1EMYcy5CLPAazgqn0mFfgYd1BScRr+fIjbcvIZNE=",
+        "path": "/home/rebecca/src/crossfire-maps",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/rebecca/src/crossfire-maps",
+        "type": "path"
+      }
+    },
+    "crossfire-server": {
+      "flake": false,
+      "locked": {
+        "lastModified": 0,
+        "narHash": "sha256-cr2njodUqr1Xcl2poEv9/4c3jRRYC5HRQLMuV3c54qc=",
+        "path": "/home/rebecca/devel/crossfire-server",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/rebecca/devel/crossfire-server",
+        "type": "path"
+      }
+    },
+    "doomrl-server": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1675988578,
+        "narHash": "sha256-2keqpwLsa4muLD9ah8c2SUd7rFrG5Pq6diADdpr70cs=",
+        "path": "/home/rebecca/devel/doomrl-server",
+        "type": "path"
+      },
+      "original": {
+        "path": "/home/rebecca/devel/doomrl-server",
+        "type": "path"
+      }
+    },
+    "munin-contrib": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1696881282,
+        "narHash": "sha256-Gak7PijGxVgJkt52YUHdTFTCw3GJ8Y/p6sOLx4dl5g4=",
+        "owner": "munin-monitoring",
+        "repo": "contrib",
+        "rev": "4abd859e6b00e42255ed01e41e96245db0d63efa",
+        "type": "github"
+      },
+      "original": {
+        "owner": "munin-monitoring",
+        "ref": "master",
+        "repo": "contrib",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1696983906,
@@ -19,7 +88,7 @@
     "nixpkgs-local": {
       "locked": {
         "lastModified": 1696990375,
-        "narHash": "sha256-71UotNg9v5CddMCLs4RTZDvcBP/KxMisHJwODfeRr8g=",
+        "narHash": "sha256-5/gCre1pbc5FvdnAU52nJ52Uyontknu1Ec+ul6GGrkM=",
         "type": "git",
         "url": "file:///home/rebecca/devel/nixpkgs"
       },
@@ -30,22 +99,25 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1697059129,
-        "narHash": "sha256-9NJcFF9CEYPvHJ5ckE8kvINvI84SZZ87PvqMbH6pro0=",
+        "lastModified": 1697009197,
+        "narHash": "sha256-viVRhBTFT8fPJTb1N3brQIpFZnttmwo3JVKNuWRVc3s=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5e4c2ada4fcd54b99d56d7bd62f384511a7e2593",
+        "rev": "01441e14af5e29c9d27ace398e6dd0b293e25a54",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
+        "id": "nixpkgs",
+        "type": "indirect"
       }
     },
     "root": {
       "inputs": {
+        "crossfire-arch": "crossfire-arch",
+        "crossfire-maps": "crossfire-maps",
+        "crossfire-server": "crossfire-server",
+        "doomrl-server": "doomrl-server",
+        "munin-contrib": "munin-contrib",
         "nixpkgs": "nixpkgs",
         "nixpkgs-local": "nixpkgs-local",
         "nixpkgs-unstable": "nixpkgs-unstable"
