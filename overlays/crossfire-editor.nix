@@ -8,12 +8,11 @@ in
 
 stdenv.mkDerivation rec {
   name = "crossfire-editor";
-  version = "2023-05-05";
+  version = "2023-10-09";
 
-  # Simply fetch the JAR file of GINsim.
   src = fetchurl {
     url = "https://sourceforge.net/projects/crossfire/files/gridarta-crossfire/CrossfireEditor.jar/download";
-    sha256 = "sha256-Cpp9kgsUdQfFIWflcgAqFvuP9E2sdWqQjrmhoTMEJoA=";
+    sha256 = "sha256-0ZnX4H5Et9c7UQe/QSTwLq7P8dJf519ZTcKDxBaeip4=";
   };
   dontUnpack = true;
   nativeBuildInputs = [ makeWrapper ];

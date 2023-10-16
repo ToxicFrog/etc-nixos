@@ -8,13 +8,11 @@ in
 
 stdenv.mkDerivation rec {
   name = "crossfire-jxclient";
-  version = "2023-05-05";
+  version = "2023-07-07";
 
-  # Simply fetch the JAR file of GINsim.
   src = fetchurl {
-    # https://sourceforge.net/projects/crossfire/files/gridarta-crossfire/CrossfireEditor.jar/download
     url = "https://sourceforge.net/projects/crossfire/files/jxclient/jxclient.jar/download";
-    sha256 = "sha256-Y5f9aIG6Uh+Zqx1mqshjt3K71Am1nKUhbf4gUsmxvVc=";
+    sha256 = "sha256-sg+46R1x6kwa1yAG16FLPZtHcfNk2BQNvrLS5G8To/A=";
   };
   dontUnpack = true;
   nativeBuildInputs = [ makeWrapper ];
