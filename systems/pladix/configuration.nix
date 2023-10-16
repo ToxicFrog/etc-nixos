@@ -95,7 +95,7 @@
   # It needs to be enabled mutably using systemctl.
   systemd.user.services.snapclient = {
     wantedBy = [ "pipewire.service" ];
-    after = [ "pipewire.service" ];
+    after = [ "pipewire.service" "pipewire-pulse.service" "wireplumber.service" ];
     serviceConfig = {
       ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla";
     };
