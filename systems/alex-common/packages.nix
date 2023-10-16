@@ -1,6 +1,8 @@
-{ config, pkgs, unstable, ... }:
+{ config, pkgs, unstable, inputs, ... }:
 
 {
+  imports = [ ../../overlays/default.nix ];
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: {
@@ -11,9 +13,6 @@
       ];
     };
   };
-  nixpkgs.overlays = [
-    (import ../../overlays/crossfire.nix)
-  ];
 
   programs.steam.enable = true;
   programs.adb.enable = true;

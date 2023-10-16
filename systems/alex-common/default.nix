@@ -7,7 +7,6 @@
   imports = [
     ./packages.nix
     ./users.nix
-    ../../overlays/default.nix
   ];
 
   hardware.bluetooth.enable = true;
