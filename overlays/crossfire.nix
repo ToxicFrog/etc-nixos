@@ -36,6 +36,6 @@ rec {
     version = "HEAD";
     src = inputs.crossfire-maps;
   });
-  crossfire-jxclient = super.callPackage ./crossfire-jxclient.nix {};
-  crossfire-editor = super.callPackage ./crossfire-editor.nix {};
+  crossfire-jxclient = super.callPackage ../packages/crossfire-jxclient.nix {};
+  crossfire-editor = super.callPackage ../packages/crossfire-editor.nix {};
 }
