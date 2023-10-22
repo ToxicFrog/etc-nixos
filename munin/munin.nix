@@ -157,17 +157,31 @@ in {
 
   # Local node. This monitors ancilla directly and fetches data from other systems
   # on the network.
-  services.munin-node = {
+  services.munin-node = let
+    curl-wrapper = pkgs.writeShellScriptBin "curl" ''
+      exec ${pkgs.openssh}/bin/ssh www.ancilla.ca curl "$@"
+    '';
+    http-prober-wrapper = pkgs.writeShellScriptBin "http_response" ''
+      export PATH="${lib.makeBinPath [ curl-wrapper ]}:$PATH"
+      exec ${inputs.munin-contrib}/plugins/http/http_response "$@"
+    '';
+  in {
     enable = true;
     extraPlugins = {
       #http_traxus_onhub = ./http__onhub;
-      http_nanolathe_prusaconnect = ./plugins/http__prusaconnect;
       borgbackup = ./plugins/borgbackup;
       certificates = ./plugins/certificates;
+      file_age = "${inputs.munin-contrib}/plugins/disk/file_age";
+      http_nanolathe_prusaconnect = ./plugins/http__prusaconnect;
+      http_remote_response = "${http-prober-wrapper}/bin/http_response";
+      #http_response = "${inputs.munin-contrib}/plugins/http/http_response";
       whois = ./plugins/whois;
       zpool_health = ./plugins/zpool_health;
-      file_age = "${inputs.munin-contrib}/plugins/disk/file_age";
     };
+    # TODO: extraAutoPlugins should do this automatically in the module
+    extraAutoPlugins = [
+      "${inputs.munin-contrib}/plugins/zfs"
+    ];
     extraPluginConfig = ''
       [df]
         env.exclude none unknown rootfs iso9660 squashfs udf romfs ramfs debugfs cgroup_root devtmpfs tmpfs
@@ -195,6 +209,13 @@ in {
 
       [http_nanolathe_prusaconnect]
         env.api_key ${secrets.printer-api-key}
+
+      [http_remote_response]
+        user root
+        env.sites http://ancilla.ancilla.ca/ http://library.ancilla.ca/ http://tv.ancilla.ca/ https://phobos.ancilla.ca/ http://music.ancilla.ca/
+        env.max_time 20
+        env.short_label true
+        env.follow_redirect false
 
       [whois]
         env.domains ancilla.ca godbehere.ca
@@ -226,10 +247,6 @@ in {
       [zpool_health]
         env.zpool ${pkgs.zfs}/bin/zpool
     '';
-    # TODO: extraAutoPlugins should do this automatically in the module
-    extraAutoPlugins = [
-      "${inputs.munin-contrib}/plugins/zfs"
-    ];
     disabledPlugins = [
       "acpi"          # sensors_ works better
       "cpuspeed"      # so noisy it's useless

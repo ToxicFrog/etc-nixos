@@ -87,8 +87,8 @@
     },
     "nixpkgs-local": {
       "locked": {
-        "lastModified": 1696990375,
-        "narHash": "sha256-5/gCre1pbc5FvdnAU52nJ52Uyontknu1Ec+ul6GGrkM=",
+        "lastModified": 1697747102,
+        "narHash": "sha256-YaBEVCPT7/fB50+Zo7ywmdEsdh11dC13oFByF7uodL8=",
         "type": "git",
         "url": "file:///home/rebecca/devel/nixpkgs"
       },
