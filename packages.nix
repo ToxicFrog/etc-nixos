@@ -4,6 +4,7 @@
   nixpkgs.config.allowUnfree = true;
   #environment.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
   environment.systemPackages = with pkgs; [
+    alot
     atop
     atuin
     beets-unstable
@@ -27,11 +28,13 @@
     kpcli
     #ledger
     leiningen
+    lieer
     lsd
     luajit
     man-pages
     nb micro
     ncdu
+    notmuch
     nox
     p7zip
     posix_man_pages
