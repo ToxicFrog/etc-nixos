@@ -13,7 +13,7 @@
     (import ./misc.nix)
     (self: super: {
       etcd = super.etcd_3_4; # todo: try upgrading to latest stable (3.5)
-      slashem9 = super.callPackage ./slashem9/slashem9.nix {};
+      slashem9 = super.callPackage ../packages/slashem9/slashem9.nix {};
       weechat = super.weechat.override {
         configure = { availablePlugins, ... }: {
           scripts = with pkgs.weechatScripts; [ weechat-matrix multiline ];

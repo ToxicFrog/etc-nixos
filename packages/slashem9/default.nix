@@ -1,5 +1,5 @@
 { stdenv, lib,fetchFromGitHub, writeScript,
-  coreutils, ncurses, gzip, flex, bison, less, bash, git, pkg-config }:
+  coreutils, ncurses, gzip, flex, bison, less, bash, git, pkg-config, boehmgc }:
 
 let
   platform =
@@ -29,17 +29,18 @@ let
 
 
 in stdenv.mkDerivation rec {
-  version = "2020-04-12";
+  version = "2023-xx-xx";
   name = "slashem9-${version}";
 
-  src = fetchFromGitHub {
-    owner = "moon-chilled";
-    repo = "slashem9";
-    rev = "d5b15eee399485fce234b29e4a31ff1e88106b9c";
-    sha256 = "00k3asj16fqywknpns9laa8d8jzlzrj33hm4mvh1mqygij75j32b";
-  };
+#  src = fetchFromGitHub {
+#    owner = "moon-chilled";
+#    repo = "slashem9";
+#    rev = "4586288d7ec6bf24b111930a951b5fd357c5d004";
+#    sha256 = "02fwkdpndx6j1k8bi7ww0458qps0kj3zis05mq33whlq0pzb7qz7";
+#  };
+  src = /home/rebecca/devel/slashem9;
 
-  buildInputs = [ ncurses ];
+  buildInputs = [ ncurses boehmgc ];
   nativeBuildInputs = [ flex bison git pkg-config ];
 
   postPatch = ''
@@ -69,7 +70,7 @@ in stdenv.mkDerivation rec {
     chmod a+x $out/bin/slashem9
   '';
 
-  meta = with stdenv.lib; {
+  meta = with lib; {
     description = "Super Lots Added Stuff Hack -- Extended Magic, a Nethack variant";
     homepage = http://nethack.org/;
     license = "nethack";
