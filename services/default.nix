@@ -189,6 +189,7 @@ in {
 
     openssh = {
       enable = true;
+      ports = [ 22 2222 ];
       settings = {
         X11Forwarding = true;
         # Scanner only uses legacy key types, so we need to enable them here.
