@@ -1,1 +1,0 @@
-This directory contains a trampoline to the real overlays, used in NIX_PATH so that tools like nix-shell can see the overlays defined here.

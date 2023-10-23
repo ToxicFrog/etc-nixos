@@ -1,6 +1,6 @@
 # Configuration specific to ancilla.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   imports = [
@@ -28,6 +28,23 @@
 #      ];
       #NIX_LD = lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
   };
+  # see https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
+  nix.registry = {
+  	nixpkgs.flake = inputs.nixpkgs;
+  	unstable.flake = inputs.nixpkgs-unstable;
+  	local.flake = inputs.nixpkgs-local;
+  };
+  nix.nixPath = [
+  	"nixpkgs=/etc/channels/nixpkgs"
+  	"unstable=/etc/channels/nixpkgs-unstable"
+  	"local=/etc/channels/nixpkgs-local"
+  	"nixos-config=/etc/nixos/configuration.nix"
+  	"/nix/var/nix/profiles/per-user/root/channels"
+    # nixpkgs-overlays = /etc/nixos/overlays # TODO
+  ];
+  environment.etc."channels/nixpkgs".source = inputs.nixpkgs.outPath;
+  environment.etc."channels/nixpkgs-unstable".source = inputs.nixpkgs-unstable.outPath;
+  environment.etc."channels/nixpkgs-local".source = inputs.nixpkgs-local.outPath;
 
   i18n = {
     defaultLocale = "en_CA.UTF-8";

@@ -1,17 +1,5 @@
 { pkgs, options, lib, inputs, ... }:
 {
-  # Proxy NIX_PATH to point at the same overlays defined in nixpkgs.overlays
-  # TODO: this means that overlays only take effect on nixos-rebuild. It would be nice
-  # if they took effect (for nix-shell etc) immediately...
-  nix.nixPath =
-    options.nix.nixPath.default ++ [
-      "nixpkgs-overlays=/etc/nix-overlays/compat"
-      "nixpkgs-devel=/home/bex/devel/nixpkgs"
-    ];
-  # Copy this into /etc/nix-overlays so everyone can read it.
-  environment.etc.nix-overlays = {
-    source = ./../overlays;
-  };
   # Overlays for nixos itself, e.g. module replacements
   imports = [
     ./nixos.nix
