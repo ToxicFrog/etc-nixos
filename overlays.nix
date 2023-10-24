@@ -1,45 +1,25 @@
 { pkgs, options, lib, inputs, ... }:
 {
   # Overlays for nixos itself, e.g. module replacements
-  imports = [
-    ./overlays/nixos.nix
+  disabledModules = [
+    "config/users-groups.nix"
+    "services/backup/borgbackup.nix"
+    "services/monitoring/munin.nix"
   ];
-  # Actual overlays.
+  imports = [
+    ./modules/borgbackup.nix
+    "${inputs.nixpkgs-unstable}/nixos/modules/config/users-groups.nix"
+    "${inputs.nixpkgs-local}/nixos/modules/services/monitoring/munin.nix"
+  ];
+  # Package overlays.
   nixpkgs.overlays = [
-    (import ./overlays/crossfire.nix inputs)
-    (import ./overlays/doomrl-server.nix inputs.doomrl-server)
+    # (import ./overlays/crossfire.nix inputs)
+    # (import ./overlays/doomrl-server.nix inputs.doomrl-server)
+    (import ./overlays/crossfire.nix)
+    (import ./overlays/doomrl-server.nix)
     (import ./overlays/dosage.nix)
+    (import ./overlays/factor-lang.nix)
     (import ./overlays/misc.nix)
-    (self: super: {
-      etcd = super.etcd_3_4; # todo: try upgrading to latest stable (3.5)
-      slashem9 = super.callPackage ./packages/slashem9/slashem9.nix {};
-      doomrl = super.callPackage ./packages/doomrl.nix {};
-      weechat = super.weechat.override {
-        configure = { availablePlugins, ... }: {
-          scripts = with pkgs.weechatScripts; [ weechat-matrix multiline ];
-        };
-      };
-      # This gets regular updates but I need to replace it with gonic if and when I can.
-      airsonic = super.airsonic.overrideAttrs (_: rec {
-        version = "11.0.2-kagemomiji";
-        name = "airsonic-advanced-${version}";
-        src = super.fetchurl {
-          url = "https://github.com/kagemomiji/airsonic-advanced/releases/download/11.0.2/airsonic.war";
-          sha256 = "PgErtEizHraZgoWHs5jYJJ5NsliDd9VulQfS64ackFo=";
-        };
-      });
-      openxcom = super.openxcom.overrideAttrs (oldAttrs: rec {
-        version = "7.0-oxce-2021.03.13";
-        src = super.fetchFromGitHub {
-          #owner = "OpenXcom"; repo = "OpenXcom";
-          #rev = "4ccb8a67a775dfc81244cf9a4bdb73584815ca51";
-          #sha256 = "1rd8paqyzds8qrggwy0p3k1f9gg7cvvsscdq0nb01zadhbrn939i";
-          owner = "MeridianOXC"; repo = "OpenXcom";
-          rev = "08d9eb908265b1fed482ff388d1ea7e8102d758f";
-          sha256 = "0xwhzcqp1lhzralmipwk0xx2p94pa2gckh39cs4bg67cpqp3rnq0";
-        };
-        nativeBuildInputs = with super; [ cmake pkg-config ];
-      });
-    })
+    (import ./overlays/munin.nix)
   ];
 }

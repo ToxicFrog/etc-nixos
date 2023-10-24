@@ -1,6 +1,12 @@
-inputs: self: super:
+# inputs:
+self: super:
 
-rec {
+let inputs = {
+  crossfire-server = /home/rebecca/devel/crossfire-server;
+  crossfire-arch = /home/rebecca/devel/crossfire-arch;
+  crossfire-maps = /home/rebecca/src/crossfire-maps;
+};
+in rec {
   crossfire-server =
     (super.crossfire-server.override { arch = crossfire-arch; maps = crossfire-maps; })
     .overrideAttrs (oldAttrs: {

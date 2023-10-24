@@ -1,7 +1,8 @@
-src: self: super:
+self: super:
 
 let
   server-path = "/srv/doomrl";
+  src = /home/rebecca/devel/doomrl-server;
 in {
   doomrl-server = self.stdenv.mkDerivation {
     name = "doomrl-server";
