@@ -2,18 +2,18 @@
 {
   # Overlays for nixos itself, e.g. module replacements
   imports = [
-    ./nixos.nix
+    ./overlays/nixos.nix
   ];
   # Actual overlays.
   nixpkgs.overlays = [
-    (import ./crossfire.nix inputs)
-    (import ./doomrl.nix)
-    (import ./doomrl-server.nix inputs.doomrl-server)
-    (import ./dosage.nix)
-    (import ./misc.nix)
+    (import ./overlays/crossfire.nix inputs)
+    (import ./overlays/doomrl-server.nix inputs.doomrl-server)
+    (import ./overlays/dosage.nix)
+    (import ./overlays/misc.nix)
     (self: super: {
       etcd = super.etcd_3_4; # todo: try upgrading to latest stable (3.5)
-      slashem9 = super.callPackage ../packages/slashem9/slashem9.nix {};
+      slashem9 = super.callPackage ./packages/slashem9/slashem9.nix {};
+      doomrl = super.callPackage ./packages/doomrl.nix {};
       weechat = super.weechat.override {
         configure = { availablePlugins, ... }: {
           scripts = with pkgs.weechatScripts; [ weechat-matrix multiline ];
