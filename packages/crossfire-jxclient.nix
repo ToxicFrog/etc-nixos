@@ -1,4 +1,4 @@
-{ stdenv, makeWrapper, gradle_6, jre }:
+{ stdenv, makeWrapper, gradle_6, jre, ffmpeg }:
 
 stdenv.mkDerivation rec {
   name = "crossfire-jxclient";
@@ -12,8 +12,7 @@ stdenv.mkDerivation rec {
     shallow = true;
   };
 
-  nativeBuildInputs = [ gradle_6 makeWrapper ];
-  propagatedBuildInputs = [ jre ];
+  nativeBuildInputs = [ gradle_6 makeWrapper ffmpeg ];
 
   buildPhase = ''
     gradle :createJar
@@ -24,7 +23,7 @@ stdenv.mkDerivation rec {
     cp jxclient.jar $out/share/java/jxclient.jar
 
     makeWrapper ${jre}/bin/java $out/bin/crossfire-jxclient \
-      --add-flags "-jar $out/share/java/jxclient.jar \
+      --add-flags "-jar $out/share/java/jxclient.jar" \
       --set _JAVA_OPTIONS '-Dawt.useSystemAAFontSettings=on' \
       --set _JAVA_AWT_WM_NONREPARENTING 1
   '';

@@ -1,28 +1,31 @@
-let pkgs = import <nixpkgs> {};
-in
-{ stdenv ? pkgs.stdenv
-, fetchurl ? pkgs.fetchurl
-, makeWrapper ? pkgs.makeWrapper
-, jre ? pkgs.jre
-}:
+{ stdenv, makeWrapper, gradle_6, jre }:
 
 stdenv.mkDerivation rec {
   name = "crossfire-editor";
-  version = "2023-10-09";
+  version = "2023-10-13";
 
-  src = fetchurl {
-    url = "https://sourceforge.net/projects/crossfire/files/gridarta-crossfire/CrossfireEditor.jar/download";
-    sha256 = "sha256-0ZnX4H5Et9c7UQe/QSTwLq7P8dJf519ZTcKDxBaeip4=";
+  src = builtins.fetchGit {
+    url = "https://git.code.sf.net/p/gridarta/gridarta";
+    ref = "master";
+    rev = "6928c5eb7c894d7e97a20af5495d3fb39d66a516";
+    submodules = true;
+    shallow = true;
   };
-  dontUnpack = true;
-  nativeBuildInputs = [ makeWrapper ];
+
+  nativeBuildInputs = [ gradle_6 makeWrapper ];
+
+  patches = [ ./crossfire-editor.patch ];
+
+  buildPhase = ''
+    gradle :src:crossfire:createEditorJar
+  '';
 
   installPhase = ''
     mkdir -pv $out/share/java $out/bin
-    cp ${src} $out/share/java/${name}-${version}.jar
+    cp src/crossfire/build/libs/CrossfireEditor.jar $out/share/java/crossfire-editor.jar
 
     makeWrapper ${jre}/bin/java $out/bin/crossfire-editor \
-      --add-flags "-jar $out/share/java/${name}-${version}.jar" \
+      --add-flags "-jar $out/share/java/crossfire-editor.jar" \
       --set _JAVA_OPTIONS '-Dawt.useSystemAAFontSettings=on' \
       --set _JAVA_AWT_WM_NONREPARENTING 1
   '';
