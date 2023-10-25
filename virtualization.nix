@@ -14,6 +14,10 @@
      interfaces.br0.useDHCP = true;
      dhcpcd.extraConfig = ''
        interface br0
+       dhcp
+       dhcp6
+       ipv4
+       ipv6
 
      '';
   };
