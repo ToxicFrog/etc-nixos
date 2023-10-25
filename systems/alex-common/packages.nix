@@ -3,8 +3,6 @@
 {
   imports = [ ../../overlays/default.nix ];
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
   nixpkgs.config.packageOverrides = pkgs: {
     steam = pkgs.steam.override {
       extraPkgs = pkgs: with pkgs; [

@@ -1,7 +1,6 @@
 { pkgs, unstable, ... }:
 
 {
-  nixpkgs.config.allowUnfree = true;
   #environment.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
   environment.systemPackages = with pkgs; [
     alot

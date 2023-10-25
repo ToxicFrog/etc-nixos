@@ -29,10 +29,10 @@
 
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs: {
     nixosConfigurations = let
-      mkSystem = modules:
+      mkSystem = extraModules:
         nixpkgs.lib.nixosSystem rec {
           system = "x86_64-linux";
-          inherit modules;
+          modules = [ ./shared/common.nix ] ++ extraModules;
           specialArgs = {
             inherit inputs;
             unstable = (import nixpkgs-unstable { inherit system; config.allowUnfree = true; }).pkgs;
@@ -40,8 +40,8 @@
         };
     in {
       ancilla = mkSystem [ ./configuration.nix ];
-      pladix = mkSystem [ ./systems/pladix/configuration.nix ];
-      lots-of-cats = mkSystem [ ./systems/lots-of-cats/configuration.nix ];
+      pladix = mkSystem [ ./common/graphical.nix ./systems/pladix/configuration.nix ];
+      lots-of-cats = mkSystem [ ./common/graphical.nix ./systems/lots-of-cats/configuration.nix ];
       # TODO: isis, timelapse, lector
     };
   };

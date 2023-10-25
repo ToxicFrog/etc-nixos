@@ -141,25 +141,6 @@ in {
       # libpurple_plugins = with pkgs; [ purple-hangouts ];
     };
 
-    smartd = {
-      enable = true;
-      # Automatically monitor devices
-      # Do not probe disks on standby unless they've skipped the last 24 probes
-      # Enable automatic offline data collection
-      # Run a short self-test every morning at 5am
-      # Report if new errors appear in the selftest or error logs
-      defaults.autodetected = "-a -n standby,24 -o on -s (S/../.././05) -l error -l selftest";
-      notifications = {
-        test = false;
-        wall.enable = true;
-        mail = {
-          enable = true;
-          mailer = "/run/current-system/sw/bin/hugin";
-          recipient = "#ancilla";
-        };
-      };
-    };
-
     # Gitolite git repo hosting (mostly used by Nightstar)
     gitolite = {
       enable = true;
@@ -176,40 +157,28 @@ in {
         + "\nHandlePowerKey=ignore";
 
     # tlp.enable = true;
-    locate = {
-      enable = true;
-      locate = pkgs.plocate;
-      # localuser = "root";
-      localuser = null
-;      # extraFlags = ["--dbformat=slocate"];
-      prunePaths = lib.mkOptionDefault [
-        "/ancilla/media/other"
+    locate.prunePaths = lib.mkOptionDefault [
+      "/ancilla/media/other"
+    ];
+
+    openssh.ports = [ 22 2222 ];  # Workaround for Bell's busted-ass router firmware
+    openssh.settings = {
+      # Scanner only uses legacy key types, so we need to enable them here.
+      KexAlgorithms = lib.mkOptionDefault [
+        "diffie-hellman-group14-sha1"
+      ];
+      Macs = lib.mkOptionDefault [
+        "hmac-sha1"
       ];
     };
-
-    openssh = {
-      enable = true;
-      ports = [ 22 2222 ];
-      settings = {
-        X11Forwarding = true;
-        # Scanner only uses legacy key types, so we need to enable them here.
-        KexAlgorithms = lib.mkOptionDefault [
-          "diffie-hellman-group14-sha1"
-        ];
-        Macs = lib.mkOptionDefault [
-          "hmac-sha1"
-        ];
-      };
-      allowSFTP = true;
-      extraConfig = ''
-        PubkeyAcceptedKeyTypes +ssh-dss,ssh-rsa
-        HostKeyAlgorithms +ssh-dss,ssh-rsa
-        Match user scanner
-          ForceCommand ${pkgs.openssh}/libexec/sftp-server
-          X11Forwarding no
-          AllowTcpForwarding no
-      '';
-    };
+    openssh.extraConfig = ''
+      PubkeyAcceptedKeyTypes +ssh-dss,ssh-rsa
+      HostKeyAlgorithms +ssh-dss,ssh-rsa
+      Match user scanner
+        ForceCommand ${pkgs.openssh}/libexec/sftp-server
+        X11Forwarding no
+        AllowTcpForwarding no
+    '';
   };
 
   programs.msmtp = {

@@ -9,37 +9,6 @@
     ./users.nix
   ];
 
-  hardware.bluetooth.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "America/Toronto";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_CA.utf8";
-  i18n.supportedLocales = [ "all" ];
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-  services.printing.drivers = with pkgs; [ samsung-unified-linux-driver_1_00_37 ];
-
-  fonts = {
-    fontDir.enable = true;
-    enableDefaultFonts = true;
-    enableGhostscriptFonts = true;
-    fontconfig.cache32Bit = true;
-    fonts = with pkgs; [
-      corefonts
-      google-fonts
-      gentium
-      inconsolata-lgc
-      noto-fonts-cjk-sans
-      noto-fonts-emoji
-      symbola
-      unifont
-      unifont_upper
-    ];
-  };
-
   # Enable sound with pipewire.
   # TODO: systemwide?
   sound.enable = true;
@@ -73,22 +42,4 @@
       }
     )
   '';
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
-  services.openssh.settings.X11Forwarding = true;
-
-  # Enable Munin system monitor
-  services.munin-node = {
-    enable = true;
-    extraConfig = ''
-      cidr_allow 192.168.1.0/24
-      cidr_allow fd85:f753:480f::/48
-    '';
-  };
-
-  nix.settings.auto-optimise-store = true;
-  system.autoUpgrade = {
-    enable = false;
-  };
 }
