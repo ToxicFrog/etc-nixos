@@ -6,9 +6,7 @@
 # the VM, like the pubsub broker and audio sink.
 { config, pkgs, ... }:
 
-let
-  secrets = (import ../../secrets/default.nix {});
-in {
+{
   networking.firewall.allowedTCPPorts = [
     1883 # MQTT
     6600 # MPD

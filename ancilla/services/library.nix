@@ -1,15 +1,13 @@
 # Configuration for library.ancilla.ca -- family ebooks (calibre) and comics
 # (ubooquity) server.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, secrets, ... }:
 
-let
-  secrets = (import ../../secrets/default.nix {});
-in {
+{
   services.nginx.virtualHosts."library.ancilla.ca" = {
     forceSSL = true;
     enableACME = true;
-    basicAuth = secrets.library-auth;
+    basicAuth = secrets.auth.nginx.library;
     # Proxy to Calibre library. TODO: move calibre service configuration into
     # nix rather than running it out of my homedir.
     locations."/".proxyPass = "http://127.0.0.1:26657/";

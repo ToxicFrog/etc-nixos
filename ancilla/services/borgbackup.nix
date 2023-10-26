@@ -1,9 +1,8 @@
 # Ancilla backup services using Borg.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, secrets, ... }:
 
 let
-  secrets = (import ../../secrets/default.nix {});
   hour = 60*60;
   day = hour*24;
   daily = day - hour;
@@ -167,7 +166,7 @@ in {
     };
     "grandriverallbreedrescue.ca" = borg-rsync {
       name = "GRABR.ca";
-      host = "${secrets.grabr-user}@grandriverallbreedrescue.ca";
+      host = "${secrets.auth.grabr.user}@grandriverallbreedrescue.ca";
       touch = ".borgbackup";
       minAge = weekly;
     };

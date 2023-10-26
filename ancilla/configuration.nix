@@ -1,15 +1,15 @@
 # Configuration specific to ancilla.
 
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, secrets, ... }:
 
 {
   imports = [
     ./boot.nix
     ./hardware-configuration.nix
     ./packages.nix
-    ../secrets/netmount.nix
     ./services/default.nix
     ./virtualization.nix
+    secrets.ancilla.netmounts
   ];
 
   system.stateVersion = "16.09";
@@ -69,5 +69,5 @@
   ];
 
   sound.enable = true;
-  users.users = (import ../secrets/users.nix { config = config; pkgs = pkgs; });
+  users.users = secrets.users { inherit config pkgs; };
 }

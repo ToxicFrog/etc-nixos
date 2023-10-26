@@ -1,7 +1,7 @@
-{ config, pkgs, modulesPath, ... }:
+{ config, pkgs, secrets, ... }:
 
 let
-  users = (import ../secrets/users.nix { config = config; pkgs = pkgs; });
+  users = secrets.users { inherit config pkgs };
 in {
   system.stateVersion = "20.09"; # Did you read the comment?
 

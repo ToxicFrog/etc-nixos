@@ -36,10 +36,12 @@
           specialArgs = {
             inherit inputs;
             unstable = (import nixpkgs-unstable { inherit system; config.allowUnfree = true; }).pkgs;
+            secrets = (import ./secrets/default.nix);
           };
         };
     in {
       ancilla = mkSystem [ ./ancilla/configuration.nix ];
+      thoth = mkSystem [ ./shared/graphical.nix ./thoth/configuration.nix ];
       pladix = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./pladix/configuration.nix ];
       lots-of-cats = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./lots-of-cats/configuration.nix ];
       # TODO: isis, timelapse, lector

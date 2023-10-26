@@ -6,10 +6,9 @@
 # then edit the authorized_keys on the rpi and add: command="munin/micronode"
 # in front of the key munin will be using.
 
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, inputs, secrets, ... }:
 
 let
-  secrets = (import ../../secrets/default.nix {});
   muninConf =
     (builtins.head (builtins.match ".*--config (/nix/store/[^ ]+munin.conf).*"
                 config.systemd.services.munin-cron.serviceConfig.ExecStart));
@@ -22,17 +21,15 @@ in {
   services.fcgiwrap.group = "nogroup";
   services.nginx.virtualHosts."ancilla.ancilla.ca".locations = {
     "/munin/static/".alias = "/srv/www/munin/static/";
-    "/munin/" = {
-      alias = "/srv/www/munin/";
-      # In CGI mode, anything ending in HTML + the homepage need to be forwarded
-      # to munin-cgi-html.
-      # extraConfig = ''
-      #   # Anything ending in .../static/foo needs to be served from /munin/static
-      #   rewrite /static/(.*)$ /munin/static/$1 last;
-      #   rewrite ^/(.*)\.html$ /munin-cgi/munin-cgi-html/$1 last;
-      #   rewrite ^/$           /munin-cgi/munin-cgi/html/   last;
-      # '';
-    };
+    "/munin/".alias = "/srv/www/munin/";
+    # In CGI mode, anything ending in HTML + the homepage need to be forwarded
+    # to munin-cgi-html.
+    # extraConfig = ''
+    #   # Anything ending in .../static/foo needs to be served from /munin/static
+    #   rewrite /static/(.*)$ /munin/static/$1 last;
+    #   rewrite ^/(.*)\.html$ /munin-cgi/munin-cgi-html/$1 last;
+    #   rewrite ^/$           /munin-cgi/munin-cgi/html/   last;
+    # '';
     # Configuration for fcgi to handle dynamic page generation and dynazoom.
     "/munin-cgi/" = {
       alias = "${pkgs.munin}/www/cgi/";

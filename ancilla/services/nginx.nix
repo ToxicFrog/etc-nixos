@@ -2,11 +2,9 @@
 # Note that some nginx configs live in their associated service files,
 # e.g. /maps is in minecraft.nix
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, secrets, ... }:
 
-let
-  secrets = (import ../../secrets/default.nix {});
-in {
+{
   services.nginx = {
     enable = true;
     recommendedProxySettings = true;
@@ -22,7 +20,7 @@ in {
       "ancilla.ancilla.ca" = {
         forceSSL = true;
         enableACME = true;
-        basicAuth = secrets.ancilla-auth;
+        basicAuth = secrets.auth.nginx.ancilla;
         locations."/".root = "/srv/www";
         locations."/media" = {
           root = "/ancilla";

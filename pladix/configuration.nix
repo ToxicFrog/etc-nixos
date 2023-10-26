@@ -2,10 +2,10 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, secrets, ... }:
 
 let
-  users = (import ../secrets/users.nix { config = config; pkgs = pkgs; });
+  users = secrets.users { inherit config pkgs; };
 in {
   imports =
     [

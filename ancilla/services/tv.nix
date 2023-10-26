@@ -1,10 +1,8 @@
-# Configuration for media servers -- plex (video) and airsonic (music).
+# Configuration for local video streaming services.
 
 { config, pkgs, lib, ... }:
 
-let
-  secrets = (import ../../secrets/default.nix {});
-in {
+{
   networking.firewall.allowedTCPPorts = [8096]; # DLNA media fetch
   networking.firewall.allowedUDPPorts = [1900 7359]; # DLNA discovery
   users.users.jellyfin.extraGroups = ["render"]; # HW video codecs
@@ -16,7 +14,6 @@ in {
     nginx.virtualHosts."tv.ancilla.ca" = {
       forceSSL = true;
       enableACME = true;
-      # basicAuth = secrets.plex-auth;
       locations."/" = {
         proxyPass = "http://127.0.0.1:8096/";
         extraConfig = "proxy_buffering off;";
@@ -32,17 +29,4 @@ in {
       };
     };
   };
-
-  # Automatically turn off Oculus's USB ports, thus shutting off the Chromecast,
-  # every night, so that it doesn't wake the screen back up and blast the entire
-  # room with light when it reboots for updates at 2am every morning.
-  # Seriously, why can't you turn that off?
-  # systemd.services.oculus-chromecast-off = {
-  #   startAt = ["*-*-* 01:00:00"];
-  #   script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@oculus tee /sys/bus/usb/drivers/usb/unbind'';
-  # };
-  # systemd.services.oculus-chromecast-on = {
-  #   startAt = ["*-*-* 09:00:00"];
-  #   script = ''echo 1-1 | ${pkgs.openssh}/bin/ssh root@oculus tee /sys/bus/usb/drivers/usb/bind'';
-  # };
 }

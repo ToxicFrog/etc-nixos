@@ -1,16 +1,14 @@
 # Ancilla services not large enough to need their own file.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, secrets, ... }:
 
 let
-  secrets = (import ../../secrets/default.nix {});
   unstable = (import <nixos-unstable> {});
   localpkgs = (import /home/rebecca/devel/nixpkgs {});
 in {
   imports = [
     ../munin/munin.nix
     ../munin/hugin.nix
-    ../../secrets/personal-services.nix
     ./bittorrent.nix
     ./borgbackup.nix
     ./doomrl-server.nix
@@ -28,6 +26,7 @@ in {
     ./timelapse.nix
     ./tv.nix
     # ./vncdesktop.nix
+    # secrets.personal-services
   ];
 
   users.users.git.createHome = lib.mkForce false;
@@ -101,7 +100,7 @@ in {
           %Current test items
           Spelldesc rewrite
         '';
-        dm_file = secrets.crossfire-dmfile;
+        dm_file = secrets.auth.crossfire.dmfile;
       };
     };
 
@@ -190,8 +189,8 @@ in {
       tls_starttls = "off";
       #tls_trust_file = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
       from = "%U@ancilla.ca";
-      user = secrets.msmtp-user;
-      password = secrets.msmtp-password;
+      user = secrets.auth.msmtp.user;
+      password = secrets.auth.msmtp.pass;
     };
   };
 

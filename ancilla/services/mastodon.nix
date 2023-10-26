@@ -2,9 +2,7 @@
 # Hosted on mastodon.ancilla.ca with @ancilla.ca usernames.
 { config, pkgs, lib, ... }:
 
-let
-  secrets = (import ../../secrets/default.nix {});
-in {
+{
   services.nginx = {
     clientMaxBodySize = "40M";
     commonHttpConfig = ''
