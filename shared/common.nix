@@ -7,6 +7,7 @@
     ./common-nix.nix
     ./common-services.nix
     ./common-packages.nix
+    ./overlays.nix
   ];
 
   users = {

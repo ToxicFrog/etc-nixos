@@ -32,7 +32,7 @@
     # rather than to the actual channels...
     nixPath = [
       "nixpkgs=/etc/channels/nixpkgs"
-      "nixpkgs-overlays=/etc/nixos/overlays"
+      "nixpkgs-overlays=/etc/nixos/shared/overlays"
       "unstable=/etc/channels/nixpkgs-unstable"
       "local=/etc/channels/nixpkgs-local"
       "nixos-config=/etc/nixos/configuration.nix"

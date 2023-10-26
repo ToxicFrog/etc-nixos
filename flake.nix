@@ -40,8 +40,8 @@
         };
     in {
       ancilla = mkSystem [ ./configuration.nix ];
-      pladix = mkSystem [ ./common/graphical.nix ./systems/pladix/configuration.nix ];
-      lots-of-cats = mkSystem [ ./common/graphical.nix ./systems/lots-of-cats/configuration.nix ];
+      pladix = mkSystem [ ./shared/graphical.nix ./systems/pladix/configuration.nix ];
+      lots-of-cats = mkSystem [ ./shared/graphical.nix ./systems/lots-of-cats/configuration.nix ];
       # TODO: isis, timelapse, lector
     };
   };

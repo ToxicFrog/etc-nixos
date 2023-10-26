@@ -6,7 +6,6 @@
   imports = [
     ./boot.nix
     ./hardware-configuration.nix
-    ./overlays.nix
     ./packages.nix
     ./secrets/netmount.nix
     ./services/default.nix
