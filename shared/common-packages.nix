@@ -10,10 +10,10 @@
     unstable.chezmoi
     dos2unix
     dtrx
-    ffmpeg-full
+    ffmpeg-vgz
     file
     findutils
-    gitAndTools.gitFull git-cola git-crypt git-secrets
+    gitFull git-crypt git-secrets
     gnumake
     htop
     jre
