@@ -11,12 +11,8 @@
   };
 
   programs.steam.enable = true;
-  programs.adb.enable = true;
-  programs.zsh.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # system tools
-    xscreensaver ark
     # for gaming
     jre stepmania lutris scummvm wine itch
     steam.run steam
@@ -41,14 +37,9 @@
     unstable.dosbox-staging dialog
     # misc games
     gnome.quadrapassel ltris lbreakout2
-    chromium  # ffmpeg/libavcodec is part of the common package set
     vulkan-tools vulkan-loader
     #libsForQt5.phonon-backend-vlc
     #libsForQt5.phonon-backend-gstreamer gst-plugins-good gst-plugins-ugly
-    # for fun
-    fortune
-    # for android stuff
-    scrcpy
   ];
 
   nixpkgs.config.permittedInsecurePackages = [

@@ -1,13 +1,14 @@
 { config, pkgs, modulesPath, ... }:
 
-{
+let
+  users = (import ../secrets/users.nix { config = config; pkgs = pkgs; });
+in {
   system.stateVersion = "20.09"; # Did you read the comment?
 
   imports =
     [
       ./hardware-configuration.nix
-      ../alex-common/default.nix
-      ../../ancilla/services/syncthing.nix
+      ../ancilla/services/syncthing.nix
     ];
 
   networking = {
@@ -20,6 +21,9 @@
   console.keyMap = "us";
 
   networking.firewall.enable = false;
+
+  users.users.root = users.root;
+  users.users.alex = users.alex // { createHome = true; };
 
   # Fix for HDMI audio going away after suspend
   # powerManagement.resumeCommands = ''

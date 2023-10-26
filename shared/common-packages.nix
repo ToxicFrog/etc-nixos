@@ -13,6 +13,7 @@
     ffmpeg-vgz
     file
     findutils
+    unstable.fortune-kind
     gitFull git-crypt git-secrets
     gnumake
     htop

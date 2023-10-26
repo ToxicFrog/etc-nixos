@@ -4,19 +4,33 @@
 
 { config, pkgs, ... }:
 
-{
+let
+  users = (import ../secrets/users.nix { config = config; pkgs = pkgs; });
+in {
   imports =
     [
       ./hardware-configuration.nix
-      ../alex-common/default.nix
-      ../../ancilla/services/syncthing.nix
+      ../ancilla/services/syncthing.nix
       ./camera.nix
+      ./sound.nix
     ];
 
   networking = {
     hostName = "pladix";
     domain = "ancilla.ca";
     networkmanager.enable = true;
+  };
+
+  users.users.root = users.root;
+  users.users.alex = users.alex // {
+    createHome = true;
+    extraGroups = users.alex.extraGroups ++ [ "adbusers" ];
+  };
+  users.users.pladix = {
+    isNormalUser = true;
+    description = "pladix role account";
+    extraGroups = [ "networkmanager" "wheel" "adbusers" ];
+    shell = pkgs.zsh;
   };
 
   # Enable the X11 windowing system.
@@ -75,13 +89,9 @@
     '';
   };
 
-  # This is a user service!!
-  # It needs to be enabled mutably using systemctl.
-  systemd.user.services.snapclient = {
-    wantedBy = [ "pipewire.service" ];
-    after = [ "pipewire.service" "pipewire-pulse.service" "wireplumber.service" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla";
-    };
-  };
+  programs.adb.enable = true;
+  environment.systemPackages = with pkgs; [
+    chromium  # ffmpeg/libavcodec is part of the common package set
+    scrcpy  # for android stuff
+  ];
 }
