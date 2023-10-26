@@ -9,7 +9,7 @@
 { config, pkgs, lib, inputs, ... }:
 
 let
-  secrets = (import ../secrets/default.nix {});
+  secrets = (import ../../secrets/default.nix {});
   muninConf =
     (builtins.head (builtins.match ".*--config (/nix/store/[^ ]+munin.conf).*"
                 config.systemd.services.munin-cron.serviceConfig.ExecStart));

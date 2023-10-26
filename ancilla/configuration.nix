@@ -7,7 +7,7 @@
     ./boot.nix
     ./hardware-configuration.nix
     ./packages.nix
-    ./secrets/netmount.nix
+    ../secrets/netmount.nix
     ./services/default.nix
     ./virtualization.nix
   ];
@@ -69,5 +69,5 @@
   ];
 
   sound.enable = true;
-  users.users = (import ./secrets/users.nix { config = config; pkgs = pkgs; });
+  users.users = (import ../secrets/users.nix { config = config; pkgs = pkgs; });
 }

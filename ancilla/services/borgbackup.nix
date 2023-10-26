@@ -3,7 +3,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  secrets = (import ../secrets/default.nix {});
+  secrets = (import ../../secrets/default.nix {});
   hour = 60*60;
   day = hour*24;
   daily = day - hour;

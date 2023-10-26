@@ -3,14 +3,14 @@
 { config, pkgs, lib, ... }:
 
 let
-  secrets = (import ../secrets/default.nix {});
+  secrets = (import ../../secrets/default.nix {});
   unstable = (import <nixos-unstable> {});
   localpkgs = (import /home/rebecca/devel/nixpkgs {});
 in {
   imports = [
     ../munin/munin.nix
     ../munin/hugin.nix
-    ../secrets/personal-services.nix
+    ../../secrets/personal-services.nix
     ./bittorrent.nix
     ./borgbackup.nix
     ./doomrl-server.nix

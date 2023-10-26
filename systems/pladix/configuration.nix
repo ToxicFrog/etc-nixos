@@ -9,7 +9,7 @@
     [
       ./hardware-configuration.nix
       ../alex-common/default.nix
-      ../../services/syncthing.nix
+      ../../ancilla/services/syncthing.nix
       ./camera.nix
     ];
 

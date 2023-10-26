@@ -3,7 +3,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  secrets = (import ../secrets/default.nix {});
+  secrets = (import ../../secrets/default.nix {});
 in {
   networking.firewall.allowedTCPPorts = [8096]; # DLNA media fetch
   networking.firewall.allowedUDPPorts = [1900 7359]; # DLNA discovery
