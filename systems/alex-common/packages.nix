@@ -1,8 +1,6 @@
 { config, pkgs, unstable, inputs, ... }:
 
 {
-  imports = [ ../../overlays/default.nix ];
-
   nixpkgs.config.packageOverrides = pkgs: {
     steam = pkgs.steam.override {
       extraPkgs = pkgs: with pkgs; [
@@ -18,7 +16,7 @@
 
   environment.systemPackages = with pkgs; [
     # system tools
-    zip unzip ncdu htop xscreensaver wget ark git
+    xscreensaver ark
     # for gaming
     jre stepmania lutris scummvm wine itch
     steam.run steam
@@ -32,16 +30,19 @@
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
     unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
+    (retroarch.override {
+      cores = with libretro; [
+        dolphin mgba beetle-psx beetle-psx-hw bsnes snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
+      ];})
+
     # for dbgl
     swt dosbox gsettings-desktop-schemas
     # for exodos-ll
     unstable.dosbox-staging dialog
     # misc games
     gnome.quadrapassel ltris lbreakout2
-    # for media playback
-    chromium ffmpeg-full
+    chromium  # ffmpeg/libavcodec is part of the common package set
     vulkan-tools vulkan-loader
-    vlc
     #libsForQt5.phonon-backend-vlc
     #libsForQt5.phonon-backend-gstreamer gst-plugins-good gst-plugins-ugly
     # for fun
@@ -49,6 +50,7 @@
     # for android stuff
     scrcpy
   ];
+
   nixpkgs.config.permittedInsecurePackages = [
     "electron-11.5.0"  # not sure what needs this. TODO: audit
   ];

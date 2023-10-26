@@ -10,6 +10,10 @@
     driSupport32Bit = true;
   };
 
+  environment.systemPackages = with pkgs; [
+    vlc
+  ];
+
   fonts = {
     fontDir.enable = true;
     enableDefaultFonts = true;

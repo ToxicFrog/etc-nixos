@@ -50,22 +50,6 @@
     xkbVariant = "";
   };
 
-  # Enable openGL.
-  hardware.opengl = {
-    enable = true;
-    driSupport32Bit = true;
-    #extraPackages = with pkgs; [vaapiVdpau vaapiIntel];
-    #extraPackages32 = with pkgs; [vaapiVdpau vaapiIntel];
-  };
-
-  environment.systemPackages = with pkgs; [
-    (retroarch.override {
-      cores = with libretro; [
-        dolphin mgba beetle-psx beetle-psx-hw bsnes snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
-      ];
-    })
-  ];
-
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];

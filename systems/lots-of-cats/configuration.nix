@@ -32,14 +32,6 @@
   services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
 
-  # Enable hardware accelerated rendering.
-  hardware.opengl = {
-    enable = true;
-    driSupport32Bit = true;
-    extraPackages = with pkgs; [vaapiVdpau vaapiIntel];
-    extraPackages32 = with pkgs; [vaapiVdpau vaapiIntel];
-  };
-
   # Enable touchpad support.
   # services.xserver.libinput.enable = true;
 
