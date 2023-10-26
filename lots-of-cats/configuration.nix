@@ -32,21 +32,17 @@ in {
   # '';
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.layout = "us";
   # services.xserver.xkbOptions = "eurosign:e";
 
   # Enable touchpad support.
   # services.xserver.libinput.enable = true;
 
   # Enable the KDE Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
   # services.xserver.displayManager.sddm.autoLogin.relogin = true;
   # services.xserver.displayManager.autoLogin = {
   #   enable = true;
   #   user = "pladix";
   # };
-  services.xserver.desktopManager.plasma5.enable = true;
   systemd.services.display-manager.wants = [ "systemd-user-sessions.service" "multi-user.target" "network-online.target" ];
   systemd.services.display-manager.after = [ "systemd-user-sessions.service" "multi-user.target" "network-online.target" ];
 }

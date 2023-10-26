@@ -10,6 +10,18 @@
     driSupport32Bit = true;
   };
 
+  # Enable X11 and KDEPlasma
+  services.xserver = {
+    enable = true;
+    layout = "us";
+    xkbVariant = "";
+    # Ctrl on capslock, alt is both alt and meta, compose is on left winkey
+    xkbOptions = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
+    displayManager.sddm.enable = true;
+    desktopManager.plasma5.enable = true;
+    # libinput.enable = false;
+  };
+
   # Enable sound with pipewire.
   sound.enable = true;
   hardware.pulseaudio.enable = false;
@@ -24,6 +36,7 @@
   environment.systemPackages = with pkgs; [
     ark
     git-cola
+    libnotify
     vlc
     xscreensaver
   ];

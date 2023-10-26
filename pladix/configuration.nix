@@ -34,7 +34,6 @@ in {
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
   services.xserver.videoDrivers = ["nvidia"];
   hardware.nvidia = {
     modesetting.enable = true;
@@ -47,22 +46,12 @@ in {
     };
   };
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.xserver.desktopManager.plasma5.enable = true;
-  services.xserver.displayManager.sddm.enable = true;
-  #services.xserver.displayManager.sddm.autoLogin.relogin = true;
   services.xserver.displayManager.autoLogin = {
     enable = true;
     user = "pladix";
   };
   # Enable touchpad support (enabled default in most desktopManager).
   services.xserver.libinput.enable = false;
-
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
-  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
