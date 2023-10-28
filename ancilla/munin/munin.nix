@@ -86,45 +86,41 @@ in {
       use_node_name yes
       address localhost
 
-      [ancilla.ca;nanolathe]
-      use_node_name no
-      address localhost
-
-      [ancilla.ca;octopi]
-      use_node_name yes
-      address octopi
-
-      [ancilla.ca;openwrt]
-      use_node_name no
-      address openwrt
-
-      [ancilla.ca;traxus]
-      use_node_name yes
-      address traxus
-
       [ancilla.ca;pladix]
       use_node_name yes
       address pladix
-
-      [ancilla.ca;isis]
-      use_node_name yes
-      address isis
-
-      [ancilla.ca;lots-of-cats]
-      use_node_name yes
-      address lots-of-cats
 
       [ancilla.ca;ancilla.ca]
       use_node_name no
       address localhost
 
-      [ancilla.ca;thoth]
+      [laptops;isis]
+      use_node_name yes
+      address isis
+
+      [laptops;lots-of-cats]
+      use_node_name yes
+      address lots-of-cats
+
+      [laptops;thoth]
       use_node_name yes
       address thoth.ancilla.ca
 
-      [ancilla.ca;meatspace]
+      [networking;openwrt]
+      use_node_name no
+      address openwrt
+
+      [networking;traxus]
+      use_node_name yes
+      address traxus
+
+      [appliances;nanolathe]
       use_node_name no
       address localhost
+
+      [appliances;octopi]
+      use_node_name yes
+      address octopi
     '';
     # Light on dark theme.
     extraCSS = ''
