@@ -118,6 +118,10 @@ in {
       use_node_name no
       address localhost
 
+      [appliances;scriptor]
+      use_node_name no
+      address localhost
+
       [appliances;octopi]
       use_node_name yes
       address octopi
@@ -170,6 +174,10 @@ in {
       #http_response = "${inputs.munin-contrib}/plugins/http/http_response";
       whois = ./plugins/whois;
       zpool_health = ./plugins/zpool_health;
+
+      # SNMP monitoring of scriptor
+      snmp_scriptor_df_ram = "${pkgs.munin}/lib/plugins/snmp__df_ram";
+      snmp_scriptor_print_supplies = "${pkgs.munin}/lib/plugins/snmp__print_supplies";
     };
     # TODO: extraAutoPlugins should do this automatically in the module
     extraAutoPlugins = [
