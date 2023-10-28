@@ -42,6 +42,10 @@
     in {
       ancilla = mkSystem [ ./ancilla/configuration.nix ];
       thoth = mkSystem [ ./shared/graphical.nix ./thoth/configuration.nix ];
+      thoth-installer = mkSystem [
+        ./shared/graphical.nix
+        ./thoth/installer.nix
+      ];
       pladix = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./pladix/configuration.nix ];
       lots-of-cats = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./lots-of-cats/configuration.nix ];
       # TODO: isis, timelapse, lector
