@@ -2,6 +2,8 @@
 #
 # Simple script for pushing configurations to other computers in the house.
 
+set -e
+
 function die {
 	echo "$@" > /dev/stderr
 	exit 1
@@ -10,6 +12,7 @@ function die {
 TARGET="$1"; shift
 ssh -o BatchMode=yes root@$TARGET true || die "Unable to ssh root@$TARGET noninteractively"
 
-nixos-rebuild -I nixos-config=/etc/nixos/systems/$TARGET/configuration.nix \
-	--build-host root@$TARGET --target-host root@$TARGET \
-	"$@"
+cd /etc/nixos
+nixos-rebuild --target-host "$TARGET" --flake ".#$TARGET" --impure "$@"
+
+# TODO: copy shared/ and system-specific configuration to the target.
