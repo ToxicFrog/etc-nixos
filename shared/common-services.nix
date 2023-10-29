@@ -2,7 +2,25 @@
 
 { config, pkgs, lib, ... }:
 
-{
+let
+  # We need to publish to hugin/smartd/<hostname>
+  # We send a multiline string payload; our "subject" is the first line
+  # cat /tmp/smartd-notify-653220 | egrep '^(Subject|Device|Model Family|Device Model|Serial Number|User Capacity):'
+  # Subject: SMART error (OfflineUncorrectableSector) detected on host: ancilla
+  # Device: /dev/sdg [USB Prolific], 2 Offline uncorrectable sectors
+  # Model Family:     Western Digital Red
+  # Device Model:     WDC WD20EFRX-68AX9N0
+  # Serial Number:    WD-WMC301428176
+  # User Capacity:    2,000,398,934,016 bytes [2.00 TB]
+  smartd-notify = pkgs.writeShellScript "smartd-notify" ''
+    ${pkgs.gnugrep}/bin/egrep \
+      '^(Subject|Device|Model Family|Device Model|Serial Number|User Capacity):' \
+    | ${pkgs.gnused}/bin/sed -E 's,Subject: +,,; s,  +, ,g;' \
+    | ${pkgs.jq}/bin/jq -R -s . \
+    | ${pkgs.mosquitto}/bin/mosquitto_pub -L mqtt://ancilla.ancilla.ca/hugin/smartd/$(hostname) -s
+  '';
+in {
+  networking.firewall.allowedTCPPorts = [ 4949 ];  # munin-node
   services = {
     locate = {
       enable = true;
@@ -43,7 +61,9 @@
         wall.enable = true;
         x11.enable = true;
         mail = {
-          enable = false;
+          enable = true;
+          mailer = "${smartd-notify}";
+          recipient = "hugin/smartd";
           # TODO we need a different mailer for this!
           # mailer = "/run/current-system/sw/bin/hugin";
           # recipient = "#ancilla";
