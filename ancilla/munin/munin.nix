@@ -15,6 +15,9 @@ let
   readTemplate = name:
     (builtins.replaceStrings ["\n"] ["\\\n"]
       (lib.strings.removeSuffix "\n" (builtins.readFile ./contact.${name})));
+  disks = [ "sda" "sdb" "sdc" "sdd" "sde" "sdf" "sdg" "sdh" "nvme0n1" ];
+  disk-monitoring = builtins.listToAttrs
+    (map (dev: lib.attrsets.nameValuePair "smart_${dev}" "${pkgs.munin}/lib/plugins/smart_") disks);
 in {
   services.fcgiwrap.enable = true;
   services.fcgiwrap.user = "munin";
@@ -164,7 +167,7 @@ in {
     '';
   in {
     enable = true;
-    extraPlugins = {
+    extraPlugins = disk-monitoring // {
       #http_traxus_onhub = ./http__onhub;
       borgbackup = ./plugins/borgbackup;
       certificates = ./plugins/certificates;
@@ -218,6 +221,15 @@ in {
         env.short_label true
         env.follow_redirect false
 
+      [sensors_*]
+        env.sensors sensors -c /etc/sensors3.conf
+        env.ignore_temp4 true
+        env.volt_warn_percent 20
+
+      [smart_*]
+        user root
+        env.smartpath ${pkgs.smartmontools}/bin/smartctl
+
       [whois]
         env.domains ancilla.ca godbehere.ca
         env.host_name ancilla.ca
@@ -233,11 +245,6 @@ in {
         env.BORG_CACHE_DIR /backup/borg/cache
         env.BORG_SECURITY_DIR /backup/borg/security
         env.BORG_KEYS_DIR /backup/borg/keys
-
-      [sensors_*]
-        env.sensors sensors -c /etc/sensors3.conf
-        env.ignore_temp4 true
-        env.volt_warn_percent 20
 
       [zfs_*]
         user root
