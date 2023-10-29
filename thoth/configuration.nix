@@ -21,6 +21,11 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  services.xserver.displayManager.autoLogin = {
+    enable = true;
+    user = "bex";
+  };
+
   programs.steam.enable = true;
   environment.systemPackages = with pkgs; [
     unstable.alephone
