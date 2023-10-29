@@ -72,7 +72,7 @@ SGR[CRITICAL]=${SGR[red]}
 SGR[UNKNOWN]=${SGR[purple]}
 
 function main {
-  mosquitto_sub -t "$1" -F '%J' | while read line; do
+  mosquitto_sub -h ancilla -t "$1" -F '%J' | while read -r line; do
     local prefix="$(jqr .topic $line | sed s,^hugin/,,)"
     local payload="$(jqo .payload $line)"
     process-message
