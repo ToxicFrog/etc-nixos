@@ -43,14 +43,17 @@ in {
       openRegistration = false;
       port = 28034; # Unicode for TURTLE is 0x128034
     };
-    postgresql.package = pkgs.postgresql_15;
-    postgresql.ensureUsers = [{
-        name = "atuin";
-        ensurePermissions = {
-          "DATABASE atuin" = "ALL PRIVILEGES";
-          "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
-        };
-    }];
+    postgresql = {
+      enable = true;
+      package = pkgs.postgresql_15;
+      ensureUsers = [{
+          name = "atuin";
+          ensurePermissions = {
+            "DATABASE atuin" = "ALL PRIVILEGES";
+            "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
+          };
+      }];
+    };
     nginx.virtualHosts."atuin.ancilla.ca" = {
       forceSSL = true;
       enableACME = true;

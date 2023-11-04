@@ -43,6 +43,6 @@
   ];
 
   nixpkgs.config.permittedInsecurePackages = [
-    "electron-11.5.0"  # not sure what needs this. TODO: audit
+    "electron-11.5.0"  # needed for itch.io client
   ];
 }
