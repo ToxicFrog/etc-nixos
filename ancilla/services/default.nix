@@ -19,6 +19,7 @@ in {
     ./music.nix
     ./nfs.nix
     ./nginx.nix
+    ./photos.nix
     ./smarthome.nix
     ./smb.nix
     ./syncthing.nix
