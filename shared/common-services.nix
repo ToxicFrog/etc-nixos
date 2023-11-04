@@ -22,6 +22,14 @@ let
 in {
   networking.firewall.allowedTCPPorts = [ 4949 ];  # munin-node
   services = {
+    kmscon = {
+      enable = true;
+      hwRender = true;
+      fonts = [
+        { name = "Cousine Nerd Font Mono"; package = (pkgs.nerdfonts.override { fonts = [ "Cousine" ]; }); }
+      ];
+    };
+
     locate = {
       enable = true;
       locate = pkgs.plocate;
