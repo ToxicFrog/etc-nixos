@@ -27,6 +27,7 @@
   };
 
   programs.steam.enable = true;
+  virtualisation.waydroid.enable = true;
   environment.systemPackages = with pkgs; [
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
