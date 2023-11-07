@@ -13,6 +13,9 @@ TARGET="$1"; shift
 ssh -o BatchMode=yes root@$TARGET true || die "Unable to ssh root@$TARGET noninteractively"
 
 cd /etc/nixos
+# This is a gross hack to create a gcroot for the built system, so we don't have
+# to rebuild it ex nihilo each time.
+nix build -o built/$TARGET ".#nixosConfigurations.$TARGET.config.system.build.toplevel"
 nixos-rebuild --target-host "$TARGET" --flake ".#$TARGET" --impure "$@"
 
 # TODO: copy shared/ and system-specific configuration to the target.
