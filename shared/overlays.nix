@@ -9,9 +9,8 @@
   imports = [
     ./modules/borgbackup.nix
     (lib.modules.mkAliasOptionModule [ "fonts" "packages" ] [ "fonts" "fonts" ])
-    "${inputs.nixpkgs-unstable}/nixos/modules/config/users-groups.nix"  # for linger
-    # TODO: switch to nixpkgs-unstable once the PR lands there
-    "${inputs.nixpkgs-local}/nixos/modules/services/monitoring/munin.nix"
+    "${inputs.nixos-unstable}/nixos/modules/config/users-groups.nix"  # for linger
+    "${inputs.nixos-unstable}/nixos/modules/services/monitoring/munin.nix"
   ];
   # Package overlays.
   nixpkgs.overlays = [

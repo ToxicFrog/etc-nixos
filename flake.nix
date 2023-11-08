@@ -1,9 +1,13 @@
 {
   description = "flakes for all ancilla.ca nixos systems";
 
+  # "nixos" points to nixos stable
+  # "nixos-unstable" points to unstable
+  # in common-nix, these are also aliased to <nixpkgs> and <unstable> respectively,
+  # as both channels and flakes.
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
-    nixpkgs-unstable.url = "flake:nixpkgs";
+    nixos.url = "github:NixOS/nixpkgs/nixos-23.05";
+    nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-local.url = "/home/rebecca/devel/nixpkgs";
     munin-contrib = {
       url = "github:munin-monitoring/contrib/master";
@@ -27,15 +31,15 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs: {
+  outputs = { self, nixos, nixos-unstable, ... }@inputs: {
     nixosConfigurations = let
       mkSystem = extraModules:
-        nixpkgs.lib.nixosSystem rec {
+        nixos.lib.nixosSystem rec {
           system = "x86_64-linux";
           modules = [ ./shared/common.nix ] ++ extraModules;
           specialArgs = {
             inherit inputs;
-            unstable = (import nixpkgs-unstable { inherit system; config.allowUnfree = true; }).pkgs;
+            unstable = (import nixos-unstable { inherit system; config.allowUnfree = true; }).pkgs;
             secrets = (import ./secrets/default.nix);
           };
         };

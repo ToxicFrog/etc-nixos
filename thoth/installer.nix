@@ -3,7 +3,7 @@
 { config, pkgs, lib, unstable, inputs, ... }:
 {
   imports = [
-    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+    "${inputs.nixos}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
   ];
   boot.supportedFilesystems = [ "bcachefs" "zfs" ];
   boot.kernelPackages = lib.mkOverride 0 unstable.linuxPackages_testing_bcachefs;

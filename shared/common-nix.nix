@@ -24,24 +24,33 @@
     # Synchronize the flake registry with the flake.lock used to build the system.
     # see https://dataswamp.org/~solene/2022-07-20-nixos-flakes-command-sync-with-system.html
     registry = {
-      nixpkgs.flake = inputs.nixpkgs;
-      unstable.flake = inputs.nixpkgs-unstable;
+      nixos.flake = inputs.nixos;
+      nixos-unstable.flake = inputs.nixos-unstable;
       local.flake = inputs.nixpkgs-local;
+      # useful aliases
+      nixpkgs.flake = inputs.nixos;
+      unstable.flake = inputs.nixos-unstable;
     };
     # Set NIX_PATH to alias channel references like <nixpkgs> to paths we control
     # rather than to the actual channels...
     nixPath = [
-      "nixpkgs=/etc/channels/nixpkgs"
-      "nixpkgs-overlays=/etc/nixos/shared/overlays"
-      "unstable=/etc/channels/nixpkgs-unstable"
+      # These match the flakes above
+      "nixos=/etc/channels/nixos"
+      "nixos-unstable=/etc/channels/nixos-unstable"
       "local=/etc/channels/nixpkgs-local"
+      # These are the aliases
+      "nixpkgs=/etc/channels/nixos"
+      "unstable=/etc/channels/nixos-unstable"
+      # And these are additional NIX_PATH settings with no equivalent in the
+      # flake registry.
+      "nixpkgs-overlays=/etc/nixos/shared/overlays"
       "nixos-config=/etc/nixos/configuration.nix"
       "/nix/var/nix/profiles/per-user/root/channels"
     ];
   };
   # ...and then point those paths at the flake inputs, thus also synchronizing
   # channel references with flake.lock.
-  environment.etc."channels/nixpkgs".source = inputs.nixpkgs.outPath;
-  environment.etc."channels/nixpkgs-unstable".source = inputs.nixpkgs-unstable.outPath;
+  environment.etc."channels/nixos".source = inputs.nixos.outPath;
+  environment.etc."channels/nixos-unstable".source = inputs.nixos-unstable.outPath;
   environment.etc."channels/nixpkgs-local".source = inputs.nixpkgs-local.outPath;
 }
