@@ -21,6 +21,7 @@
     antimicroX # controller support for keyboard-only games
     appimage-run # for gdlauncher
     opentyrian
+    golly
     gzdoom
     crossfire-jxclient crossfire-editor
     unstable.alephone
