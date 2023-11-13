@@ -51,6 +51,8 @@
   # ...and then point those paths at the flake inputs, thus also synchronizing
   # channel references with flake.lock.
   environment.etc."channels/nixos".source = inputs.nixos.outPath;
+  environment.etc."channels/nixpkgs".source = inputs.nixos.outPath;
   environment.etc."channels/nixos-unstable".source = inputs.nixos-unstable.outPath;
+  environment.etc."channels/unstable".source = inputs.nixos-unstable.outPath;
   environment.etc."channels/nixpkgs-local".source = inputs.nixpkgs-local.outPath;
 }
