@@ -18,6 +18,11 @@ self: super:
     cmakeFlags = [ "-DENABLE_UBSAN=OFF" ];
     buildInputs = [ self.zlib ];
   });
+  golly = super.callPackage ../packages/golly.nix {};
+  wxGTK32-curl = super.wxGTK32.overrideAttrs (old: rec {
+    configureFlags = old.configureFlags ++ [ "--with-libcurl" ];
+    buildInputs = old.buildInputs ++ [ self.curl ];
+  });
   openxcom = super.openxcom.overrideAttrs (oldAttrs: rec {
     version = "7.0-oxce-2021.03.13";
     src = super.fetchFromGitHub {
