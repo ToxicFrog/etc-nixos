@@ -35,6 +35,8 @@
     after = [ "pipewire.service" "pipewire-pulse.service" "wireplumber.service" ];
     serviceConfig = {
       ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla";
+      Restart = "always";
+      RestartSec = "60s";
     };
   };
 }
