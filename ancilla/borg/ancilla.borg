@@ -24,6 +24,7 @@ R ancilla/torrents
 ! home/*/music/
 #! home/*/Pictures/
 ! home/*/Comics/
+! home/*/Games/
 ! home/*/Games/**/*Cache*/
 ! home/*/.local/share/Steam/
 ! home/*/.local/share/Trash/

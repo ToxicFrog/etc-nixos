@@ -28,10 +28,20 @@
       fsType = "vfat";
     };
 
-  # TODO: replace with sshfs as Alex
   fileSystems."/ancilla" =
     { device = "ancilla:/ancilla";
       fsType = "nfs";
+    };
+
+  fileSystems."/home/alex" =
+    { device = "alex@ancilla:/home/alex";
+      fsType = "sshfs";
+      options = [
+        "reconnect" "default_permissions" "allow_other" "delay_connect"
+        "uid=${toString config.users.users.alex.uid}"
+        "gid=${toString config.users.groups.users.gid}"
+        "ServerAliveInterval=15" "IdentityFile=/root/.ssh/alex.rsa"
+      ];
     };
 
   swapDevices = [

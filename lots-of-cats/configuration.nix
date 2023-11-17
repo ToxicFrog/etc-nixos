@@ -14,16 +14,17 @@ in {
   networking = {
     hostName = "lots-of-cats";
     domain = "ancilla.ca";
-    networkmanager.enable = true;
+    firewall.enable = false;
+    networkmanager.enable = false;
+    wireless.enable = true;
+    wireless.networks = secrets.wifi;
   };
 
   #console.font = "latarcyrheb-sun32";
   console.keyMap = "us";
 
-  networking.firewall.enable = false;
-
   users.users.root = users.root;
-  users.users.alex = users.alex // { createHome = true; };
+  users.users.alex = users.alex; # // { createHome = true; };
 
   # Fix for HDMI audio going away after suspend
   # powerManagement.resumeCommands = ''
