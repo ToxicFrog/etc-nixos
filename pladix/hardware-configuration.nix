@@ -30,6 +30,13 @@
   fileSystems."/ancilla" =
     { device = "ancilla:/ancilla";
       fsType = "nfs";
+      options = [ "_netdev" "x-systemd.automount" ];
+    };
+
+  fileSystems."/home/alex" =
+    { device = "ancilla:/home/alex";
+      fsType = "nfs";
+      options = [ "_netdev" "x-systemd.automount" ];
     };
 
   swapDevices =
