@@ -17,7 +17,12 @@
     xkbVariant = "";
     # Ctrl on capslock, alt is both alt and meta, compose is on left winkey
     xkbOptions = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
-    displayManager.sddm.enable = true;
+    displayManager.sddm = {
+      enable = true;
+      autoNumlock = true;
+      # wayland.enable = true;
+      # settings.General.DisplayServer = "x11";
+    };
     desktopManager.plasma5.enable = true;
     # libinput.enable = false;
   };
