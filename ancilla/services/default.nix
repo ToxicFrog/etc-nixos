@@ -33,8 +33,8 @@ in {
   users.users.git.createHome = lib.mkForce false;
   systemd.services.gitolite-init.after = ["local-fs.target"];
 
-  # CUPS
-  networking.firewall.allowedTCPPorts = [ 21 631 ];
+  # ftpd & CUPS
+  networking.firewall.allowedTCPPorts = [ 20 21 631 ];
 
   services = {
     # A'Tuin shell history synchronization
@@ -163,6 +163,22 @@ in {
     locate.prunePaths = lib.mkOptionDefault [
       "/ancilla/media/other"
     ];
+
+    vsftpd = {
+      enable = true;
+      anonymousMkdirEnable = true;
+      anonymousUploadEnable = true;
+      anonymousUser = true;
+      anonymousUserHome = "/ancilla/scans/";
+      anonymousUserNoPassword = true;
+      writeEnable = true;
+      extraConfig = ''
+        pasv_min_port=20
+        pasv_max_port=20
+        syslog_enable=YES
+        xferlog_enable=YES
+      '';
+    };
 
     openssh.ports = [ 22 2222 ];  # Workaround for Bell's busted-ass router firmware
     openssh.settings = {
