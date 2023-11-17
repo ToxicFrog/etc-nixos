@@ -18,7 +18,7 @@ in {
   networking = {
     hostName = "pladix";
     domain = "ancilla.ca";
-    networkmanager.enable = true;
+    networkmanager.enable = false;
   };
 
   users.users.root = users.root;
