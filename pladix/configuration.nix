@@ -21,16 +21,13 @@ in {
     networkmanager.enable = false;
   };
 
-  users.users.root = users.root;
-  users.users.alex = users.alex // {
-    createHome = true;
-    extraGroups = users.alex.extraGroups ++ [ "adbusers" ];
-  };
-  users.users.pladix = {
-    isNormalUser = true;
-    description = "pladix role account";
-    extraGroups = [ "networkmanager" "wheel" "adbusers" ];
-    shell = pkgs.zsh;
+  users.users = let
+    pladix-users = secrets.pladix { inherit pkgs; };
+  in {
+    root = users.root // pladix-users.root;
+    alex = users.alex;
+    bex = users.bex;
+    pladix = pladix-users.pladix;
   };
 
   # Enable the X11 windowing system.
@@ -46,12 +43,12 @@ in {
     };
   };
 
-  services.xserver.displayManager.autoLogin = {
-    enable = true;
-    user = "pladix";
-  };
+  # services.xserver.displayManager.autoLogin = {
+  #   enable = true;
+  #   user = "pladix";
+  # };
   # Enable touchpad support (enabled default in most desktopManager).
-  services.xserver.libinput.enable = false;
+  # services.xserver.libinput.enable = false;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
