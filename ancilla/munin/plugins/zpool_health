@@ -12,7 +12,7 @@ zpool_health -- monitors zpool component health
   env.pools tank backup
   env.zpool /sbin/zpool
 
-If 'pools' is unset, all pool returned by "zpool status" will be monitored.
+If 'pools' is unset, all pools returned by "zpool status" will be monitored.
 If 'zpool' is unset, it will try to find it with 'type'.
 
 =head1 AUTHOR
