@@ -5,7 +5,7 @@
 {
   imports = [
     ./common-nix.nix
-    ./common-services.nix
+    ./common-services.nix  # TODO: disable this for the installer and isci-target builds
     ./common-packages.nix
     ./overlays.nix
   ];

@@ -50,6 +50,9 @@
         ./shared/graphical.nix
         ./thoth/installer.nix
       ];
+      iscsi-target = mkSystem [
+        ./iscsi-target.nix
+      ];
       pladix = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./pladix/configuration.nix ];
       lots-of-cats = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./lots-of-cats/configuration.nix ];
       # TODO: isis, timelapse, lector
