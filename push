@@ -20,7 +20,7 @@ nix build -o built/$TARGET ".#nixosConfigurations.$TARGET.config.system.build.to
 # Build was successful, so stage the configs on the target as a reference
 command rsync -a --info=progress2 \
 	--chmod=D0555,F0444 \
-	--exclude='/.git/'
+	--exclude='/.git/' \
 	--delete --delete-excluded \
 	/etc/nixos/ root@$TARGET:/etc/nixos/
 
