@@ -28,6 +28,8 @@
 # So, without metrics, we can use this to send messages with a given severity
 # With metrics, we additionally output the metric info, one per line.
 
+set -e
+
 # Set up colour codes
 case $HUGIN_COLOUR in
   irc|IRC)
