@@ -14,7 +14,7 @@
   services.xserver = {
     enable = true;
     layout = "us";
-    xkbVariant = "";
+    # xkbVariant = "";
     # Ctrl on capslock, alt is both alt and meta, compose is on left winkey
     xkbOptions = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
     displayManager.sddm = {
@@ -26,10 +26,13 @@
     desktopManager.plasma5.enable = true;
     # libinput.enable = false;
   };
+  # Enable XDG desktop portal for GTK programs like VSCode, so that they will
+  # use native (i.e. Qt) file pickers and stuff.
+  environment.sessionVariables.GTK_USE_PORTAL = "1";
 
   # Enable sound with pipewire.
   sound.enable = true;
-  hardware.pulseaudio.enable = false;
+  # hardware.pulseaudio.enable = true;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
