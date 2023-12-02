@@ -11,7 +11,7 @@ let
 
   photosLocation = "/ancilla/media/photos/immich";
 
-  autoStart = false;
+  autoStart = true;
   extraOptions = [ "--network=immich-bridge" "--add-host=host.docker.internal:host-gateway" ];
   environment = {
     DB_HOSTNAME = "host.docker.internal";
