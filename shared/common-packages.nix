@@ -10,7 +10,6 @@
     unstable.chezmoi
     dos2unix
     dtrx
-    ffmpeg-vgz
     file
     findutils
     unstable.fortune-kind
