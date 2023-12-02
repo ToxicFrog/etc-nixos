@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, secrets, ... }:
+{ config, pkgs, lib, secrets, ... }:
 
 let
   users = secrets.users { inherit config pkgs; };
@@ -10,9 +10,9 @@ in {
   imports =
     [
       ./hardware-configuration.nix
-      ../ancilla/services/syncthing.nix
-      ./camera.nix
-      ./sound.nix
+      # ../ancilla/services/syncthing.nix
+      # ./camera.nix
+      # ./sound.nix
     ];
 
   networking = {
@@ -30,25 +30,41 @@ in {
     pladix = pladix-users.pladix;
   };
 
-  # Enable the X11 windowing system.
+  services.xserver.displayManager.setupCommands = ''
+    ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-1-2 --mode 1920x1080
+  '';
+
+  # nvidia has some serious issues here.
+  # If we disable it, we run entirely with the onboard video card, which is
+  # Fine I Guess but not suitable for a lot of 3d gaming.
+  # If we enable it in sync (always on) mode, it works fine for 3d gaming, but
+  # SDDM user switching breaks and even logging out and back in is not guaranteed
+  # to work.
+  # If we enable it in offload mode, everything works fine, but offloaded programs
+  # have <50% the performance that we get in sync mode.
   services.xserver.videoDrivers = ["nvidia"];
   hardware.nvidia = {
     modesetting.enable = true;
-    open = true;
+    open = false;
+    # powerManagement.enable = true;
+    # powerManagement.finegrained = true;
     nvidiaSettings = true;
     prime = {
       sync.enable = true;
+      # offload.enable = true;
+      # offload.enableOffloadCmd = true;
       nvidiaBusId = "PCI:1:0:0";
       intelBusId = "PCI:0:2:0";
     };
   };
 
-  # services.xserver.displayManager.autoLogin = {
-  #   enable = true;
-  #   user = "pladix";
+  # Enabling offload universally causes it to log in to a black screen.
+  # environment.sessionVariables = {
+  #   __NV_PRIME_RENDER_OFFLOAD = "1";
+  #   __NV_PRIME_RENDER_OFFLOAD_PROVIDER = "NVIDIA-G0";
+  #   __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  #   __VK_LAYER_NV_optimus = "NVIDIA_only";
   # };
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = false;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
