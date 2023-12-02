@@ -10,6 +10,7 @@
     initrd.kernelModules = [ ];
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
+    # kernelParams = [ "module_blacklist=i915" ];  # attempt to fix issues with sddm user switching
   };
   boot.loader = {
     systemd-boot.enable = true;
@@ -33,7 +34,7 @@
       options = [ "_netdev" "x-systemd.automount" ];
     };
 
-  fileSystems."/home/alex" =
+  fileSystems."/home/alex/ancilla" =
     { device = "ancilla:/home/alex";
       fsType = "nfs";
       options = [ "_netdev" "x-systemd.automount" ];
