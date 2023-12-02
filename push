@@ -16,6 +16,15 @@ cd /etc/nixos
 # This is a gross hack to create a gcroot for the built system, so we don't have
 # to rebuild it ex nihilo each time.
 nix build -o built/$TARGET ".#nixosConfigurations.$TARGET.config.system.build.toplevel"
+
+# Build was successful, so stage the configs on the target as a reference
+command rsync -a --info=progress2 \
+	--chmod=D0555,F0444 \
+	--exclude='/.git/'
+	--delete --delete-excluded \
+	/etc/nixos/ root@$TARGET:/etc/nixos/
+
+# And finally actually install the new system configuration
 nixos-rebuild --target-host "$TARGET" --flake ".#$TARGET" --impure "$@"
 
 # TODO: copy shared/ and system-specific configuration to the target.
