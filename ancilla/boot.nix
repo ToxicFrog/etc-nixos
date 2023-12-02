@@ -20,6 +20,11 @@
     # loader.systemd-boot.enable = true;
     # loader.efi.canTouchEfiVariables = true;
 
+    # causes data corruption!! see https://github.com/openzfs/zfs/issues/15526
+    extraModprobeConfig = ''
+      options zfs zfs_dmu_offset_next_sync=0
+    '';
+
     kernelParams = ["consoleblank=0" "nohibernate"];
     kernelModules = ["k10temp" "nct6775" "netatop"];
 
