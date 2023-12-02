@@ -97,6 +97,10 @@ in {
       use_node_name no
       address localhost
 
+      [networking;crossfire.real-time.com]
+      use_node_name no
+      address localhost
+
       [laptops;isis]
       use_node_name yes
       address isis
@@ -171,6 +175,7 @@ in {
       #http_traxus_onhub = ./http__onhub;
       borgbackup = ./plugins/borgbackup;
       certificates = ./plugins/certificates;
+      crossfire_metaserver = ./plugins/crossfire_metaserver;
       file_age = "${inputs.munin-contrib}/plugins/disk/file_age";
       http_nanolathe_prusaconnect = ./plugins/http__prusaconnect;
       http_remote_response = "${http-prober-wrapper}/bin/http_response";

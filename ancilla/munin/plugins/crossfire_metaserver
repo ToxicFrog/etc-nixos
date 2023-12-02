@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+: << =cut
+
+=head1 NAME
+
+crossfire_metaserver -- monitors player counts for the Crossfire multiplayer RPG
+
+=head1 CONFIGURATION
+
+[crossfire_metaserver]
+  env.metaserver_url http://crossfire.real-time.com/metaserver2/meta_client.php
+  env.host_name crossfire.real-time.com
+
+metaserver_url should point to the URL of a metaserver that returns responses in
+the format documented here under "Client Updates". host_name, if provided,
+overrides the hostname inferred from the metaserver_url; the plugin will report
+itself as providing stats for that hostname.
+
+=head1 AUTHOR
+
+Written by Rebecca Kelly (ToxicFrog)
+
+=head1 LICENSE
+
+MIT
+
+=head1 MAGIC MARKERS
+
+ #%# family=contrib
+
+=cut
+
+set -e
+shopt -s lastpipe
+
+declare -A servers=()
+
+metaserver_url="${metaserver_url:=http://crossfire.real-time.com/metaserver2/meta_client.php}"
+if [[ ! $host_name ]]; then
+  host_name="$(echo "$metaserver_url" | sed -E 's,^https?://,,' | cut -d/ -f1)"
+fi
+
+function fetch {
+  curl -s "$metaserver_url" | while read line; do
+    case "$line" in
+      START_SERVER_DATA)
+        hostname=""
+        players=""
+        ;;
+      hostname=*)
+        hostname="${line#*=}"
+        ;;
+      num_players=*)
+        num_players="${line#*=}"
+        ;;
+      END_SERVER_DATA)
+        if [[ $hostname && $num_players ]]; then
+          servers["$hostname"]="$num_players"
+        fi
+        ;;
+    esac
+  done
+}
+
+function config {
+  printf "host_name %s\n" "$host_name"
+  printf "graph_title Crossfire Player Counts\n"
+  printf "graph_vlabel Players Online\n"
+  printf "graph_category games\n"
+  # printf "graph_printf %%d\n"
+  printf "graph_info Number of people playing Crossfire, both total and per server.\n"
+
+  # TODO: include .extinfo here, drawn from the text_comment or html_comment field
+  for hostname in "${!servers[@]}"; do
+    local clean_hostname="$(clean $hostname)"
+    printf "%s.label %s\n" "$clean_hostname" "$hostname"
+  done
+  printf "TOTAL.label TOTAL\n"
+}
+
+function data {
+  local total=0
+  for hostname in "${!servers[@]}"; do
+    printf '%d\t%s\n' "${servers[$hostname]}" "$hostname"
+  done | sort -gr | while read -r players hostname; do
+    local clean_hostname="$(clean $hostname)"
+    printf "%s.value %d\n" "$clean_hostname" "$players"
+    total=$(( total + players ))
+  done
+  printf "TOTAL.value %d\n" "$total"
+}
+
+function clean {
+  printf "%s" "$1" | tr -c 'a-zA-Z0-9_' _
+}
+
+fetch
+
+if (( ${#servers[@]} == 0 )); then
+  printf "Empty response from metaserver, giving up." >&2
+  exit 1
+fi
+
+if [[ $1 == config ]]; then
+  config
+else
+  data
+fi
