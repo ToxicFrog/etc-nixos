@@ -55,7 +55,7 @@
     jq
     rsync
     jshon
-    xxd pv exiftool sigal imagemagick # for share
+    xxd pv exiftool imagemagick sigal # for share
     lgogdownloader
     tmuxinator
     lm_sensors

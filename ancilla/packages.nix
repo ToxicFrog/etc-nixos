@@ -21,7 +21,7 @@
     nox
     ledger-autosync
     recode
-    (recoll.override { withGui = false; })  # log searching
+    recoll
     wring
     unstable.yt-dlp
   ];

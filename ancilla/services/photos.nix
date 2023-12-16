@@ -49,8 +49,9 @@ in
     ensureUsers = [
       {
         name = environment.DB_USERNAME;
+        ensureDBOwnership = true;
         ensurePermissions = {
-          "DATABASE ${environment.DB_DATABASE_NAME}" = "ALL PRIVILEGES";
+          # "DATABASE ${environment.DB_DATABASE_NAME}" = "ALL PRIVILEGES";
           "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
         };
       }

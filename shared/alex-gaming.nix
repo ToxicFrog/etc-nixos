@@ -1,14 +1,14 @@
 { config, pkgs, unstable, inputs, ... }:
 
 {
-  nixpkgs.config.packageOverrides = pkgs: {
-    steam = pkgs.steam.override {
-      extraPkgs = pkgs: with pkgs; [
-        libpng  # for dead cells
-        # pango harfbuzz libthai # previously needed
-      ];
-    };
-  };
+  # nixpkgs.config.packageOverrides = pkgs: {
+  #   steam = pkgs.steam.override {
+  #     extraPkgs = pkgs: with pkgs; [
+  #       libpng  # for dead cells
+  #       # pango harfbuzz libthai # previously needed
+  #     ];
+  #   };
+  # };
 
   programs.steam.enable = true;
 
@@ -21,7 +21,7 @@
     antimicroX # controller support for keyboard-only games
     appimage-run # for gdlauncher
     opentyrian
-    golly
+    # golly
     unstable.gzdoom
     crossfire-jxclient crossfire-editor
     unstable.alephone

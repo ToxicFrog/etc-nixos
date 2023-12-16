@@ -18,6 +18,7 @@ self: super:
     cmakeFlags = [ "-DENABLE_UBSAN=OFF" ];
     buildInputs = [ self.zlib ];
   });
+  sigal = super.callPackage ../packages/sigal.nix {};
   golly = super.callPackage ../packages/golly.nix {};
   wxGTK32-curl = super.wxGTK32.overrideAttrs (old: rec {
     configureFlags = old.configureFlags ++ [ "--with-libcurl" ];

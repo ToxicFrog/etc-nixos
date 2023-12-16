@@ -51,7 +51,7 @@
 
   fonts = {
     fontDir.enable = true;
-    enableDefaultFonts = true;
+    enableDefaultPackages = true;
     enableGhostscriptFonts = true;
     fontconfig.cache32Bit = true;
     fontconfig.localConf = ''
@@ -75,7 +75,7 @@
         </rejectfont>
       </selectfont>
     '';
-    fonts = with pkgs; [
+    packages = with pkgs; [
       corefonts
       google-fonts
       gentium

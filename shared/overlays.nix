@@ -8,7 +8,6 @@
   ];
   imports = [
     ./modules/borgbackup.nix
-    (lib.modules.mkAliasOptionModule [ "fonts" "packages" ] [ "fonts" "fonts" ])
     "${inputs.nixos-unstable}/nixos/modules/config/users-groups.nix"  # for linger
     "${inputs.nixos-unstable}/nixos/modules/services/monitoring/munin.nix"
   ];

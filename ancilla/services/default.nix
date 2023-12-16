@@ -48,8 +48,9 @@ in {
       package = pkgs.postgresql_15;
       ensureUsers = [{
           name = "atuin";
+          ensureDBOwnership = true;
           ensurePermissions = {
-            "DATABASE atuin" = "ALL PRIVILEGES";
+            # "DATABASE atuin" = "ALL PRIVILEGES";
             "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
           };
       }];
