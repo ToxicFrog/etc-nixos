@@ -12,6 +12,7 @@
     dtrx
     file
     findutils
+    firefox
     unstable.fortune-kind
     gitFull git-crypt git-secrets
     gnumake
@@ -23,6 +24,7 @@
     micro
     nb
     ncdu
+    unstable.nix-output-monitor
     p7zip
     posix_man_pages
     python3

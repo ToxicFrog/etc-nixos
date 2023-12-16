@@ -35,7 +35,6 @@
     calibre
     crossfire-jxclient crossfire-editor
     digikam
-    firefox
     unstable.gzdoom
     steam steam.run
     syncthing qsyncthingtray

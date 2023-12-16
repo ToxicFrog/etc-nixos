@@ -32,7 +32,6 @@
 
   environment.systemPackages = with pkgs; [
     digikam
-    firefox
     syncthing qsyncthingtray
     vscode
     yakuake

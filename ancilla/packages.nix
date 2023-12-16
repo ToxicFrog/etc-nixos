@@ -10,7 +10,6 @@
     calibre  # for calibre-server
     # chromium chromedriver  # no longer needed for dlique
     ffmpeg-vgz
-    firefox  # for dlique
     # geckodriver  # needs a special built, which is in ~/opt
     gcc
     gdb
