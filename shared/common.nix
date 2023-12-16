@@ -26,4 +26,6 @@
     extraLocaleSettings.LC_TIME = "en_DK.UTF-8";
     supportedLocales = [ "all" ];
   };
+
+  hardware.enableRedistributableFirmware = true;
 }
