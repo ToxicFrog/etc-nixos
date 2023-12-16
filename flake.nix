@@ -45,6 +45,7 @@
         };
     in {
       ancilla = mkSystem [ ./ancilla/configuration.nix ];
+      durandal = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./durandal/configuration.nix ];
       thoth = mkSystem [ ./shared/graphical.nix ./thoth/configuration.nix ];
       thoth-installer = mkSystem [
         ./shared/graphical.nix
@@ -53,6 +54,7 @@
       iscsi-target = mkSystem [
         ./iscsi-target.nix
       ];
+      installer = mkSystem [ ./installer.nix ];
       pladix = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./pladix/configuration.nix ];
       lots-of-cats = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./lots-of-cats/configuration.nix ];
       # TODO: isis, timelapse, lector
