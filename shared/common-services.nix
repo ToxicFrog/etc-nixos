@@ -22,6 +22,8 @@ let
 in {
   networking.firewall.allowedTCPPorts = [ 4949 ];  # munin-node
   services = {
+    fstrim.enable = true;
+
     kmscon = {
       enable = true;
       hwRender = true;
@@ -32,7 +34,7 @@ in {
 
     locate = {
       enable = true;
-      locate = pkgs.plocate;
+      package = pkgs.plocate;
       localuser = null;  # plocate always runs as root
     };
 
