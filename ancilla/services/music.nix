@@ -98,4 +98,13 @@ in {
       '';
     };
   };
+
+  sound.enable = true;
+  services.pipewire.enable = false;
+  hardware.pulseaudio.enable = false;
+  sound.extraConfig = ''
+    pcm.!default {
+        type null
+    }
+  '';
 }
