@@ -33,6 +33,7 @@ self: super:
     };
     nativeBuildInputs = with self; [ cmake pkg-config ];
   });
+  pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
   slashem9 = super.callPackage ../packages/slashem9/slashem9.nix {};
   weechat = super.weechat.override {
     configure = { availablePlugins, ... }: {
