@@ -3,6 +3,8 @@ final: prev: {
     # HACK HACK HACK
     # perl -T breaks makeWrapper --set PERL5LIB; see https://github.com/NixOS/nixpkgs/issues/263396
     # Copied from pkgs/servers/monitoring/munin/default.nix
+
+    buildInputs = old.buildInputs ++ [ final.perlPackages.TimeDate ];
     postFixup = ''
       # Added this quick hack
       echo "Replacing perl -T with perl..."
@@ -16,7 +18,7 @@ final: prev: {
           ln -s $out/nix-support/propagated-build-inputs $out/nix-support/propagated-user-env-packages
       fi
 
-      # Added CGI and CGI::Fast to the library list
+      # Added CGI, CGI::Fast, and TimeDate to the library list
       for file in "$out"/bin/munindoc "$out"/sbin/munin-* "$out"/lib/munin-* "$out"/www/cgi/*; do
           # don't wrap .jar files
           case "$file" in
@@ -24,7 +26,7 @@ final: prev: {
           esac
           wrapProgram "$file" \
             --set PERL5LIB "$out/${final.perlPackages.perl.libPrefix}:${with final.perlPackages; makePerlPath [
-                  LogLog4perl IOSocketINET6 Socket6 URI DBFile DateManip
+                  LogLog4perl IOSocketINET6 Socket6 URI DBFile DateManip TimeDate
                   HTMLTemplate FileCopyRecursive FCGI NetCIDR NetSNMP NetServer
                   ListMoreUtils DBDPg LWP final.rrdtool CGI CGIFast
                   ]}"
