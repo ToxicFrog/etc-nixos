@@ -16,7 +16,8 @@ in {
   };
 
   # Need to hard-code these so the system can start booting.
-  fileSystems."/" = zfs "ancilla/root";
+  #fileSystems."/" = zfs "ancilla/root";
+  fileSystems."/" = zfs "internal/root";
   fileSystems."/nix" = zfs "internal/nix";
 
   # also, check this out:
