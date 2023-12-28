@@ -14,9 +14,12 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  users.users = secrets.thoth.users { inherit pkgs; };
+  users.users = {
+    root = (secrets.thoth.users { inherit pkgs; }).root;
+    bex = (secrets.thoth.users { inherit pkgs; }).bex // { createHome = true; };
+  };
   networking = {
-    hostName = "thoth";
+    hostName = "durandal";
     domain = "ancilla.ca";
     networkmanager.enable = true;
     firewall.enable = false;
