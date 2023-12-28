@@ -58,6 +58,7 @@ in {
       htmldir /srv/www/munin
       ssh_command /run/current-system/sw/bin/ssh
       cgitmpdir /var/lib/munin/cgi-tmp
+      # fork no # for debugging
 
       # TODO
       # migrate to larger RRDs
@@ -71,6 +72,7 @@ in {
       # RRDs will have a different step size (5m/1h/1d rather than 5m/30m/2h/1d)
       # and RRA count?
       #graph_data_size custom 2d, 30m for 9d, 2h for 45d, 1d for 450d
+      # full res for 1 month, then hourly for a year, then daily for a decade
       graph_data_size custom 1t, 1h for 1y, 1d for 10y
       graph_strategy cgi
       html_strategy cron
@@ -113,9 +115,9 @@ in {
       use_node_name yes
       address thoth.ancilla.ca
 
-      [networking;openwrt]
-      use_node_name no
-      address openwrt
+      [networking;whirlwind]
+      use_node_name yes
+      address whirlwind
 
       [networking;traxus]
       use_node_name yes
@@ -152,12 +154,12 @@ in {
   };
 
   # Hack to invert luminance of graphs after munin-cron generates them.
-  systemd.services.munin-cron.postStart = ''
-    cd /srv/www/munin
-    ${pkgs.findutils}/bin/find ancilla.ca -name '*.png' -newer .inverted -exec \
-      ${pkgs.imagemagick}/bin/mogrify -colorspace HSL -channel B -negate +channel -colorspace sRGB '{}' ';'
-    touch .inverted
-  '';
+  # systemd.services.munin-cron.postStart = ''
+  #   cd /srv/www/munin
+  #   ${pkgs.findutils}/bin/find ancilla.ca -name '*.png' -newer .inverted -exec \
+  #     ${pkgs.imagemagick}/bin/mogrify -colorspace HSL -channel B -negate +channel -colorspace sRGB '{}' ';'
+  #   touch .inverted
+  # '';
 
   # Local node. This monitors ancilla directly and fetches data from other systems
   # on the network.
@@ -171,6 +173,9 @@ in {
     '';
   in {
     enable = true;
+    # extraConfig = ''
+    #   log_level 4
+    # '';
     extraPlugins = disk-monitoring // {
       #http_traxus_onhub = ./http__onhub;
       borgbackup = ./plugins/borgbackup;
@@ -319,7 +324,7 @@ in {
       # thresholds are wrong
       set temp1_max 115
       set temp1_max_hyst 90
-      set in0_min 0.75
+      set in0_min 0.45
     ''
   ];
   systemd.services.lmsensors-load-thresholds = rec {
