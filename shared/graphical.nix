@@ -85,7 +85,7 @@
       symbola
       unifont
       unifont_upper
-      nerdfonts
+      (nerdfonts.override { fonts = [ "Cousine" "Hasklig" "NerdFontsSymbolsOnly" "FiraCode" ]; })
     ];
   };
 }
