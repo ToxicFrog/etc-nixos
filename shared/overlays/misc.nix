@@ -10,6 +10,9 @@ self: super:
       sha256 = "PgErtEizHraZgoWHs5jYJJ5NsliDd9VulQfS64ackFo=";
     };
   });
+  atuin = super.atuin.overrideAttrs (old: rec {
+    patches = old.patches ++ [ ./atuin-zfs.patch ];
+  });
   doomrl = super.callPackage ../packages/doomrl.nix {};
   etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
   ffmpeg-vgz = (super.ffmpeg-full.overrideAttrs { pname = "ffmpeg-vgz"; })
