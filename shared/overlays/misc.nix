@@ -38,6 +38,7 @@ self: super:
   });
   pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
   slashem9 = super.callPackage ../packages/slashem9/slashem9.nix {};
+  udb-editor = super.callPackage ../packages/ultimate-doombuilder.nix {};
   weechat = super.weechat.override {
     configure = { availablePlugins, ... }: {
       scripts = with self.weechatScripts; [ weechat-matrix multiline ];
