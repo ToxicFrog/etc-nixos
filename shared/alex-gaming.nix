@@ -22,7 +22,7 @@
     appimage-run # for gdlauncher
     opentyrian
     # golly
-    unstable.gzdoom
+    unstable.gzdoom udb-editor eureka-editor
     crossfire-jxclient crossfire-editor
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
