@@ -22,9 +22,9 @@
         >&2 echo "timelapse error -- no snapshot for midnight found in latest update"
         exit 1
       fi
-      chown -R rebecca:users garden
+      chown -R bex:users garden
       # need to figure out the closure for this -- exiftool and ffmpeg at least
-      #sudo -u rebecca ./build
+      #sudo -u bex ./build
     '';
   };
 }

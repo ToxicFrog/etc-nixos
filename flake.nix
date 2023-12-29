@@ -8,25 +8,25 @@
   inputs = {
     nixos.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-local.url = "/home/rebecca/devel/nixpkgs";
+    nixpkgs-local.url = "/home/bex/devel/nixpkgs";
     munin-contrib = {
       url = "github:munin-monitoring/contrib/master";
       flake = false;
     };
     doomrl-server = {
-      url = "/home/rebecca/devel/doomrl-server";
+      url = "/home/bex/devel/doomrl-server";
       flake = false;
     };
     crossfire-server = {
-      url = "/home/rebecca/devel/crossfire-server";
+      url = "/home/bex/devel/crossfire-server";
       flake = false;
     };
     crossfire-arch = {
-      url = "/home/rebecca/devel/crossfire-arch";
+      url = "/home/bex/devel/crossfire-arch";
       flake = false;
     };
     crossfire-maps = {
-      url = "/home/rebecca/src/crossfire-maps";
+      url = "/home/bex/src/crossfire-maps";
       flake = false;
     };
   };

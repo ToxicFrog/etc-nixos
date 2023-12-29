@@ -4,7 +4,7 @@
 
 let
   unstable = (import <nixos-unstable> {});
-  localpkgs = (import /home/rebecca/devel/nixpkgs {});
+  localpkgs = (import /home/bex/devel/nixpkgs {});
 in {
   imports = [
     ../munin/munin.nix

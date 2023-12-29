@@ -4,12 +4,12 @@
       "flake": false,
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-BPJw9mGv17D6ZVHTyW0SQyfx/Z7sN9U3g7Arxyps9jA=",
-        "path": "/home/rebecca/devel/crossfire-arch",
+        "narHash": "sha256-O32LjRho7g5IEtrBYnpBzMTNn7uxc/T8nB+NoXyV0RU=",
+        "path": "/home/bex/devel/crossfire-arch",
         "type": "path"
       },
       "original": {
-        "path": "/home/rebecca/devel/crossfire-arch",
+        "path": "/home/bex/devel/crossfire-arch",
         "type": "path"
       }
     },
@@ -17,12 +17,12 @@
       "flake": false,
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-23i1EMYcy5CLPAazgqn0mFfgYd1BScRr+fIjbcvIZNE=",
-        "path": "/home/rebecca/src/crossfire-maps",
+        "narHash": "sha256-F38avqb9JJ3VxvdgcyoRG4mAjR8WkBM9srrvF9+Rv10=",
+        "path": "/home/bex/src/crossfire-maps",
         "type": "path"
       },
       "original": {
-        "path": "/home/rebecca/src/crossfire-maps",
+        "path": "/home/bex/src/crossfire-maps",
         "type": "path"
       }
     },
@@ -30,12 +30,12 @@
       "flake": false,
       "locked": {
         "lastModified": 0,
-        "narHash": "sha256-cr2njodUqr1Xcl2poEv9/4c3jRRYC5HRQLMuV3c54qc=",
-        "path": "/home/rebecca/devel/crossfire-server",
+        "narHash": "sha256-Q07Cn82Qgy11EsMb59bibDLoxq8EL0qiX1qb7wK1E/M=",
+        "path": "/home/bex/devel/crossfire-server",
         "type": "path"
       },
       "original": {
-        "path": "/home/rebecca/devel/crossfire-server",
+        "path": "/home/bex/devel/crossfire-server",
         "type": "path"
       }
     },
@@ -44,11 +44,11 @@
       "locked": {
         "lastModified": 1675988578,
         "narHash": "sha256-2keqpwLsa4muLD9ah8c2SUd7rFrG5Pq6diADdpr70cs=",
-        "path": "/home/rebecca/devel/doomrl-server",
+        "path": "/home/bex/devel/doomrl-server",
         "type": "path"
       },
       "original": {
-        "path": "/home/rebecca/devel/doomrl-server",
+        "path": "/home/bex/devel/doomrl-server",
         "type": "path"
       }
     },
@@ -103,14 +103,17 @@
     },
     "nixpkgs-local": {
       "locked": {
-        "lastModified": 1698238456,
-        "narHash": "sha256-b7g///X9mYxLvM8KoqjPQY6HmtO+GsIq2a5qCsHETg8=",
+        "lastModified": 1702692562,
+        "narHash": "sha256-PPBqr7e7CFF5GMX5ho7GdrRyRTcL5vIK+RR181ku7WA=",
+        "ref": "refs/heads/sigal-2.4",
+        "rev": "b208d4a46ef2152d54a5fc9c49ef7ecb7b9bdb82",
+        "revCount": 560130,
         "type": "git",
-        "url": "file:///home/rebecca/devel/nixpkgs"
+        "url": "file:///home/bex/devel/nixpkgs"
       },
       "original": {
         "type": "git",
-        "url": "file:///home/rebecca/devel/nixpkgs"
+        "url": "file:///home/bex/devel/nixpkgs"
       }
     },
     "root": {

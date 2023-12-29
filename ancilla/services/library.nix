@@ -27,10 +27,10 @@
 
   services.calibre-web = {
     enable = false;
-    user = "rebecca";
+    user = "bex";
     group = "users";
     options = {
-      calibreLibrary = "/home/rebecca/Books/Calibre";
+      calibreLibrary = "/home/bex/Books/Calibre";
     };
     listen.port = 26657;
     listen.ip = "127.0.0.1";
