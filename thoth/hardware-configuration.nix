@@ -6,18 +6,19 @@
 {
   imports =
     [ (modulesPath + "/installer/scan/not-detected.nix")
-      # Disable stable bcachefs since it doesn't support unstable bcachefs-tools
       "${inputs.nixos-unstable}/nixos/modules/tasks/filesystems/bcachefs.nix"
     ];
+  # Disable stable bcachefs since it doesn't support unstable bcachefs-tools
+  disabledModules = [ "tasks/filesystems/bcachefs.nix" ];
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "sdhci_pci" "bcache" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelPackages = lib.mkOverride 0 unstable.linuxPackages_testing_bcachefs;
+  # boot.kernelPackages = lib.mkOverride 0 unstable.linuxPackages_testing_bcachefs;
+  boot.kernelPackages = lib.mkOverride 0 unstable.linuxPackages_testing;
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
   boot.supportedFilesystems = [ "bcachefs" ];
   boot.initrd.systemd.enable = true;
-  disabledModules = [ "tasks/filesystems/bcachefs.nix" ];
   nixpkgs.overlays = [
   	(self: super: {
   		bcachefs-tools = unstable.bcachefs-tools;
