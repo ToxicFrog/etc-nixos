@@ -234,7 +234,7 @@ in {
       [sensors_*]
         env.sensors sensors -c /etc/sensors3.conf
         env.ignore_temp4 true
-        env.volt_warn_percent 20
+        env.volt_warn_percent 10
 
       [smart_*]
         user root
@@ -324,7 +324,7 @@ in {
       # thresholds are wrong
       set temp1_max 115
       set temp1_max_hyst 90
-      set in0_min 0.45
+      set in0_min 0.4
     ''
   ];
   systemd.services.lmsensors-load-thresholds = rec {
