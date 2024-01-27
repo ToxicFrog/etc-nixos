@@ -1,6 +1,16 @@
 self: super:
 
 {
+  # Simple packages
+  doomrl = super.callPackage ../packages/doomrl.nix {};
+  etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
+  golly = super.callPackage ../packages/golly.nix {};
+  pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
+  sigal = super.callPackage ../packages/sigal.nix {};
+  slashem9 = super.callPackage ../packages/slashem9/slashem9.nix {};
+  udb-editor = super.callPackage ../packages/ultimate-doombuilder.nix {};
+
+  # Actual overrides
   # TODO: replace this with gonic if and when I can.
   airsonic = super.airsonic.overrideAttrs (_: rec {
     version = "11.0.2-kagemomiji";
@@ -13,16 +23,12 @@ self: super:
   atuin = super.atuin.overrideAttrs (old: rec {
     patches = old.patches ++ [ ./atuin-zfs.patch ];
   });
-  doomrl = super.callPackage ../packages/doomrl.nix {};
-  etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
   ffmpeg-vgz = (super.ffmpeg-full.overrideAttrs { pname = "ffmpeg-vgz"; })
     .override { game-music-emu = self.libgme-vgz; };
   libgme-vgz = super.game-music-emu.overrideAttrs (old: {
     cmakeFlags = [ "-DENABLE_UBSAN=OFF" ];
     buildInputs = [ self.zlib ];
   });
-  sigal = super.callPackage ../packages/sigal.nix {};
-  golly = super.callPackage ../packages/golly.nix {};
   wxGTK32-curl = super.wxGTK32.overrideAttrs (old: rec {
     configureFlags = old.configureFlags ++ [ "--with-libcurl" ];
     buildInputs = old.buildInputs ++ [ self.curl ];
@@ -36,9 +42,6 @@ self: super:
     };
     nativeBuildInputs = with self; [ cmake pkg-config ];
   });
-  pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
-  slashem9 = super.callPackage ../packages/slashem9/slashem9.nix {};
-  udb-editor = super.callPackage ../packages/ultimate-doombuilder.nix {};
   weechat = super.weechat.override {
     configure = { availablePlugins, ... }: {
       scripts = with self.weechatScripts; [ weechat-matrix multiline ];
