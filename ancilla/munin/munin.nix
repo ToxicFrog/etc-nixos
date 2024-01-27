@@ -123,6 +123,10 @@ in {
       use_node_name yes
       address traxus
 
+      [appliances;katamari]
+      use_node_name yes
+      address katamari
+
       [appliances;nanolathe]
       use_node_name no
       address localhost
