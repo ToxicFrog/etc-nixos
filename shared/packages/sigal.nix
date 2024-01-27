@@ -8,12 +8,16 @@
 python3.pkgs.buildPythonApplication rec {
   pname = "sigal";
   version = "2.4";
-  format = "pyproject";
+  pyproject = true;
 
   src = fetchPypi {
     inherit version pname;
     hash = "sha256-pDTaqtqfuk7tACkyaKClTJotuVcTKli5yx1wbEM93TM=";
   };
+
+  nativeBuildInputs = with python3.pkgs; [
+    setuptools-scm
+  ];
 
   propagatedBuildInputs = with python3.pkgs; [
     # install_requires
@@ -29,9 +33,6 @@ python3.pkgs.buildPythonApplication rec {
     feedgenerator
     zopfli
     cryptography
-
-    setuptools # needs pkg_resources
-    setuptools-scm
   ];
 
   nativeCheckInputs = [
