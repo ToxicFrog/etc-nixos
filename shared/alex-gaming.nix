@@ -14,15 +14,16 @@
 
   environment.systemPackages = with pkgs; [
     # for gaming
-    jre stepmania lutris scummvm wine itch
+    jre stepmania scummvm wine itch
     steam.run steam
+    heroic gamescope protonup-ng protonup-qt # gog/epic
     fluidsynth soundfont-fluid
     caffeine-ng # power control for retroarch
     antimicroX # controller support for keyboard-only games
     appimage-run # for gdlauncher
     opentyrian
     # golly
-    unstable.gzdoom udb-editor eureka-editor
+    unstable.gzdoom udb-editor doomrunner
     crossfire-jxclient crossfire-editor
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
@@ -31,7 +32,7 @@
       cores = with libretro; [
         dolphin mgba beetle-psx beetle-psx-hw bsnes snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
       ];})
-
+    unstable.pcsx2
     # for dbgl
     swt dosbox gsettings-desktop-schemas
     # for exodos-ll
