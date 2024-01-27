@@ -1,0 +1,44 @@
+diff --git a/libavformat/libgme.c b/libavformat/libgme.c
+index 4d04537339..b2635fc89f 100644
+--- a/libavformat/libgme.c
++++ b/libavformat/libgme.c
+@@ -63,7 +63,26 @@ static int load_metadata(AVFormatContext *s, int64_t *duration)
+     if (gme_track_info(gme->music_emu, &info, gme->track_index))
+         return AVERROR_STREAM_NOT_FOUND;
+ 
+-    *duration = info->length;
++    // Some formats support looped audio. In these cases, length will be -1, and
++    // the track length needs to be determined from intro_length and loop_length
++    // instead. Furthermore, some formats have no length data at all, in which
++    // case all of these fields will be -1.
++    // When reading these formats, GME will return audio frames forever if you
++    // ask for them; it's up to the caller to decide when to stop, either by
++    // closing the file after a certain point or by calling gme_set_fade()
++    // before starting playback, which will cause GME to simulate a fadeout and
++    // end of file at that point.
++    // The GME documentation recommends a default behaviour of playing the intro
++    // followed by two loops, for looped audio, or playing 2.5 minutes and then
++    // fading out, for audio of indeterminate length.
++    if (info->length > 0) {
++        *duration = info->length;
++    } else if (info->intro_length > 0 || info->loop_length > 0) {
++        *duration = info->intro_length + info->loop_length * 2;
++    } else {
++        *duration = 150000; // 2.5 minutes in milliseconds
++    }
++
+     add_meta(s, "system",       info->system);
+     add_meta(s, "game",         info->game);
+     add_meta(s, "song",         info->song);
+@@ -138,8 +157,10 @@ static int read_header_gme(AVFormatContext *s)
+     if (!st)
+         return AVERROR(ENOMEM);
+     avpriv_set_pts_info(st, 64, 1, 1000);
+-    if (duration > 0)
++    if (duration > 0) {
+         st->duration = duration;
++        gme_set_fade(gme->music_emu, duration); // Avoid infinite playback
++    }
+     st->codecpar->codec_type  = AVMEDIA_TYPE_AUDIO;
+     st->codecpar->codec_id    = AV_NE(AV_CODEC_ID_PCM_S16BE, AV_CODEC_ID_PCM_S16LE);
+     st->codecpar->ch_layout.nb_channels = 2;

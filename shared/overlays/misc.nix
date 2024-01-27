@@ -24,12 +24,27 @@ self: super:
   atuin = super.atuin.overrideAttrs (old: rec {
     patches = old.patches ++ [ ./atuin-zfs.patch ];
   });
-  ffmpeg-vgz = (super.ffmpeg-full.overrideAttrs { pname = "ffmpeg-vgz"; })
-    .override { game-music-emu = self.libgme-vgz; };
+  # TODO: add an overlay for calibre that adds the libcrypto dependency that ACSM import needs
+  ffmpeg-vgz = (super.ffmpeg-full.overrideAttrs (old: {
+    pname = "ffmpeg-vgz";
+    # We need both this and the openmpt patch below for ffmpegfs
+    prePatch = ''
+      sed -Ei '/"set subsong"/ s,i64 = -2,i64 = -1,' libavformat/libopenmpt.c
+    '';
+    patches = old.patches ++ [ ./ffmpeg-gme-loops.patch ];
+  })).override {
+    game-music-emu = self.libgme-vgz;
+    libopenmpt = self.libopenmpt-subsong;
+  };
   libgme-vgz = super.game-music-emu.overrideAttrs (old: {
     cmakeFlags = [ "-DENABLE_UBSAN=OFF" ];
     buildInputs = [ self.zlib ];
   });
+  libopenmpt-subsong = super.libopenmpt.overrideAttrs {
+    prePatch = ''
+      sed -Ei 's,m_current_subsong = 0,m_current_subsong = all_subsongs,' libopenmpt/libopenmpt_impl.cpp
+    '';
+  };
   wxGTK32-curl = super.wxGTK32.overrideAttrs (old: rec {
     configureFlags = old.configureFlags ++ [ "--with-libcurl" ];
     buildInputs = old.buildInputs ++ [ self.curl ];
