@@ -33,6 +33,12 @@ in {
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-1-2 --mode 1920x1080
   '';
+  services.xserver.displayManager.defaultSession = "plasmawayland";
+
+  services.xserver.displayManager.autoLogin = {
+    enable = true;
+    user = "alex";
+  };
 
   # nvidia has some serious issues here.
   # If we disable it, we run entirely with the onboard video card, which is
@@ -42,6 +48,8 @@ in {
   # to work.
   # If we enable it in offload mode, everything works fine, but offloaded programs
   # have <50% the performance that we get in sync mode.
+  # At the moment we reluctantly put it in sync mode and just accept that user
+  # switching will never work.
   services.xserver.videoDrivers = ["nvidia"];
   hardware.nvidia = {
     modesetting.enable = true;

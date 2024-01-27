@@ -21,6 +21,7 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  services.xserver.displayManager.defaultSession = "plasmawayland";
   services.xserver.displayManager.autoLogin = {
     enable = true;
     user = "bex";
