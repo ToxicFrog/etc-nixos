@@ -36,6 +36,7 @@
     crossfire-jxclient crossfire-editor
     digikam
     unstable.gzdoom udb-editor
+    love
     steam steam.run
     syncthing qsyncthingtray
     unstable.prusa-slicer

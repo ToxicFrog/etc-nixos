@@ -39,6 +39,7 @@
     # misc games
     gnome.quadrapassel ltris lbreakout2
     vulkan-tools vulkan-loader
+    love
     #libsForQt5.phonon-backend-vlc
     #libsForQt5.phonon-backend-gstreamer gst-plugins-good gst-plugins-ugly
   ];
