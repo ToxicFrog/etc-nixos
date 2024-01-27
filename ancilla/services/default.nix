@@ -35,6 +35,9 @@ in {
 
   # ftpd & CUPS
   networking.firewall.allowedTCPPorts = [ 20 21 631 ];
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 21020; to = 21029; } # vsftpd PASV
+  ];
 
   services = {
     # A'Tuin shell history synchronization
@@ -174,8 +177,8 @@ in {
       anonymousUserNoPassword = true;
       writeEnable = true;
       extraConfig = ''
-        pasv_min_port=20
-        pasv_max_port=20
+        pasv_min_port=21020
+        pasv_max_port=21029
         syslog_enable=YES
         xferlog_enable=YES
       '';
