@@ -46,7 +46,8 @@
   };
   users.groups.codex = { gid = 980; };
   virtualisation.oci-containers.containers.codex = {
-    image = "ajslater/codex@sha256:f6f239c5c8a028b570e27a163c5103461a22f9b790fb54a971afcbe08361f89c"; # 1.4.2
+    # image = "ajslater/codex@sha256:1faf2ca1c75ec09903fe6a3c902e1ce3622b6e17d3223fbc0631dc056b488416"; # 1.5.0 rc2
+    image = "ajslater/codex@sha256:57f77e79441b0b200c6c17339a89b6448281df6f645f86b6fb39870dba2db492"; # 1.4.3
     user = "987:980";
     ports = ["9810:9810"];
     extraOptions = ["--memory=1g"];
