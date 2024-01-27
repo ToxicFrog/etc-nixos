@@ -8,6 +8,7 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
+  boot.loader.grub.useOSProber = true;
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
@@ -21,6 +22,12 @@
   fileSystems."/boot" =
     { device = "/dev/disk/by-label/NIXBOOT";
       fsType = "vfat";
+    };
+
+  fileSystems."/ancilla" =
+    { device = "ancilla:/ancilla";
+      fsType = "nfs";
+      options = [ "_netdev" "x-systemd.automount" ];
     };
 
   swapDevices =
