@@ -38,9 +38,9 @@
   networking.firewall.allowedTCPPorts = [6771];
   networking.firewall.allowedUDPPorts = [6771];
 
-  services.jackett = {
+  services.prowlarr = {
     enable = true;
-    package = unstable.jackett;
+    package = unstable.prowlarr;
   };
 
   services.nginx.virtualHosts."ancilla.ancilla.ca".locations = {
@@ -52,8 +52,8 @@
       proxy_send_timeout      600s;
       http2_push_preload      on;
     '';
-    "/jackett/".extraConfig = ''
-      proxy_pass              http://127.0.0.1:9117;
+    "/prowlarr".extraConfig = ''
+      proxy_pass              http://127.0.0.1:9696;
       proxy_read_timeout      600s;
       proxy_send_timeout      600s;
     '';
