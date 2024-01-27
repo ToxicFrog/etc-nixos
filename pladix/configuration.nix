@@ -12,7 +12,7 @@ in {
       ./hardware-configuration.nix
       # ../ancilla/services/syncthing.nix
       # ./camera.nix
-      # ./sound.nix
+      ./sound.nix
     ];
 
   networking = {
@@ -104,16 +104,4 @@ in {
     chromium  # ffmpeg/libavcodec is part of the common package set
     scrcpy  # for android stuff
   ];
-
-  # This is a user service!!
-  # It needs to be enabled mutably using systemctl.
-  systemd.user.services.snapclient = {
-    wantedBy = [ "default.target" ];
-    after = [ "pipewire.service" "wireplumber.service" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla";
-      Restart = "always";
-      RestartSec = "60s";
-    };
-  };
 }
