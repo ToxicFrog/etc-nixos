@@ -36,6 +36,9 @@ self: super:
     game-music-emu = self.libgme-vgz;
     libopenmpt = self.libopenmpt-subsong;
   };
+  ffmpegfs = super.callPackage ../packages/ffmpegfs.nix {
+    ffmpeg = self.ffmpeg-vgz;
+  };
   libgme-vgz = super.game-music-emu.overrideAttrs (old: {
     cmakeFlags = [ "-DENABLE_UBSAN=OFF" ];
     buildInputs = [ self.zlib ];
