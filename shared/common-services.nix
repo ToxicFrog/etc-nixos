@@ -1,6 +1,6 @@
 # Common services that run on all machines, like locate and munin.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, options, ... }:
 
 let
   # We need to publish to hugin/smartd/<hostname>
@@ -36,6 +36,7 @@ in {
       enable = true;
       package = pkgs.plocate;
       localuser = null;  # plocate always runs as root
+      pruneFS = options.services.locate.pruneFS.default ++ [ "fuse.ffmpegfs" ];
     };
 
     munin-node = {
