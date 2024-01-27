@@ -1,0 +1,50 @@
+From d9d067f23ce7de0491d9ae799ffb8094280239f4 Mon Sep 17 00:00:00 2001
+From: Fabian Wunsch <fabian@uriah.heep.sax.de>
+Date: Mon, 2 May 2022 21:32:39 +0200
+Subject: [PATCH] add albums on addAll()
+
+---
+ webapp/alpha/m.js | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/webapp/alpha/m.js b/webapp/alpha/m.js
+index e5005dee..e4ee87ef 100644
+--- a/webapp/alpha/m.js
++++ b/webapp/alpha/m.js
+@@ -396,10 +396,36 @@ async function addFilePlaylist(el) {
+   }
+ }
+ 
++async function addAlbumToPlayer(el) {
++  let album = el.hasAttribute('data-album') ? el.getAttribute('data-album') : null;
++  let artist = el.hasAttribute('data-artist') ? el.getAttribute('data-artist') : null;
++  let year = el.hasAttribute('data-year') ? el.getAttribute('data-year') : null;
++
++  try {
++    const response = await MSTREAMAPI.albumSongs({
++      album,
++      artist,
++      year,
++      ignoreVPaths: Object.keys(MSTREAMPLAYER.ignoreVPaths).filter((vpath) => {
++        return MSTREAMPLAYER.ignoreVPaths[vpath] === true;
++      })
++    });
++
++    response.forEach(song => {
++      VUEPLAYERCORE.addSongWizard(song.filepath, {}, true)
++    });
++  }catch(err) {
++    boilerplateFailure(err);
++  }
++}
++
+ function addAll() {
+   ([...document.getElementsByClassName('filez')]).forEach(el => {
+     VUEPLAYERCORE.addSongWizard(el.getAttribute("data-file_location"), {}, true);
+   });
++  ([...document.getElementsByClassName('albumz')]).forEach(el => {
++    addAlbumToPlayer(el)
++  });
+ }
+ 
+ function addAllSongs(res) {
