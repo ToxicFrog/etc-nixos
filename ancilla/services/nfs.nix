@@ -21,6 +21,7 @@
       #/ancilla          *.ancilla.ca(rw,crossmnt,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
       /ancilla          192.168.1.0/24(rw,crossmnt,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
       /home/alex        192.168.1.0/24(rw,crossmnt,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
+      /backup/hass      192.168.1.0/24(rw,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
     '';
       # /ancilla/installs 192.168.86.0/24(rw,crossmnt,no_subtree_check)
       # /ancilla/media
