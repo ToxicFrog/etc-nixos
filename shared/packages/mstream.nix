@@ -1,10 +1,10 @@
-{ lib, buildNpmPackage, fetchFromGitHub }:
+{ lib, buildNpmPackage, fetchFromGitHub, source ? null }:
 
 buildNpmPackage rec {
   pname = "mstream";
   version = "2023.11";
 
-  src = fetchFromGitHub {
+  src = if source != null then source else fetchFromGitHub {
     owner = "IrosTheBeggar";
     repo = pname;
     rev = "06f15420d8e0bcb23d9d698c866c184579ab9f14";

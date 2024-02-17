@@ -9,10 +9,18 @@
     nixos.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-local.url = "/home/bex/devel/nixpkgs";
+
+    # Non-nixos upstreams
+    mstream = {
+      url = "github:IrosTheBeggar/mstream/master";
+      flake = false;
+    };
     munin-contrib = {
       url = "github:munin-monitoring/contrib/master";
       flake = false;
     };
+
+    # Local inputs
     doomrl-server = {
       url = "/home/bex/devel/doomrl-server";
       flake = false;

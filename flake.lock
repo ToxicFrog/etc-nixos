@@ -52,6 +52,23 @@
         "type": "path"
       }
     },
+    "mstream": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1707284801,
+        "narHash": "sha256-PwuPIgHFz89g5UioKD6YRjogUEki1FnkDvTwpaXn8GE=",
+        "owner": "IrosTheBeggar",
+        "repo": "mstream",
+        "rev": "c686ace36c3fa8eba2f23ce3e58a299827f68b9b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "IrosTheBeggar",
+        "ref": "master",
+        "repo": "mstream",
+        "type": "github"
+      }
+    },
     "munin-contrib": {
       "flake": false,
       "locked": {
@@ -122,6 +139,7 @@
         "crossfire-maps": "crossfire-maps",
         "crossfire-server": "crossfire-server",
         "doomrl-server": "doomrl-server",
+        "mstream": "mstream",
         "munin-contrib": "munin-contrib",
         "nixos": "nixos",
         "nixos-unstable": "nixos-unstable",

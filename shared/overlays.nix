@@ -21,5 +21,8 @@
     (import ./overlays/factor-lang.nix)
     (import ./overlays/misc.nix)
     (import ./overlays/munin.nix)
+    (self: super: {
+      mstream = super.callPackage ./packages/mstream.nix { source = inputs.mstream; };
+    })
   ];
 }
