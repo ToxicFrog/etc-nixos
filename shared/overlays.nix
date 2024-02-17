@@ -2,13 +2,13 @@
 {
   # Overlays for nixos itself, e.g. module replacements
   disabledModules = [
-    "config/users-groups.nix"
+    # "config/users-groups.nix"
     "services/backup/borgbackup.nix"
     "services/monitoring/munin.nix"
   ];
   imports = [
     ./modules/borgbackup.nix
-    "${inputs.nixos-unstable}/nixos/modules/config/users-groups.nix"  # for linger
+    # "${inputs.nixos-unstable}/nixos/modules/config/users-groups.nix"  # for linger
     "${inputs.nixos-unstable}/nixos/modules/services/monitoring/munin.nix"
   ];
   # Package overlays.
