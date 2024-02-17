@@ -95,6 +95,7 @@ in {
         --expiry_time=50w \
         --desttype=opus --hide_extensions=.backup,.torrent \
         --include_extensions=${include_extensions} \
+        --cachepath=/ancilla/media/music/.ffmpegfs-cache \
         /ancilla/media/music/Library \
         /ancilla/media/music/.ffmpegfs \
         -o noatime,ro,allow_other,umask=0222,uid=${toString config.users.users.nobody.uid},gid=${toString config.users.groups.nogroup.gid}
@@ -161,6 +162,7 @@ in {
       "podcast-path" = "/var/empty";
       #"playlists-path" = "/ancilla/media/music/Playlists";
       "scan-at-start-enabled" = false;
+      "scan-interval" = 60; # in minutes
       "scan-watcher-enabled" = true;
       "jukebox-enabled" = true;
       "jukebox-mpv-extra-args" = "--audio-channels=stereo --audio-samplerate=48000 --audio-format=s16 --ao=pcm --ao-pcm-file=/run/snapserver/music";
