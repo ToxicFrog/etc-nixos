@@ -23,7 +23,7 @@
   systemd.services.matrix2051 = {
     description = "Matrix2051 IRC gateway for Matrix";
     wantedBy = ["multi-user.target"];
-    after = ["network-online.target" "local-fs.target" "ancilla-media-music-ffmpegfs.service"];
+    after = ["network-online.target" "local-fs.target" "conduit.service"];
     script = ''
       ${pkgs.matrix2051}/bin/matrix2051 start
     '';
@@ -33,6 +33,36 @@
     environment = {
       RELEASE_COOKIE = "matrix2051";
       RELEASE_TMP = "/var/empty";
+    };
+  };
+
+  systemd.services.mautrix-discord = {
+    description = "Matrix-to-Discord puppeting bridge";
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target" "local-fs.target" "conduit.service"];
+    serviceConfig = {
+      DynamicUser = "true";
+      ExecStart = "${unstable.mautrix-discord}/bin/mautrix-discord";
+      Restart = "on-failure";
+      RestartSec = "30s";
+      StateDirectory = "mautrix-discord";
+      User = "mautrix-discord";
+      WorkingDirectory = "/var/lib/mautrix-discord";
+    };
+  };
+
+  systemd.services.mautrix-googlechat = {
+    description = "Matrix-to-Googlechat puppeting bridge";
+    wantedBy = ["multi-user.target"];
+    after = ["network-online.target" "local-fs.target" "conduit.service"];
+    serviceConfig = {
+      DynamicUser = "true";
+      ExecStart = "${unstable.mautrix-googlechat}/bin/mautrix-googlechat";
+      Restart = "on-failure";
+      RestartSec = "30s";
+      StateDirectory = "mautrix-googlechat";
+      User = "mautrix-googlechat";
+      WorkingDirectory = "/var/lib/mautrix-googlechat";
     };
   };
 
