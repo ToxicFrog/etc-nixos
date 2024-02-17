@@ -13,6 +13,7 @@
     # geckodriver  # needs a special built, which is in ~/opt
     gcc
     gdb
+    grip-search
     hledger hledger-ui hledger-web
     kpcli
     leiningen
@@ -21,7 +22,6 @@
     nox
     ledger-autosync
     recode
-    recoll
     wring
     unstable.yt-dlp
   ];
