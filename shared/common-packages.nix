@@ -36,6 +36,7 @@
     unrar
     unzip
     wget
+    xxd
     zip
   ];
 }
