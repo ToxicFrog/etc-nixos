@@ -61,9 +61,4 @@ self: super:
     };
     nativeBuildInputs = with self; [ cmake pkg-config ];
   });
-  weechat = super.weechat.override {
-    configure = { availablePlugins, ... }: {
-      scripts = with self.weechatScripts; [ weechat-matrix multiline ];
-    };
-  };
 }
