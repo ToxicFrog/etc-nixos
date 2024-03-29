@@ -38,7 +38,7 @@
     digikam
     unstable.gzdoom udb-editor
     love
-    steam steam.run
+    steam steam.run unstable.heroic
     syncthing qsyncthingtray
     unstable.prusa-slicer
     vscode
