@@ -3,6 +3,7 @@
 {
   #environment.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
   environment.systemPackages = with pkgs; [
+    abcde mkcue cdparanoia
     alot
     atop
     # TODO: beancount
