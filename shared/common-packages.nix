@@ -8,6 +8,7 @@
     binutils  # for strings and nm
     btop
     unstable.chezmoi
+    csvkit
     dos2unix
     dtrx
     factor-lang
