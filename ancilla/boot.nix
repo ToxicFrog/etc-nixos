@@ -24,7 +24,7 @@
     kernelModules = ["k10temp" "nct6775" "netatop"];
 
     supportedFilesystems = ["zfs"];
-    #zfs.extraPools = ["ancilla" "backup" "internal"];
+    zfs.extraPools = ["ancilla" "backup" "internal"];
     zfs.devNodes = "/dev/disk/by-path";
     zfs.forceImportRoot = false;
     initrd.kernelModules = [ "nvme" ];
