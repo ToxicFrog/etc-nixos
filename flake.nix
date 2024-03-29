@@ -10,6 +10,9 @@
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-local.url = "/home/bex/devel/nixpkgs";
 
+    # Nixpkgs patches
+    nixpkgs-factor-rewrap.url = "github:spacefrogg/nixpkgs/factor-rewrap";
+
     # Non-nixos upstreams
     mstream = {
       url = "github:IrosTheBeggar/mstream/master";
@@ -48,6 +51,7 @@
           specialArgs = {
             inherit inputs;
             unstable = (import nixos-unstable { inherit system; config.allowUnfree = true; }).pkgs;
+            factor-rewrap = (import inputs.nixpkgs-factor-rewrap { inherit system; config.allowUnfree = true; }).pkgs;
             secrets = (import ./secrets/default.nix);
           };
         };

@@ -118,6 +118,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-factor-rewrap": {
+      "locked": {
+        "lastModified": 1708612960,
+        "narHash": "sha256-eETpudKUrBC/5rTpilXC3gFC2tYe1ZGRgwMsM5sWZOs=",
+        "owner": "spacefrogg",
+        "repo": "nixpkgs",
+        "rev": "5c43520eb28ddf56554dbbaa5783d641a329f40d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "spacefrogg",
+        "ref": "factor-rewrap",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-local": {
       "locked": {
         "lastModified": 1702692562,
@@ -143,6 +159,7 @@
         "munin-contrib": "munin-contrib",
         "nixos": "nixos",
         "nixos-unstable": "nixos-unstable",
+        "nixpkgs-factor-rewrap": "nixpkgs-factor-rewrap",
         "nixpkgs-local": "nixpkgs-local"
       }
     }

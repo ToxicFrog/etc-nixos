@@ -10,6 +10,7 @@
     unstable.chezmoi
     dos2unix
     dtrx
+    factor-lang
     file
     findutils
     firefox
