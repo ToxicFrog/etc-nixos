@@ -1,4 +1,4 @@
-{ pkgs, options, lib, inputs, ... }:
+{ pkgs, options, lib, inputs, factor-rewrap, makeWrapper, ... }:
 {
   # Overlays for nixos itself, e.g. module replacements
   disabledModules = [
@@ -18,11 +18,16 @@
     (import ./overlays/crossfire.nix)
     (import ./overlays/doomrl-server.nix)
     (import ./overlays/dosage.nix)
-    (import ./overlays/factor-lang.nix)
     (import ./overlays/misc.nix)
     (import ./overlays/munin.nix)
-    (self: super: {
-      mstream = super.callPackage ./packages/mstream.nix { source = inputs.mstream; };
+    # Anything we pass extra arguments to need to go in the top level because
+    # import breaks in spooky and confusing ways otherwise.
+    # TODO: figure out wtf is going on there.
+    (final: prev: {
+      mstream = prev.callPackage ./packages/mstream.nix { source = inputs.mstream; };
+      factor-lang = factor-rewrap.factor-lang.override {
+        runtimeLibs = with final; [ readline ];
+      };
     })
   ];
 }
