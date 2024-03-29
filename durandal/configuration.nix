@@ -40,6 +40,19 @@
     yakuake
   ];
 
+  environment.etc."wireplumber/main.lua.d/99-disable-suspend.lua".text = ''
+    table.insert(alsa_monitor.rules,
+      {
+        matches = {{{ "node.name", "matches", "alsa_output.*" }}};
+        apply_properties = {
+          ["dither.noise"] = 2;
+          ["node.pause-on-idle"] = false;
+          ["session.suspend-timeout-seconds"] = 0;
+        }
+      }
+    )
+  '';
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It's perfectly fine and recommended to leave
