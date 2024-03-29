@@ -14,14 +14,15 @@
 
   environment.systemPackages = with pkgs; [
     # for gaming
-    jre stepmania scummvm wine itch
+    jre stepmania scummvm wine #itch
     steam.run steam
-    heroic gamescope protonup-ng protonup-qt # gog/epic
+    unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
     fluidsynth soundfont-fluid
     caffeine-ng # power control for retroarch
     antimicroX # controller support for keyboard-only games
     appimage-run # for gdlauncher
     opentyrian
+    unstable.knossosnet
     # golly
     unstable.gzdoom udb-editor doomrunner
     crossfire-jxclient crossfire-editor
