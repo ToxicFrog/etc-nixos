@@ -38,6 +38,7 @@
   };
 
   programs.steam.enable = true;
+  services.input-remapper.enable = true;
   virtualisation.waydroid.enable = true;
   environment.systemPackages = with pkgs; [
     unstable.alephone
@@ -46,9 +47,10 @@
     calibre
     crossfire-jxclient crossfire-editor
     digikam
+    gargoyle
     unstable.gzdoom udb-editor
     love
-    steam steam.run unstable.heroic
+    steam steam.run unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
     syncthing qsyncthingtray
     unstable.prusa-slicer
     vscode
@@ -69,5 +71,4 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
 }
