@@ -27,6 +27,16 @@
     user = "bex";
   };
 
+  sound.enable = true;
+  hardware.pulseaudio = lib.mkForce {
+    enable = true;
+    support32Bit = true;
+  };
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = lib.mkForce false;
+  };
+
   programs.steam.enable = true;
   virtualisation.waydroid.enable = true;
   environment.systemPackages = with pkgs; [
