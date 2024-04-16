@@ -21,6 +21,15 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  services.tailscale = {
+    enable = true;
+    openFirewall = true;
+    extraUpFlags = [
+      "--login-server=https://headscale.ancilla.ca"
+    ];
+  };
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+
   services.xserver.displayManager.defaultSession = "plasmawayland";
   services.xserver.displayManager.autoLogin = {
     enable = true;

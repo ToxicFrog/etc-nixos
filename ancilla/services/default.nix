@@ -12,6 +12,7 @@ in {
     ./bittorrent.nix
     ./borgbackup.nix
     ./doomrl-server.nix
+    ./headscale.nix
     ./library.nix
     ./mastodon.nix
     ./matrix.nix
