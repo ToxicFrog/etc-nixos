@@ -1,6 +1,13 @@
 # Patterns for Durandal.
-R home/
-R cygdrive/c/Users/
+# R home/
+# R cygdrive/c/Users/
+# durandal-nixos
+R root
+R var/lib
+R boot
+R home
+R etc/nixos
+R var/cache/locatedb
 ! **/tmp/
 ! **/Temp/
 ! **/temp/
@@ -10,3 +17,14 @@ R cygdrive/c/Users/
 ! cygdrive/c/Users/*/AppData/Local/Packages/
 ! cygdrive/c/Users/*/AppData/Local/Steam/
 ! **/AMD/*Cache/
+
+! **/.cache/
+! **/.bup/
+! home/*/Videos/
+! home/*/Music/
+! home/*/Pictures/
+! home/*/Comics/
+! home/*/Games/
+! home/*/.local/share/Steam/
+! home/*/.local/share/lutris/
+! home/*/.local/share/Trash/

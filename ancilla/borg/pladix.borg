@@ -10,11 +10,12 @@ R data/Games/epic-games-store/dosdevices/
 R data/Games/epic-games-store/drive_c/users
 R data/Games/epic-games-store/drive_c/ProgramData
 
-# /home/alex is on NFS!
-! home/alex
+# /home/alex/ancilla is on NFS!
+! home/alex/ancilla
 ! **/tmp/
 ! **/.cache/
 ! **/.bup/
+! home/*/Heroic/
 ! home/*/Videos/
 ! home/*/Music/
 ! home/*/Pictures/
