@@ -21,9 +21,6 @@ self: super:
       sha256 = "PgErtEizHraZgoWHs5jYJJ5NsliDd9VulQfS64ackFo=";
     };
   });
-  atuin = super.atuin.overrideAttrs (old: rec {
-    patches = old.patches ++ [ ./atuin-zfs.patch ];
-  });
   # TODO: add an overlay for calibre that adds the libcrypto dependency that ACSM import needs
   ffmpeg-vgz = (super.ffmpeg-full.overrideAttrs (old: {
     pname = "ffmpeg-vgz";
