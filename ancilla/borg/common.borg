@@ -9,5 +9,19 @@
 ! **/Code Cache/
 ! **/ScriptCache/
 
+# Core files
 - **/core
 - **/core.*
+
+# Home directories containing large amounts of data
+! home/*/Videos/
+! home/*/Music/
+! home/*/Pictures/
+! home/*/Comics/
+! home/*/Games/
+! home/*/.local/share/Trash/
+# Bulky gaming stuff
+! home/*/.local/share/Steam/
+! home/*/.local/share/lutris/
+! home/*/.config/heroic/tools/
+! home/*/Heroic/

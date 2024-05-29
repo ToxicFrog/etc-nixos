@@ -27,3 +27,4 @@ R data/Games/epic-games-store/drive_c/ProgramData
 ! var/lib/**/proc/
 ! **/core
 ! **/core.*
+! home/*/.heroic/tools/

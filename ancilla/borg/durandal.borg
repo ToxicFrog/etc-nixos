@@ -17,6 +17,7 @@ R var/cache/locatedb
 ! cygdrive/c/Users/*/AppData/Local/Packages/
 ! cygdrive/c/Users/*/AppData/Local/Steam/
 ! **/AMD/*Cache/
+! home/*/.heroic/tools/
 
 ! **/.cache/
 ! **/.bup/

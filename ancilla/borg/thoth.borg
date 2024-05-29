@@ -16,3 +16,4 @@ R var/cache/locatedb
 ! home/*/.local/share/Steam/
 ! home/*/.local/share/lutris/
 ! home/*/.local/share/Trash/
+! home/*/.heroic/tools/
