@@ -23,6 +23,7 @@
     appimage-run # for gdlauncher
     opentyrian
     unstable.knossosnet
+    scanmem
     # golly
     unstable.gzdoom udb-editor doomrunner
     crossfire-jxclient crossfire-editor
