@@ -1,10 +1,10 @@
-{ pkgs, lib, secrets, ... }:
+{ pkgs, lib, unstable, secrets, ... }:
 
 let
-  immich-version = "v1.91.4";
+immich-version = "v1.101.0";
   digests = {
-    immich-server = "sha256:f1dd777fd38f30fc17a3dbe6a9f7dc9c548c41f9688908bf79d4109733e09b54";
-    immich-ml = "sha256:634c4a66ea5c8a6e4679d7560d34abda67f88dc1d6adda18f56c00c58a07ac6d";
+    immich-server = "sha256:0097562444db38ebd2e5f98e71bd27dc6dd69b7f786207f7d323febbf99b8f93";
+    immich-ml = "sha256:b0a22ca87496019f495ed5ce89df08da237e0987d389376b435b2226a8c29463";
   };
 
   photosLocation = "/ancilla/media/photos/immich";
@@ -38,7 +38,7 @@ in
   services.postgresql = {
     enableTCPIP = true;
     ensureDatabases = [ environment.DB_DATABASE_NAME ];
-    extraPlugins = with pkgs; [ pgvecto-rs ];
+    extraPlugins = with pkgs; [ unstable.postgresql15Packages.pgvecto-rs ];
     settings = { shared_preload_libraries = "vectors.so"; };
 
     ensureUsers = [
@@ -57,9 +57,9 @@ in
   virtualisation.oci-containers.containers = {
     immich-server = {
       inherit autoStart extraOptions environment;
-      image = "ghcr.io/immich-app/immich-server:${immich-version}";#@${digests.immich-server}";
-      entrypoint = "/bin/sh";
-      cmd = [ "start.sh" "immich" ];
+      image = "ghcr.io/immich-app/immich-server:${immich-version}@${digests.immich-server}";
+      # cmd = [ "start.sh" "immich" ];
+      cmd = [ "./start-server.sh" ];
 
       volumes = [
         "${photosLocation}:/usr/src/app/upload"
@@ -71,8 +71,7 @@ in
 
     immich-microservices = {
       inherit autoStart extraOptions environment;
-      image = "ghcr.io/immich-app/immich-server:${immich-version}";#@${digests.immich-server}";
-      entrypoint = "/bin/sh";
+      image = "ghcr.io/immich-app/immich-server:${immich-version}@${digests.immich-server}";
       cmd = [ "start.sh" "microservices" ];
 
       volumes = [
@@ -83,7 +82,7 @@ in
 
     immich-ml = {
       inherit autoStart extraOptions environment;
-      image = "ghcr.io/immich-app/immich-machine-learning:${immich-version}";#@${digests.immich-ml}";
+      image = "ghcr.io/immich-app/immich-machine-learning:${immich-version}@${digests.immich-ml}";
 
       volumes = [
         "${photosLocation}:/usr/src/app/upload"
