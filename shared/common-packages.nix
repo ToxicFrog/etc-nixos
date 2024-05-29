@@ -3,6 +3,11 @@
 { config, pkgs, lib, unstable, ... }:
 
 {
+  # Include terminfo files from all known terminals in the terminfo database,
+  # even if they aren't installed. This means we'll handle them correctly if
+  # someone using them logs in over telnet or ssh.
+  environment.enableAllTerminfo = true;
+
   environment.systemPackages = with pkgs; [
     atuin
     binutils  # for strings and nm
