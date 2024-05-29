@@ -4,6 +4,10 @@
 { config, pkgs, inputs, ... }:
 
 {
+  # nixpkgs-aware command-not-found replacement, along with nix-locate command
+  programs.nix-index.enable = true;
+  programs.command-not-found.enable = false;
+  
   # Compatibility shim for running non-nixos binaries
   programs.nix-ld = {
     enable = true;
