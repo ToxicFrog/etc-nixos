@@ -47,7 +47,9 @@
   environment.systemPackages = with pkgs; [
     ark
     git-cola
+    kitty
     libnotify
+    tdrop
     vlc
     xscreensaver
   ];
