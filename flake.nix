@@ -13,6 +13,17 @@
     # Nixpkgs patches
     nixpkgs-factor-rewrap.url = "github:spacefrogg/nixpkgs/factor-rewrap";
 
+    # Lix fork
+    lix = {
+      url = "git+https://git@git.lix.systems/lix-project/lix?ref=refs/tags/2.90-beta.1";
+      flake = false;
+    };
+    lix-module = {
+      url = "git+https://git.lix.systems/lix-project/nixos-module";
+      inputs.lix.follows = "lix";
+      inputs.nixpkgs.follows = "nixos";
+    };
+
     # Non-nixos upstreams
     mstream = {
       url = "github:IrosTheBeggar/mstream/master";
@@ -24,25 +35,30 @@
     };
 
     # Local inputs
+    # Uncomment the git+ url to use latest commit, or the plain path to use
+    # whatever is in the worktree.
     doomrl-server = {
       url = "/home/bex/devel/doomrl-server";
       flake = false;
     };
     crossfire-server = {
-      url = "/home/bex/devel/crossfire-server";
+      # url = "/home/bex/devel/crossfire-server";
+      url = "git+file:///home/bex/devel/crossfire-server/.git?ref=master";
       flake = false;
     };
     crossfire-arch = {
-      url = "/home/bex/devel/crossfire-arch";
+      # url = "/home/bex/devel/crossfire-arch";
+      url = "git+file:///home/bex/devel/crossfire-arch/.git";
       flake = false;
     };
     crossfire-maps = {
       url = "/home/bex/src/crossfire-maps";
+      # url = "git+file:///home/bex/src/crossfire-maps/.git";
       flake = false;
     };
   };
 
-  outputs = { self, nixos, nixos-unstable, ... }@inputs: {
+  outputs = { self, nixos, nixos-unstable, lix-module, ... }@inputs: {
     nixosConfigurations = let
       mkSystem = extraModules:
         nixos.lib.nixosSystem rec {
@@ -58,7 +74,7 @@
     in {
       ancilla = mkSystem [ ./ancilla/configuration.nix ];
       durandal = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./durandal/configuration.nix ];
-      thoth = mkSystem [ ./shared/graphical.nix ./thoth/configuration.nix ];
+      thoth = mkSystem [ ./shared/graphical.nix ./thoth/configuration.nix lix-module.nixosModules.default ];
       thoth-installer = mkSystem [
         ./shared/graphical.nix
         ./thoth/installer.nix
