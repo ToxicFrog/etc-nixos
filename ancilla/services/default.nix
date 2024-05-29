@@ -253,4 +253,17 @@ in {
     serviceConfig.ExecStart = "${pkgs.curl}/bin/curl ${secrets.dyndns-url}";
     serviceConfig.Type = "oneshot";
   };
+
+  systemd.services.food-of-tyria = {
+    description = "Food of Tyria tracker";
+    after = ["network-online.target" "local-fs.target"];
+    environment.PORT = "8099";
+    serviceConfig = {
+      User = "bex"; Group = "users";
+      ExecStart = "${pkgs.jre}/bin/java -jar /home/bex/devel/tyria/target/food-of-tyria-0.1.0-SNAPSHOT-standalone.jar";
+      Restart = "always";
+      RestartSec = 15;
+      WorkingDirectory = "/home/bex/devel/tyria";
+    };
+  };
 }
