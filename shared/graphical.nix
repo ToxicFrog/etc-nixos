@@ -80,9 +80,10 @@
     '';
     packages = with pkgs; [
       corefonts
-      google-fonts
+      (google-fonts.override { fonts = [ "Cousine" ]; })
       gentium
       inconsolata-lgc
+      noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji
       symbola
