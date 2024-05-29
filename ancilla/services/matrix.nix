@@ -17,8 +17,10 @@
       allow_federation = true;
       trusted_servers = ["matrix.org"];
       # database_path = "/srv/matrix/conduit-db"
+      database_backend = "rocksdb";
     };
   };
+  systemd.services.conduit.serviceConfig.ReadWritePaths = "/srv/matrix-conduit/";
 
   systemd.services.matrix2051 = {
     description = "Matrix2051 IRC gateway for Matrix";
@@ -40,6 +42,7 @@
     description = "Matrix-to-Discord puppeting bridge";
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target" "conduit.service"];
+    path = with pkgs; [ lottieconverter ];
     serviceConfig = {
       DynamicUser = "true";
       ExecStart = "${unstable.mautrix-discord}/bin/mautrix-discord";
@@ -55,6 +58,7 @@
     description = "Matrix-to-Googlechat puppeting bridge";
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target" "conduit.service"];
+    path = with pkgs; [ lottieconverter ];
     serviceConfig = {
       DynamicUser = "true";
       ExecStart = "${unstable.mautrix-googlechat}/bin/mautrix-googlechat";
