@@ -8,11 +8,13 @@
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
-      stdenv.cc.cc
+      stdenv.cc.cc.lib libgcc.lib
+      readline
       zlib
       fuse
       nss
       openal
+      openvr
       freetype
       SDL SDL_ttf SDL_net SDL_gpu SDL_gfx SDL_sound SDL_mixer SDL_image
       SDL2 SDL2_ttf SDL2_net SDL2_gfx SDL2_sound SDL2_mixer SDL2_image
