@@ -8,6 +8,7 @@
     # address = "0.0.0.0";
     port = 8514;
     settings = {
+      useRoutingFeatures = "server";
       dns_config = {
         base_domain = "ancilla.ca";
         domains = [ "ancilla.ca" ];
@@ -41,10 +42,6 @@
     config.services.headscale.package
     config.services.tailscale.package
   ];
-  boot.kernel.sysctl = {
-    "net.ipv4.ip_forward" = true;
-    "net.ipv6.conf.all.forwarding" = true;
-  };
 
   # Set up an edge router
   services.tailscale = {
@@ -53,7 +50,8 @@
     extraUpFlags = [
       "--login-server=https://headscale.ancilla.ca"
       "--advertise-routes=192.168.1.0/24"
-      # "--advertise-exit-node"
+      "--advertise-exit-node"
+      # "--exit-node-allow-lan-access"  # use this on the client, not the EN
     ];
   };
 }
