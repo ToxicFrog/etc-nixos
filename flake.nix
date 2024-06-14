@@ -63,7 +63,7 @@
       mkSystem = extraModules:
         nixos.lib.nixosSystem rec {
           system = "x86_64-linux";
-          modules = [ ./shared/common.nix ] ++ extraModules;
+          modules = [ ./shared/common.nix lix-module.nixosModules.default ] ++ extraModules;
           specialArgs = {
             inherit inputs;
             unstable = (import nixos-unstable { inherit system; config.allowUnfree = true; }).pkgs;
@@ -74,7 +74,7 @@
     in {
       ancilla = mkSystem [ ./ancilla/configuration.nix ];
       durandal = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./durandal/configuration.nix ];
-      thoth = mkSystem [ ./shared/graphical.nix ./thoth/configuration.nix lix-module.nixosModules.default ];
+      thoth = mkSystem [ ./shared/graphical.nix ./thoth/configuration.nix ];
       thoth-installer = mkSystem [
         ./shared/graphical.nix
         ./thoth/installer.nix

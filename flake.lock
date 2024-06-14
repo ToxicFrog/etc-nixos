@@ -19,7 +19,7 @@
     "crossfire-maps": {
       "flake": false,
       "locked": {
-        "lastModified": 0,
+        "lastModified": 1698187266,
         "narHash": "sha256-F38avqb9JJ3VxvdgcyoRG4mAjR8WkBM9srrvF9+Rv10=",
         "path": "/home/bex/src/crossfire-maps",
         "type": "path"
@@ -121,11 +121,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1715038983,
-        "narHash": "sha256-DCZbFoNM8sx6YhEtu/xkNZfRwEt7RucJr3zuVVkugIw=",
+        "lastModified": 1716856858,
+        "narHash": "sha256-dfNGs2AW/V31nMVeEBSUJCMfT6bZAKJ5qsWgFHWhvUc=",
         "ref": "refs/heads/main",
-        "rev": "aaf759cd93d1946336247808e7551df714cfd332",
-        "revCount": 70,
+        "rev": "38f31ee7c1a60adae58833789dd855c128b056c6",
+        "revCount": 85,
         "type": "git",
         "url": "https://git.lix.systems/lix-project/nixos-module"
       },
@@ -170,11 +170,11 @@
     },
     "nixos": {
       "locked": {
-        "lastModified": 1711460390,
-        "narHash": "sha256-akSgjDZL6pVHEfSE6sz1DNSXuYX6hq+P/1Z5IoYWs7E=",
+        "lastModified": 1716633019,
+        "narHash": "sha256-xim1b5/HZYbWaZKyI7cn9TJCM6ewNVZnesRr00mXeS4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "44733514b72e732bd49f5511bd0203dea9b9a434",
+        "rev": "9d29cd266cebf80234c98dd0b87256b6be0af44e",
         "type": "github"
       },
       "original": {
@@ -186,11 +186,11 @@
     },
     "nixos-unstable": {
       "locked": {
-        "lastModified": 1711523803,
-        "narHash": "sha256-UKcYiHWHQynzj6CN/vTcix4yd1eCu1uFdsuarupdCQQ=",
+        "lastModified": 1716769173,
+        "narHash": "sha256-7EXDb5WBw+d004Agt+JHC/Oyh/KTUglOaQ4MNjBbo5w=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2726f127c15a4cc9810843b96cad73c7eb39e443",
+        "rev": "9ca3f649614213b2aaf5f1e16ec06952fe4c2632",
         "type": "github"
       },
       "original": {
@@ -218,10 +218,10 @@
     },
     "nixpkgs-local": {
       "locked": {
-        "lastModified": 1702692562,
-        "narHash": "sha256-PPBqr7e7CFF5GMX5ho7GdrRyRTcL5vIK+RR181ku7WA=",
+        "lastModified": 1705506579,
+        "narHash": "sha256-6BJoLJPr5gNuXEym7sDAwjTpvy3I8Wnoipd68IXD9qM=",
         "ref": "refs/heads/sigal-2.4",
-        "rev": "b208d4a46ef2152d54a5fc9c49ef7ecb7b9bdb82",
+        "rev": "b28ae18dd01e1284b8485811dea603bd39781441",
         "revCount": 560130,
         "type": "git",
         "url": "file:///home/bex/devel/nixpkgs"
