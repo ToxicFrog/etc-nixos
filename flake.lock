@@ -154,11 +154,11 @@
     "munin-contrib": {
       "flake": false,
       "locked": {
-        "lastModified": 1711148346,
-        "narHash": "sha256-NOnvvW1UnEotQd6qlRA/zbSPafimHVlY3R4z/XtYI6I=",
+        "lastModified": 1715706369,
+        "narHash": "sha256-NjsOAZ5OQ2uGehjMmLVEW8HWpP3+364V1oHxHSVu2Ag=",
         "owner": "munin-monitoring",
         "repo": "contrib",
-        "rev": "d104e6db99ffae754015247f06e554e81377bdc0",
+        "rev": "1f1e5d3299e0f144e1e45afcb7e109ecdfb7739a",
         "type": "github"
       },
       "original": {
