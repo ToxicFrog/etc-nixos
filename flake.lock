@@ -202,11 +202,11 @@
     },
     "nixpkgs-factor-rewrap": {
       "locked": {
-        "lastModified": 1708612960,
-        "narHash": "sha256-eETpudKUrBC/5rTpilXC3gFC2tYe1ZGRgwMsM5sWZOs=",
+        "lastModified": 1709397197,
+        "narHash": "sha256-Im0t/iKG5sIx24abrfm0JQogGlNBCdQ/Ppj7oaBSp2c=",
         "owner": "spacefrogg",
         "repo": "nixpkgs",
-        "rev": "5c43520eb28ddf56554dbbaa5783d641a329f40d",
+        "rev": "473372a02fea7d2723296be088c360dad35d8d78",
         "type": "github"
       },
       "original": {

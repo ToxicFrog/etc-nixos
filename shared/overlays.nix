@@ -25,9 +25,6 @@
     # TODO: figure out wtf is going on there.
     (final: prev: {
       mstream = prev.callPackage ./packages/mstream.nix { source = inputs.mstream; };
-      factor-lang = factor-rewrap.factor-lang.override {
-        runtimeLibs = with final; [ readline ];
-      };
     })
   ];
 }

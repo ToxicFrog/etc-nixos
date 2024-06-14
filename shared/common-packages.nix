@@ -16,7 +16,6 @@
     csvkit
     dos2unix
     dtrx
-    factor-lang
     file
     findutils
     firefox
