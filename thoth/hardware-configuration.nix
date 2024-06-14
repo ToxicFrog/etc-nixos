@@ -13,9 +13,7 @@
 
   boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "sdhci_pci" "bcache" ];
   boot.initrd.kernelModules = [ ];
-  # boot.kernelPackages = lib.mkOverride 0 unstable.linuxPackages_testing_bcachefs;
-  # boot.kernelPackages = lib.mkOverride 0 unstable.linuxPackages_testing;
-  boot.kernelPackages = lib.mkOverride 0 pkgs.linuxPackages_6_7;
+  boot.kernelPackages = lib.mkOverride 0 pkgs.linuxPackages_latest;
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
   boot.supportedFilesystems = [ "bcachefs" ];
