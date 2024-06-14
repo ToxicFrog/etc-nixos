@@ -2,13 +2,13 @@
 
 buildNpmPackage rec {
   pname = "mstream";
-  version = "2023.11";
+  version = "5.12.2";
 
   src = if source != null then source else fetchFromGitHub {
     owner = "IrosTheBeggar";
     repo = pname;
-    rev = "06f15420d8e0bcb23d9d698c866c184579ab9f14";
-    hash = "sha256-I17zhLiviKB8O1JRLAdTjTKysOp27YgWWkKU0D5ZZUU=";
+    rev = "v${version}";
+    hash = "sha256-000zhLiviKB8O1JRLAdTjTKysOp27YgWWkKU0D5ZZUU=";
   };
 
   patches = [ ./mstream-add-all.patch ];
@@ -17,7 +17,7 @@ buildNpmPackage rec {
     cp -v ${./mstream.lock} package-lock.json
   '';
 
-  npmDepsHash = "sha256-7i8O44lUBSPrcroyvG4eLz7jfaNzW7SZmxyQOt3MybI=";
+  npmDepsHash = "sha256-6tV/VGDcNndtf78jCJdxDy8EAfBziLvjYmofCeTx0bw=";
   dontNpmBuild = true;
 
   # The prepack script runs the build script, which we'd rather do in the build phase.

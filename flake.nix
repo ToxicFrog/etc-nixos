@@ -26,7 +26,7 @@
 
     # Non-nixos upstreams
     mstream = {
-      url = "github:IrosTheBeggar/mstream/master";
+      url = "github:IrosTheBeggar/mstream/v5.12.2";
       flake = false;
     };
     munin-contrib = {

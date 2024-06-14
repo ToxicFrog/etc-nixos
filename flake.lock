@@ -137,16 +137,16 @@
     "mstream": {
       "flake": false,
       "locked": {
-        "lastModified": 1707284801,
-        "narHash": "sha256-PwuPIgHFz89g5UioKD6YRjogUEki1FnkDvTwpaXn8GE=",
+        "lastModified": 1714956161,
+        "narHash": "sha256-MBM7DeD664ommN56ZZkEGpGJg/YWcLXGT44oXke/hjk=",
         "owner": "IrosTheBeggar",
         "repo": "mstream",
-        "rev": "c686ace36c3fa8eba2f23ce3e58a299827f68b9b",
+        "rev": "6488cd1db765d83f6a56172d6dbe6276fbdd8042",
         "type": "github"
       },
       "original": {
         "owner": "IrosTheBeggar",
-        "ref": "master",
+        "ref": "v5.12.2",
         "repo": "mstream",
         "type": "github"
       }
