@@ -45,6 +45,15 @@ self: super:
       sed -Ei 's,m_current_subsong = 0,m_current_subsong = all_subsongs,' libopenmpt/libopenmpt_impl.cpp
     '';
   };
+  scanmem = super.scanmem.overrideAttrs (old: rec {
+    patches = [ ./scanmem.patch ];
+    src = super.fetchFromGitHub {
+      owner  = "scanmem";
+      repo   = "scanmem";
+      rev    = "0def8b2abfcb922c9b647092394f079d29e299e1";
+      sha256 = "sha256-+9za/XivOLDJTjUEt/6vv19DljQaqXx8YoElghx1qxc=";
+    };
+  });
   wxGTK32-curl = super.wxGTK32.overrideAttrs (old: rec {
     configureFlags = old.configureFlags ++ [ "--with-libcurl" ];
     buildInputs = old.buildInputs ++ [ self.curl ];

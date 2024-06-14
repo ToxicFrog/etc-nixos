@@ -1,0 +1,56 @@
+From afbb3d8d9362282b5f99ac149ae5e4a1981e7631 Mon Sep 17 00:00:00 2001
+From: Rebecca Kelly <bk@ancilla.ca>
+Date: Fri, 14 Jun 2024 17:48:24 -0400
+Subject: [PATCH] add option to load cheats from file on startup
+
+---
+ gui/GameConqueror.py | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/gui/GameConqueror.py b/gui/GameConqueror.py
+index 47f3f82..8c79cee 100644
+--- a/gui/GameConqueror.py
++++ b/gui/GameConqueror.py
+@@ -401,15 +401,18 @@ class GameConqueror():
+         response = dialog.run()
+         if response == Gtk.ResponseType.OK:
+             try:
+-                with open(dialog.get_filename(), 'r') as f:
+-                    obj = json.load(f)
+-                    for row in obj['cheat_list']:
+-                        self.add_to_cheat_list(row[2],row[4],row[3],row[1],True)
++                LoadCheatsFromFile(dialog.get_filename())
+             except:
+                 pass
+         dialog.destroy()
+         return True
+ 
++    def LoadCheatsFromFile(self, filename):
++        with open(filename, 'r') as f:
++            obj = json.load(f)
++            for row in obj['cheat_list']:
++                self.add_to_cheat_list(row[2],row[4],row[3],row[1],True)
++    
+     def SaveCheat_Button_clicked_cb(self, button, data=None):
+         dialog = Gtk.FileChooserDialog(title=_("Save.."),
+                                        transient_for=self.main_window,
+@@ -1176,6 +1179,7 @@ if __name__ == '__main__':
+     parser.add_argument('-s', '--search', metavar='val', dest='search_value',
+                         help=_('prefill the search box'))
+     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + VERSION)
++    parser.add_argument('-c', '--cheats', help='Load cheats from this file on startup')
+     parser.add_argument("pid", nargs='?', type=int, help=_("PID of the process"))
+     args = parser.parse_args()
+ 
+@@ -1197,5 +1201,8 @@ if __name__ == '__main__':
+     if (args.search_value is not None) :
+         gc_instance.input_box.set_text(args.search_value)
+ 
++    if (args.cheats is not None) :
++        gc_instance.LoadCheatsFromFile(args.cheats)
++
+     # Start
+     Gtk.main()
+-- 
+2.42.0
+
