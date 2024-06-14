@@ -21,7 +21,7 @@ let
     noUpload = true;
     writeLogs = false;
     folders = {
-      ancilla = { root = "/ancilla/media/music/.ffmpegfs"; };
+      ancilla = { root = "/ancilla/media/music/.srv"; };
       podcasts = { root = "/ancilla/media/music/Podcasts"; };
       archive = { root = "/ancilla/media/music/ancilla-archive"; };
       quetzalcoatl = { root = "/ancilla/media/music/quetzalcoatl"; };
@@ -86,37 +86,18 @@ in {
   users.groups.mstream = {};
   # environment.etc."mstream.conf.json".text = mstreamConfig;
 
-  systemd.services."ancilla-media-music-ffmpegfs" = {
-    description = "ffmpegfs mount for /ancilla/media/music/.ffmpegs";
-    wantedBy = ["multi-user.target"];
-    after = ["network-online.target" "local-fs.target"];
-    script = ''
-      ${pkgs.ffmpegfs}/bin/ffmpegfs -d \
-        --expiry_time=50w \
-        --desttype=opus --hide_extensions=.backup,.torrent \
-        --include_extensions=${include_extensions} \
-        --cachepath=/ancilla/media/music/.ffmpegfs-cache \
-        /ancilla/media/music/Library \
-        /ancilla/media/music/.ffmpegfs \
-        -o noatime,ro,allow_other,umask=0222,uid=${toString config.users.users.nobody.uid},gid=${toString config.users.groups.nogroup.gid}
-    '';
-    postStop = ''
-      ${pkgs.fuse}/bin/fusermount -u /ancilla/media/music/.ffmpegs
-    '';
-    serviceConfig = {
-      User = "root";
-      Group = "root";
-      WorkingDirectory = "/var/empty";
-      Restart = "always";
-      RestartSec = "5";
-    };
-  };
-
+  # mstream patch
+  # document.querySelectorAll('div.dirz span.songDropdown').forEach(x => x.click())
+  # need to hook the addAll function, which only works on albums, not dirs
+  # and then in css
+  # div.song-button-box { height: 100% }
+  # div.song-button-box > span { height: 100% }
+  # div.song-button-box > span > svg { height: 100%; width: 75% }
+  # div.playlist-item { padding-top: 0.4em; padding-bottom: 0; }
   systemd.services.mstream = {
     description = "mStream music server";
     wantedBy = ["multi-user.target"];
-    after = ["network-online.target" "local-fs.target" "ancilla-media-music-ffmpegfs.service"];
-    requires = ["ancilla-media-music-ffmpegfs.service"];
+    after = ["network-online.target" "local-fs.target"];
     script = ''
       mkdir -p art db
       cp -n ${mstreamConfigFile} mstream.conf.json || true
@@ -149,13 +130,12 @@ in {
   systemd.services.gonic.serviceConfig.BindPaths = [
     "-/run/snapserver/music"
   ];
-  systemd.services.gonic.after = ["network-online.target" "local-fs.target" "ancilla-media-music-ffmpegfs.service"];
-  systemd.services.gonic.requires = ["ancilla-media-music-ffmpegfs.service"];
+  systemd.services.gonic.after = ["network-online.target" "local-fs.target"];
   services.gonic = {
     enable = true;
     settings = {
       "music-path" = [
-        "/ancilla/media/music/.ffmpegfs"
+        "/ancilla/media/music/.srv"
         "/ancilla/media/music/Podcasts"
         # "/ancilla/media/music/ancilla-archives/library/albums"
       ];
