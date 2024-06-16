@@ -13,18 +13,17 @@
   # Enable X11 and KDEPlasma
   services.xserver = {
     enable = true;
-    layout = "us";
-    # xkbVariant = "";
+    xkb.layout = "us";
     # Ctrl on capslock, alt is both alt and meta, compose is on left winkey
-    xkbOptions = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
-    displayManager.sddm = {
-      enable = true;
-      autoNumlock = true;
-      # wayland.enable = true;
-      # settings.General.DisplayServer = "x11";
-    };
+    xkb.options = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
     desktopManager.plasma5.enable = true;
     # libinput.enable = false;
+  };
+  services.displayManager.sddm = {
+    enable = true;
+    autoNumlock = true;
+    # wayland.enable = true;
+    # settings.General.DisplayServer = "x11";
   };
   # Enable XDG desktop portal for GTK programs like VSCode, so that they will
   # use native (i.e. Qt) file pickers and stuff.

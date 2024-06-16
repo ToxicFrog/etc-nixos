@@ -33,8 +33,8 @@
   };
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
-  services.xserver.displayManager.defaultSession = "plasmawayland";
-  services.xserver.displayManager.autoLogin = {
+  services.displayManager.defaultSession = "plasmawayland";
+  services.displayManager.autoLogin = {
     enable = true;
     user = "bex";
   };
