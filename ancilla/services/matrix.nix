@@ -21,11 +21,13 @@
     };
   };
   systemd.services.conduit.serviceConfig.ReadWritePaths = "/srv/matrix-conduit/";
+  systemd.services.conduit.after = [ "network-online.service" ];
 
   systemd.services.matrix2051 = {
     description = "Matrix2051 IRC gateway for Matrix";
     wantedBy = ["multi-user.target"];
-    after = ["network-online.target" "local-fs.target" "conduit.service"];
+    wants = ["network-online.target" "conduit.service" "mautrix-discord.service" "mautrix-googlechat.service"];
+    after = ["network-online.target" "local-fs.target" "conduit.service" "mautrix-discord.service" "mautrix-googlechat.service"];
     script = ''
       ${pkgs.matrix2051}/bin/matrix2051 start
     '';
@@ -41,6 +43,7 @@
   systemd.services.mautrix-discord = {
     description = "Matrix-to-Discord puppeting bridge";
     wantedBy = ["multi-user.target"];
+    wants = ["network-online.target" "conduit.service"];
     after = ["network-online.target" "local-fs.target" "conduit.service"];
     path = with pkgs; [ lottieconverter ];
     serviceConfig = {
@@ -57,6 +60,7 @@
   systemd.services.mautrix-googlechat = {
     description = "Matrix-to-Googlechat puppeting bridge";
     wantedBy = ["multi-user.target"];
+    wants = ["network-online.target" "conduit.service"];
     after = ["network-online.target" "local-fs.target" "conduit.service"];
     path = with pkgs; [ lottieconverter ];
     serviceConfig = {

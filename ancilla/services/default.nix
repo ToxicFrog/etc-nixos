@@ -20,7 +20,7 @@ in {
     ./music.nix
     ./nfs.nix
     ./nginx.nix
-    ./photos.nix
+    # ./photos.nix  # pgvecto-rs is broken in 24.05
     ./smarthome.nix
     ./smb.nix
     ./syncthing.nix
@@ -53,10 +53,10 @@ in {
       ensureUsers = [{
           name = "atuin";
           ensureDBOwnership = true;
-          ensurePermissions = {
-            # "DATABASE atuin" = "ALL PRIVILEGES";
-            "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
-          };
+          # ensurePermissions = {
+          #   # "DATABASE atuin" = "ALL PRIVILEGES";
+          #   "ALL TABLES IN SCHEMA public" = "ALL PRIVILEGES";
+          # };
       }];
     };
     nginx.virtualHosts."atuin.ancilla.ca" = {
@@ -196,8 +196,8 @@ in {
       ];
     };
     openssh.extraConfig = ''
-      PubkeyAcceptedKeyTypes +ssh-dss,ssh-rsa
-      HostKeyAlgorithms +ssh-dss,ssh-rsa
+      PubkeyAcceptedKeyTypes +ssh-rsa
+      HostKeyAlgorithms +ssh-rsa
       Match user scanner
         ForceCommand ${pkgs.openssh}/libexec/sftp-server
         X11Forwarding no

@@ -6,7 +6,7 @@
   # in common-nix, these are also aliased to <nixpkgs> and <unstable> respectively,
   # as both channels and flakes.
   inputs = {
-    nixos.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixos.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-local.url = "/home/bex/devel/nixpkgs";
 

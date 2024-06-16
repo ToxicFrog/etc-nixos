@@ -59,9 +59,10 @@ in {
     description = "MQTT listener for Munin notifications";
     inherit serviceConfig;
     wantedBy = ["multi-user.target"];
+    wants = ["network-online.target" "hugin-ii.service" "mosquitto.service"];
     after = ["network-online.target" "hugin-ii.service" "mosquitto.service"];
     partOf = ["hugin-ii.service"];
-    requires = ["hugin-ii.service"];
+    requires = ["hugin-ii.service" "mosquitto.service"];
     path = with pkgs; [ zsh jq mosquitto ];
     environment = { HUGIN_COLOUR = "irc"; };
     script = ''

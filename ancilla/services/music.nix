@@ -140,7 +140,7 @@ in {
         # "/ancilla/media/music/ancilla-archives/library/albums"
       ];
       "podcast-path" = "/var/empty";
-      #"playlists-path" = "/ancilla/media/music/Playlists";
+      "playlists-path" = "/ancilla/media/music/Playlists";
       "scan-at-start-enabled" = false;
       "scan-interval" = 60; # in minutes
       "scan-watcher-enabled" = true;

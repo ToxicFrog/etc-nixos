@@ -23,7 +23,7 @@ beamPackages.mixRelease rec {
   meta = with lib; {
     description = "IRCv3 client to Matrix homeserver proxy";
     homepage = "https://github.com/progval/matrix2051";
-    license = licenses.agpl3;
+    license = licenses.agpl3Only;
     # maintainers = with maintainers; [ picnoir yuka kloenk yayayayaka ];
     platforms = platforms.unix;
   };
