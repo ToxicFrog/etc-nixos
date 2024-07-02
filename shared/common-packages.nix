@@ -21,7 +21,7 @@
     findutils
     firefox
     unstable.fortune-kind
-    gitFull git-crypt git-secrets
+    gitFull git-crypt git-secrets gitui
     gnumake
     htop
     jre
@@ -45,6 +45,7 @@
     vivid
     wget
     xxd
+    unstable.zig
     zip
   ];
 }
