@@ -33,11 +33,14 @@
   };
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
 
-  services.displayManager.defaultSession = "plasmawayland";
+  services.displayManager.defaultSession = "plasma";
   services.displayManager.autoLogin = {
     enable = true;
     user = "bex";
   };
+
+  services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
+  services.desktopManager.plasma6.enable = true;
 
   sound.enable = true;
   hardware.pulseaudio = lib.mkForce {
@@ -51,7 +54,6 @@
 
   programs.steam.enable = true;
   services.input-remapper.enable = true;
-  virtualisation.waydroid.enable = true;
   environment.systemPackages = with pkgs; [
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity

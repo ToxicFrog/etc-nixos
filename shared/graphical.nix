@@ -16,7 +16,7 @@
     xkb.layout = "us";
     # Ctrl on capslock, alt is both alt and meta, compose is on left winkey
     xkb.options = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
-    desktopManager.plasma5.enable = true;
+    desktopManager.plasma5.enable = lib.mkDefault true;
     # libinput.enable = false;
   };
   services.displayManager.sddm = {
