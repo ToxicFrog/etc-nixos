@@ -1,0 +1,17 @@
+diff --git a/src/service/rooms/timeline/mod.rs b/src/service/rooms/timeline/mod.rs
+index 29d8339d..bf63c0e5 100644
+--- a/src/service/rooms/timeline/mod.rs
++++ b/src/service/rooms/timeline/mod.rs
+@@ -764,9 +764,9 @@ impl Service {
+             None::<PduEvent>, // TODO: third_party_invite
+             |k, s| auth_events.get(&(k.clone(), s.to_owned())),
+         )
+-        .map_err(|e| {
+-            error!("{:?}", e);
+-            Error::bad_database("Auth check failed.")
++        .map_err(|error| {
++            error!(%error, ?pdu, "Auth check failed.");
++            Error::BadDatabase("Auth check failed.")
+         })?;
+
+         if !auth_check {

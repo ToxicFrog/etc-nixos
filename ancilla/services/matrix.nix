@@ -1,12 +1,33 @@
 { config, pkgs, lib, unstable, ... }:
 
+let
+  version = "a126a36249df7fda1d89f345a34607e9e54a077a";
+  src = pkgs.fetchFromGitHub {
+    owner = "mautrix";
+    repo = "discord";
+    rev = version;
+    hash = "sha256-YJQZYdty+t8rnSgtxzUmUtOV21hDdrjOzR6Q0cmJHVU=";
+  };
+  mautrix-discord-head = unstable.mautrix-discord.override {
+    buildGoModule = args: pkgs.buildGoModule (args // {
+      inherit src version;
+      vendorHash = "sha256-AmAKSq3Nh+XMcR4g2Upt1d+v4kno0ESajiFybzW7coo=";
+    });
+  };
+in
 {
   services.matrix-conduit = {
     enable = true;
     extraEnvironment = {
       RUST_MIN_STACK = "16777216";
     };
-    package = unstable.matrix-conduit;
+    package = unstable.matrix-conduit.overrideAttrs (old: {
+      patches = [ ./conduit-618.diff ]; #./conduit-logging.patch ];
+      postPatch = ''
+        sed -Ei 's,latest_database_version = 13,latest_database_version = 14,' src/database/mod.rs
+      '';
+        # sed -Ei 's,tracing_subscriber::fmt::Layer::new\(\),tracing_subscriber::fmt::Layer::new\(\).pretty\(\),' src/main.rs
+    });
     settings.global = {
       server_name = "ancilla.ca";
       address = "127.0.0.1";
@@ -18,6 +39,7 @@
       trusted_servers = ["matrix.org"];
       # database_path = "/srv/matrix/conduit-db"
       database_backend = "rocksdb";
+      # log = "debug";
     };
   };
   systemd.services.conduit.serviceConfig.ReadWritePaths = "/srv/matrix-conduit/";
@@ -48,7 +70,7 @@
     path = with pkgs; [ lottieconverter ];
     serviceConfig = {
       DynamicUser = "true";
-      ExecStart = "${unstable.mautrix-discord}/bin/mautrix-discord";
+      ExecStart = "${mautrix-discord-head}/bin/mautrix-discord";
       Restart = "on-failure";
       RestartSec = "30s";
       StateDirectory = "mautrix-discord";

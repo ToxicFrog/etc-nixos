@@ -1,0 +1,424 @@
+diff --git a/src/api/server_server.rs b/src/api/server_server.rs
+index fa7f13153e06a5070d6e7a117ea81233d90ef29a..282ffc4879a48633bd7a48b37415070797adb1be 100644
+--- a/src/api/server_server.rs
++++ b/src/api/server_server.rs
+@@ -34,7 +34,7 @@ use ruma::{
+     events::{
+         receipt::{ReceiptEvent, ReceiptEventContent, ReceiptType},
+         room::{
+-            join_rules::{JoinRule, RoomJoinRulesEventContent},
++            join_rules::{AllowRule, JoinRule, RoomJoinRulesEventContent},
+             member::{MembershipState, RoomMemberEventContent},
+         },
+         StateEventType, TimelineEventType,
+@@ -1387,7 +1387,6 @@ pub async fn create_join_event_template_route(
+     );
+     let state_lock = mutex_state.lock().await;
+ 
+-    // TODO: Conduit does not implement restricted join rules yet, we always reject
+     let join_rules_event = services().rooms.state_accessor.room_state_get(
+         &body.room_id,
+         &StateEventType::RoomJoinRules,
+@@ -1404,17 +1403,88 @@ pub async fn create_join_event_template_route(
+         })
+         .transpose()?;
+ 
+-    if let Some(join_rules_event_content) = join_rules_event_content {
+-        if matches!(
+-            join_rules_event_content.join_rule,
+-            JoinRule::Restricted { .. } | JoinRule::KnockRestricted { .. }
+-        ) {
+-            return Err(Error::BadRequest(
+-                ErrorKind::UnableToAuthorizeJoin,
+-                "Conduit does not support restricted rooms yet.",
+-            ));
+-        }
+-    }
++    let join_authorized_via_users_server =
++        if let Some(join_rules_event_content) = join_rules_event_content {
++            if let JoinRule::Restricted(r) | JoinRule::KnockRestricted(r) =
++                join_rules_event_content.join_rule
++            {
++                if r.allow
++                    .iter()
++                    .filter_map(|rule| {
++                        if let AllowRule::RoomMembership(membership) = rule {
++                            Some(membership)
++                        } else {
++                            None
++                        }
++                    })
++                    .any(|m| {
++                        services()
++                            .rooms
++                            .state_cache
++                            .is_joined(&body.user_id, &m.room_id)
++                            .unwrap_or(false)
++                    })
++                {
++                    if services()
++                        .rooms
++                        .state_cache
++                        .is_left(&body.user_id, &body.room_id)
++                        .unwrap_or(true)
++                        || services()
++                            .rooms
++                            .state_cache
++                            .is_knocked(&body.user_id, &body.room_id)
++                            .unwrap_or(false)
++                    {
++                        let members: Vec<_> = services()
++                            .rooms
++                            .state_cache
++                            .room_members(&body.room_id)
++                            .filter_map(Result::ok)
++                            .filter(|user| user.server_name() == services().globals.server_name())
++                            .collect();
++
++                        let mut auth_user = None;
++
++                        for user in members {
++                            if services()
++                                .rooms
++                                .state_accessor
++                                .user_can_invite(&body.room_id, &user, &body.user_id, &state_lock)
++                                .await
++                                .unwrap_or(false)
++                            {
++                                auth_user = Some(user);
++                                break;
++                            }
++                        }
++                        if auth_user.is_some() {
++                            auth_user
++                        } else {
++                            return Err(Error::BadRequest(
++                                ErrorKind::UnableToGrantJoin,
++                                "No user on this server is able to assist in joining.",
++                            ));
++                        }
++                    } else {
++                        // If the user has any state other than leave or knock, either:
++                        // - the auth_check will deny them (ban)
++                        // - they are able to join via other methods (invite)
++                        // - they are already in the room (join)
++                        None
++                    }
++                } else {
++                    return Err(Error::BadRequest(
++                        ErrorKind::UnableToAuthorizeJoin,
++                        "User is not known to be in any required room.",
++                    ));
++                }
++            } else {
++                None
++            }
++        } else {
++            None
++        };
+ 
+     let room_version_id = services().rooms.state.get_room_version(&body.room_id)?;
+     if !body.ver.contains(&room_version_id) {
+@@ -1434,7 +1504,7 @@ pub async fn create_join_event_template_route(
+         membership: MembershipState::Join,
+         third_party_invite: None,
+         reason: None,
+-        join_authorized_via_users_server: None,
++        join_authorized_via_users_server,
+     })
+     .expect("member event is valid value");
+ 
+@@ -1478,35 +1548,6 @@ async fn create_join_event(
+         .event_handler
+         .acl_check(sender_servername, room_id)?;
+ 
+-    // TODO: Conduit does not implement restricted join rules yet, we always reject
+-    let join_rules_event = services().rooms.state_accessor.room_state_get(
+-        room_id,
+-        &StateEventType::RoomJoinRules,
+-        "",
+-    )?;
+-
+-    let join_rules_event_content: Option<RoomJoinRulesEventContent> = join_rules_event
+-        .as_ref()
+-        .map(|join_rules_event| {
+-            serde_json::from_str(join_rules_event.content.get()).map_err(|e| {
+-                warn!("Invalid join rules event: {}", e);
+-                Error::bad_database("Invalid join rules event in db.")
+-            })
+-        })
+-        .transpose()?;
+-
+-    if let Some(join_rules_event_content) = join_rules_event_content {
+-        if matches!(
+-            join_rules_event_content.join_rule,
+-            JoinRule::Restricted { .. } | JoinRule::KnockRestricted { .. }
+-        ) {
+-            return Err(Error::BadRequest(
+-                ErrorKind::UnableToAuthorizeJoin,
+-                "Conduit does not support restricted rooms yet.",
+-            ));
+-        }
+-    }
+-
+     // We need to return the state prior to joining, let's keep a reference to that here
+     let shortstatehash = services()
+         .rooms
+@@ -1522,7 +1563,8 @@ async fn create_join_event(
+ 
+     // We do not add the event_id field to the pdu here because of signature and hashes checks
+     let room_version_id = services().rooms.state.get_room_version(room_id)?;
+-    let (event_id, value) = match gen_event_id_canonical_json(pdu, &room_version_id) {
++
++    let (event_id, mut value) = match gen_event_id_canonical_json(pdu, &room_version_id) {
+         Ok(t) => t,
+         Err(_) => {
+             // Event could not be converted to canonical json
+@@ -1533,6 +1575,14 @@ async fn create_join_event(
+         }
+     };
+ 
++    ruma::signatures::hash_and_sign_event(
++        services().globals.server_name().as_str(),
++        services().globals.keypair(),
++        &mut value,
++        &room_version_id,
++    )
++    .map_err(|_| Error::BadRequest(ErrorKind::InvalidParam, "Failed to sign event."))?;
++
+     let origin: OwnedServerName = serde_json::from_value(
+         serde_json::to_value(value.get("origin").ok_or(Error::BadRequest(
+             ErrorKind::InvalidParam,
+@@ -1555,7 +1605,14 @@ async fn create_join_event(
+     let pdu_id: Vec<u8> = services()
+         .rooms
+         .event_handler
+-        .handle_incoming_pdu(&origin, &event_id, room_id, value, true, &pub_key_map)
++        .handle_incoming_pdu(
++            &origin,
++            &event_id,
++            room_id,
++            value.clone(),
++            true,
++            &pub_key_map,
++        )
+         .await?
+         .ok_or(Error::BadRequest(
+             ErrorKind::InvalidParam,
+@@ -1593,7 +1650,11 @@ async fn create_join_event(
+             .filter_map(|(_, id)| services().rooms.timeline.get_pdu_json(id).ok().flatten())
+             .map(PduEvent::convert_to_outgoing_federation_event)
+             .collect(),
+-        event: None, // TODO: handle restricted joins
++        // Event field is required if the room version supports restricted join rules.
++        event: Some(
++            to_raw_value(&CanonicalJsonValue::Object(value.clone()))
++                .expect("To raw json should not fail since only change was adding signature"),
++        ),
+     })
+ }
+ 
+diff --git a/src/database/key_value/rooms/state_cache.rs b/src/database/key_value/rooms/state_cache.rs
+index 49e3842b4bad476df7fa39ebb60280408e57b778..1db3a0aa8b35e33ef12678b58b5ef7b3858965d8 100644
+--- a/src/database/key_value/rooms/state_cache.rs
++++ b/src/database/key_value/rooms/state_cache.rs
+@@ -66,6 +66,8 @@ impl service::rooms::state_cache::Data for KeyValueDatabase {
+         self.roomuserid_joined.remove(&roomuser_id)?;
+         self.userroomid_leftstate.remove(&userroom_id)?;
+         self.roomuserid_leftcount.remove(&roomuser_id)?;
++        self.userroomid_knockedstate.remove(&userroom_id)?;
++        self.roomuserid_knockedcount.remove(&roomuser_id)?;
+ 
+         Ok(())
+     }
+@@ -91,6 +93,36 @@ impl service::rooms::state_cache::Data for KeyValueDatabase {
+         self.roomuserid_joined.remove(&roomuser_id)?;
+         self.userroomid_invitestate.remove(&userroom_id)?;
+         self.roomuserid_invitecount.remove(&roomuser_id)?;
++        self.userroomid_knockedstate.remove(&userroom_id)?;
++        self.roomuserid_knockedcount.remove(&roomuser_id)?;
++
++        Ok(())
++    }
++
++    fn mark_as_knocked(&self, user_id: &UserId, room_id: &RoomId) -> Result<()> {
++        let mut roomuser_id = room_id.as_bytes().to_vec();
++        roomuser_id.push(0xff);
++        roomuser_id.extend_from_slice(user_id.as_bytes());
++
++        let mut userroom_id = user_id.as_bytes().to_vec();
++        userroom_id.push(0xff);
++        userroom_id.extend_from_slice(room_id.as_bytes());
++
++        self.userroomid_knockedstate.insert(
++            &userroom_id,
++            &serde_json::to_vec(&Vec::<Raw<AnySyncStateEvent>>::new())
++                .expect("state to bytes always works"),
++        )?;
++        self.roomuserid_knockedcount.insert(
++            &roomuser_id,
++            &services().globals.next_count()?.to_be_bytes(),
++        )?;
++        self.userroomid_joined.remove(&userroom_id)?;
++        self.roomuserid_joined.remove(&roomuser_id)?;
++        self.userroomid_invitestate.remove(&userroom_id)?;
++        self.roomuserid_invitecount.remove(&roomuser_id)?;
++        self.userroomid_invitestate.remove(&userroom_id)?;
++        self.roomuserid_invitecount.remove(&roomuser_id)?;
+ 
+         Ok(())
+     }
+@@ -604,4 +636,13 @@ impl service::rooms::state_cache::Data for KeyValueDatabase {
+ 
+         Ok(self.userroomid_leftstate.get(&userroom_id)?.is_some())
+     }
++
++    #[tracing::instrument(skip(self))]
++    fn is_knocked(&self, user_id: &UserId, room_id: &RoomId) -> Result<bool> {
++        let mut userroom_id = user_id.as_bytes().to_vec();
++        userroom_id.push(0xff);
++        userroom_id.extend_from_slice(room_id.as_bytes());
++
++        Ok(self.userroomid_knockedstate.get(&userroom_id)?.is_some())
++    }
+ }
+diff --git a/src/database/mod.rs b/src/database/mod.rs
+index 41da857ce685d17dbcce2ba9a5fa4aa215a35ecb..8c902063f217574645c6c52749952f2eb50a9292 100644
+--- a/src/database/mod.rs
++++ b/src/database/mod.rs
+@@ -12,7 +12,10 @@ use lru_cache::LruCache;
+ use ruma::{
+     events::{
+         push_rules::{PushRulesEvent, PushRulesEventContent},
+-        room::message::RoomMessageEventContent,
++        room::{
++            member::{MembershipState, RoomMemberEventContent},
++            message::RoomMessageEventContent,
++        },
+         GlobalAccountDataEvent, GlobalAccountDataEventType, StateEventType,
+     },
+     push::Ruleset,
+@@ -99,6 +102,8 @@ pub struct KeyValueDatabase {
+     pub(super) roomuserid_invitecount: Arc<dyn KvTree>, // InviteCount = Count
+     pub(super) userroomid_leftstate: Arc<dyn KvTree>,
+     pub(super) roomuserid_leftcount: Arc<dyn KvTree>,
++    pub(super) userroomid_knockedstate: Arc<dyn KvTree>,
++    pub(super) roomuserid_knockedcount: Arc<dyn KvTree>,
+ 
+     pub(super) disabledroomids: Arc<dyn KvTree>, // Rooms where incoming federation handling is disabled
+ 
+@@ -324,6 +329,8 @@ impl KeyValueDatabase {
+             roomuserid_invitecount: builder.open_tree("roomuserid_invitecount")?,
+             userroomid_leftstate: builder.open_tree("userroomid_leftstate")?,
+             roomuserid_leftcount: builder.open_tree("roomuserid_leftcount")?,
++            userroomid_knockedstate: builder.open_tree("userroomid_knockedstate")?,
++            roomuserid_knockedcount: builder.open_tree("roomuserid_knockedcount")?,
+ 
+             disabledroomids: builder.open_tree("disabledroomids")?,
+ 
+@@ -937,6 +944,60 @@ impl KeyValueDatabase {
+                 warn!("Migration: 12 -> 13 finished");
+             }
+ 
++            if services().globals.database_version()? < 14 {
++                for username in services().users.list_local_users()? {
++                    let user = match UserId::parse_with_server_name(
++                        username.clone(),
++                        services().globals.server_name(),
++                    ) {
++                        Ok(u) => u,
++                        Err(e) => {
++                            warn!("Invalid username {username}: {e}");
++                            continue;
++                        }
++                    };
++
++                    for room in
++                        services()
++                            .rooms
++                            .metadata
++                            .iter_ids()
++                            .filter_map(|room_id| match room_id {
++                                Ok(room_id) => Some(room_id),
++                                Err(e) => {
++                                    warn!("Invalid room id: {e}");
++                                    None
++                                }
++                            })
++                    {
++                        if services()
++                            .rooms
++                            .state_accessor
++                            .room_state_get(&room, &StateEventType::RoomMember, user.as_str())?
++                            .map(|pdu| {
++                                serde_json::from_str(pdu.content.get())
++                                    .map_err(|_| Error::bad_database("Invalid PDU in database."))
++                            })
++                            .transpose()?
++                            .map(|content: RoomMemberEventContent| content.membership)
++                            == Some(MembershipState::Knock)
++                        {
++                            services().rooms.state_cache.update_membership(
++                                &room,
++                                &user,
++                                MembershipState::Knock,
++                                &user,
++                                None,
++                                false,
++                            )?;
++                        }
++                    }
++                }
++                services().globals.bump_database_version(14)?;
++
++                warn!("Migration: 13 -> 14 finished");
++            }
++
+             assert_eq!(
+                 services().globals.database_version().unwrap(),
+                 latest_database_version
+diff --git a/src/service/rooms/state_cache/data.rs b/src/service/rooms/state_cache/data.rs
+index b511919a207bd15e24daec1054d180d5ab9e5613..6d44b0dfa4b2771786ee437abf2f5353422d32b2 100644
+--- a/src/service/rooms/state_cache/data.rs
++++ b/src/service/rooms/state_cache/data.rs
+@@ -18,6 +18,9 @@ pub trait Data: Send + Sync {
+     ) -> Result<()>;
+     fn mark_as_left(&self, user_id: &UserId, room_id: &RoomId) -> Result<()>;
+ 
++    /// Marks a user as knocking on a room
++    fn mark_as_knocked(&self, user_id: &UserId, room_id: &RoomId) -> Result<()>;
++
+     fn update_joined_count(&self, room_id: &RoomId) -> Result<()>;
+ 
+     fn get_our_real_users(&self, room_id: &RoomId) -> Result<Arc<HashSet<OwnedUserId>>>;
+@@ -106,4 +109,6 @@ pub trait Data: Send + Sync {
+     fn is_invited(&self, user_id: &UserId, room_id: &RoomId) -> Result<bool>;
+ 
+     fn is_left(&self, user_id: &UserId, room_id: &RoomId) -> Result<bool>;
++
++    fn is_knocked(&self, user_id: &UserId, room_id: &RoomId) -> Result<bool>;
+ }
+diff --git a/src/service/rooms/state_cache/mod.rs b/src/service/rooms/state_cache/mod.rs
+index c108695d4da0c4792538774a31fa9ac8b31dd97f..cef240981d58fd8bfe61b9e6071d15475dd563d4 100644
+--- a/src/service/rooms/state_cache/mod.rs
++++ b/src/service/rooms/state_cache/mod.rs
+@@ -181,6 +181,9 @@ impl Service {
+             MembershipState::Leave | MembershipState::Ban => {
+                 self.db.mark_as_left(user_id, room_id)?;
+             }
++            MembershipState::Knock => {
++                self.db.mark_as_knocked(user_id, room_id)?;
++            }
+             _ => {}
+         }
+ 
+@@ -350,4 +353,9 @@ impl Service {
+     pub fn is_left(&self, user_id: &UserId, room_id: &RoomId) -> Result<bool> {
+         self.db.is_left(user_id, room_id)
+     }
++
++    #[tracing::instrument(skip(self))]
++    pub fn is_knocked(&self, user_id: &UserId, room_id: &RoomId) -> Result<bool> {
++        self.db.is_knocked(user_id, room_id)
++    }
+ }
