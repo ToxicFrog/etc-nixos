@@ -46,7 +46,7 @@
     registry = {
       nixos.flake = inputs.nixos;
       nixos-unstable.flake = inputs.nixos-unstable;
-      local.flake = inputs.nixpkgs-local;
+      # local.flake = inputs.nixpkgs-local; # TODO: doesn't work when bootstrapping
       # useful aliases
       nixpkgs.flake = inputs.nixos;
       unstable.flake = inputs.nixos-unstable;
@@ -57,7 +57,7 @@
       # These match the flakes above
       "nixos=/etc/channels/nixos"
       "nixos-unstable=/etc/channels/nixos-unstable"
-      "local=/etc/channels/nixpkgs-local"
+      # "local=/etc/channels/nixpkgs-local" # TODO: doesn't work when bootstrapping
       # These are the aliases
       "nixpkgs=/etc/channels/nixos"
       "unstable=/etc/channels/nixos-unstable"
@@ -74,5 +74,5 @@
   environment.etc."channels/nixpkgs".source = inputs.nixos.outPath;
   environment.etc."channels/nixos-unstable".source = inputs.nixos-unstable.outPath;
   environment.etc."channels/unstable".source = inputs.nixos-unstable.outPath;
-  environment.etc."channels/nixpkgs-local".source = inputs.nixpkgs-local.outPath;
+  # environment.etc."channels/nixpkgs-local".source = inputs.nixpkgs-local.outPath; # TODO: doesn't work when bootstrapping
 }

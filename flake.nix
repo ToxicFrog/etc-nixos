@@ -8,7 +8,7 @@
   inputs = {
     nixos.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-local.url = "/home/bex/devel/nixpkgs";
+    # nixpkgs-local.url = "/home/bex/devel/nixpkgs";  # TODO: doesn't work when bootstrapping
 
     # Nixpkgs patches
     nixpkgs-factor-rewrap.url = "github:spacefrogg/nixpkgs/factor-rewrap";

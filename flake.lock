@@ -216,21 +216,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-local": {
-      "locked": {
-        "lastModified": 1705506579,
-        "narHash": "sha256-6BJoLJPr5gNuXEym7sDAwjTpvy3I8Wnoipd68IXD9qM=",
-        "ref": "refs/heads/sigal-2.4",
-        "rev": "b28ae18dd01e1284b8485811dea603bd39781441",
-        "revCount": 560130,
-        "type": "git",
-        "url": "file:///home/bex/devel/nixpkgs"
-      },
-      "original": {
-        "type": "git",
-        "url": "file:///home/bex/devel/nixpkgs"
-      }
-    },
     "root": {
       "inputs": {
         "crossfire-arch": "crossfire-arch",
@@ -243,8 +228,7 @@
         "munin-contrib": "munin-contrib",
         "nixos": "nixos",
         "nixos-unstable": "nixos-unstable",
-        "nixpkgs-factor-rewrap": "nixpkgs-factor-rewrap",
-        "nixpkgs-local": "nixpkgs-local"
+        "nixpkgs-factor-rewrap": "nixpkgs-factor-rewrap"
       }
     },
     "systems": {
