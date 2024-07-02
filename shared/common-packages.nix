@@ -16,6 +16,7 @@
     csvkit
     dos2unix
     dtrx
+    eza
     file
     findutils
     firefox
@@ -24,7 +25,7 @@
     gnumake
     htop
     jre
-    lsd
+    lsd # deprecated, remove later
     luajit
     man-pages
     micro
@@ -41,6 +42,7 @@
     tmux
     unrar
     unzip
+    vivid
     wget
     xxd
     zip
