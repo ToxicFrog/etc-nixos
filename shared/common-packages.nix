@@ -9,7 +9,7 @@
   environment.enableAllTerminfo = true;
 
   environment.systemPackages = with pkgs; [
-    atuin
+    unstable.atuin
     binutils  # for strings and nm
     btop
     unstable.chezmoi
