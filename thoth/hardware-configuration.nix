@@ -11,22 +11,16 @@
   # Disable stable bcachefs since it doesn't support unstable bcachefs-tools
   # disabledModules = [ "tasks/filesystems/bcachefs.nix" ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "sdhci_pci" "bcache" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "nvme" "usb_storage" "sd_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
-  boot.kernelPackages = lib.mkOverride 0 pkgs.linuxPackages_latest;
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
-  boot.supportedFilesystems = [ "bcachefs" ];
+  boot.supportedFilesystems = [ "ext4" ];
   boot.initrd.systemd.enable = true;
-  nixpkgs.overlays = [
-  	(self: super: {
-  		bcachefs-tools = unstable.bcachefs-tools;
-  	})
-  ];
 
   fileSystems."/" =
     { device = "/dev/nvme0n1p3";
-      fsType = "bcachefs";
+      fsType = "ext4";
     };
 
   fileSystems."/boot" =
