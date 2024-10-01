@@ -49,8 +49,8 @@
     "doomrl-server": {
       "flake": false,
       "locked": {
-        "lastModified": 1675988578,
-        "narHash": "sha256-2keqpwLsa4muLD9ah8c2SUd7rFrG5Pq6diADdpr70cs=",
+        "lastModified": 1719721364,
+        "narHash": "sha256-1u8DJq5l0SAFksBtaQmquCLqPhD0vam8leKlJDRIv1Q=",
         "path": "/home/bex/devel/doomrl-server",
         "type": "path"
       },
@@ -95,37 +95,32 @@
     "lix": {
       "flake": false,
       "locked": {
-        "lastModified": 1714955862,
-        "narHash": "sha256-REWlo2RYHfJkxnmZTEJu3Cd/2VM+wjjpPy7Xi4BdDTQ=",
-        "ref": "refs/tags/2.90-beta.1",
-        "rev": "b6799ab0374a8e1907a48915d3187e07da41d88c",
-        "revCount": 15501,
-        "type": "git",
-        "url": "https://git@git.lix.systems/lix-project/lix"
+        "lastModified": 1718767907,
+        "narHash": "sha256-gpd+mGQxqVHw2kO6rSPQel8TkChHh9UpqxjsmQi0QJM=",
+        "rev": "85f282ef572577899b3d80ba8def1b920a386218",
+        "type": "tarball",
+        "url": "https://git.lix.systems/api/v1/repos/lix-project/lix/archive/85f282ef572577899b3d80ba8def1b920a386218.tar.gz"
       },
       "original": {
-        "ref": "refs/tags/2.90-beta.1",
-        "type": "git",
-        "url": "https://git@git.lix.systems/lix-project/lix"
+        "type": "tarball",
+        "url": "https://git.lix.systems/lix-project/lix/archive/main.tar.gz"
       }
     },
     "lix-module": {
       "inputs": {
         "flake-utils": "flake-utils",
         "flakey-profile": "flakey-profile",
-        "lix": [
-          "lix"
-        ],
+        "lix": "lix",
         "nixpkgs": [
           "nixos"
         ]
       },
       "locked": {
-        "lastModified": 1716856858,
-        "narHash": "sha256-dfNGs2AW/V31nMVeEBSUJCMfT6bZAKJ5qsWgFHWhvUc=",
+        "lastModified": 1719353937,
+        "narHash": "sha256-86NBqDxAP20ET/UoKX0WvSItblNQ97czXb2q7lkMrwk=",
         "ref": "refs/heads/main",
-        "rev": "38f31ee7c1a60adae58833789dd855c128b056c6",
-        "revCount": 85,
+        "rev": "5d9d94089fb1ca96222a34bfe245ef5c5ebefd37",
+        "revCount": 92,
         "type": "git",
         "url": "https://git.lix.systems/lix-project/nixos-module"
       },
@@ -154,11 +149,11 @@
     "munin-contrib": {
       "flake": false,
       "locked": {
-        "lastModified": 1715706369,
-        "narHash": "sha256-NjsOAZ5OQ2uGehjMmLVEW8HWpP3+364V1oHxHSVu2Ag=",
+        "lastModified": 1719295919,
+        "narHash": "sha256-09jJ1EU1VGKPCMEcRNsbeQ8gUQUSKFueSvMmFqW22Oc=",
         "owner": "munin-monitoring",
         "repo": "contrib",
-        "rev": "1f1e5d3299e0f144e1e45afcb7e109ecdfb7739a",
+        "rev": "5fefb15188e617a6a14f7cf25a82e97b5e112c8b",
         "type": "github"
       },
       "original": {
@@ -170,11 +165,11 @@
     },
     "nixos": {
       "locked": {
-        "lastModified": 1719838683,
-        "narHash": "sha256-Zw9rQjHz1ilNIimEXFeVa1ERNRBF8DoXDhLAZq5B4pE=",
+        "lastModified": 1720386169,
+        "narHash": "sha256-NGKVY4PjzwAa4upkGtAMz1npHGoRzWotlSnVlqI40mo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d032c1a6dfad4eedec7e35e91986becc699d7d69",
+        "rev": "194846768975b7ad2c4988bdb82572c00222c0d7",
         "type": "github"
       },
       "original": {
@@ -186,11 +181,11 @@
     },
     "nixos-unstable": {
       "locked": {
-        "lastModified": 1718318537,
-        "narHash": "sha256-4Zu0RYRcAY/VWuu6awwq4opuiD//ahpc2aFHg2CWqFY=",
+        "lastModified": 1720418205,
+        "narHash": "sha256-cPJoFPXU44GlhWg4pUk9oUPqurPlCFZ11ZQPk21GTPU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e9ee548d90ff586a6471b4ae80ae9cfcbceb3420",
+        "rev": "655a58a72a6601292512670343087c2d75d859c1",
         "type": "github"
       },
       "original": {
@@ -222,7 +217,6 @@
         "crossfire-maps": "crossfire-maps",
         "crossfire-server": "crossfire-server",
         "doomrl-server": "doomrl-server",
-        "lix": "lix",
         "lix-module": "lix-module",
         "mstream": "mstream",
         "munin-contrib": "munin-contrib",
