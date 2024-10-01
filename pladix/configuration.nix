@@ -30,12 +30,12 @@ in {
     pladix = pladix-users.pladix;
   };
 
-  services.displayManager.setupCommands = ''
+  services.xserver.displayManager.setupCommands = ''
     ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-1-2 --mode 1920x1080
   '';
-  services.displayManager.defaultSession = "plasmawayland";
+  services.xserver.displayManager.defaultSession = "plasmawayland";
 
-  services.displayManager.autoLogin = {
+  services.xserver.displayManager.autoLogin = {
     enable = true;
     user = "alex";
   };

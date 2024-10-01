@@ -2,7 +2,8 @@
 
 {
   # Allow TCP pulse access for use by snapclient etc
-  environment.etc."pipewire/pipewire-pulse.conf.d/99-pulse-tcp.conf".text = ''
+  services.pipewire.pulse.enable = true;
+  services.pipewire.extraConfig.pipewire-pulse."99-pulse-tcp.conf" = ''
     pulse.properties = {
       server.address = [
         "unix:native"
@@ -15,7 +16,7 @@
   '';
   # Disable suspend and produce 1 bit of dither so that the amp doesn't go to
   # sleep.
-  environment.etc."wireplumber/main.lua.d/99-disable-suspend.lua".text = ''
+  services.pipewire.wireplumber.extraScripts."99-disable-suspend.lua" = ''
     table.insert(alsa_monitor.rules,
       {
         matches = {{{ "node.name", "matches", "alsa_output.*" }}};
