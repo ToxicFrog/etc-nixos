@@ -31,7 +31,7 @@
   };
 
   programs.steam.enable = true;
-  virtualisation.waydroid.enable = true;
+  virtualisation.waydroid.enable = false;
 
   environment.systemPackages = with pkgs; [
     # digikam
