@@ -7,7 +7,7 @@
   # nixpkgs-aware command-not-found replacement, along with nix-locate command
   programs.nix-index.enable = true;
   programs.command-not-found.enable = false;
-  
+
   # Compatibility shim for running non-nixos binaries
   programs.nix-ld = {
     enable = true;
@@ -39,6 +39,8 @@
     };
     extraOptions = ''
       experimental-features = nix-command flakes
+      keep-derivations = true
+      keep-outputs = true
     '';
 
     # Synchronize the flake registry with the flake.lock used to build the system.
