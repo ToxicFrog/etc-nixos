@@ -74,6 +74,9 @@ in {
         client_max_body_size    0;
       '';
     };
+    locations."/gonic/" = {
+      proxyPass = "http://127.0.0.1:4747/";
+    };
   };
 
   users.users.mstream = {
@@ -126,9 +129,11 @@ in {
     builtins.storeDir
     config.services.gonic.settings.music-path
     config.services.gonic.settings.podcast-path
+    "/ancilla/media/music/Library"  # many of the files in the library are symlinks into this
   ];
   systemd.services.gonic.serviceConfig.BindPaths = [
     "-/run/snapserver/music"
+    config.services.gonic.settings.playlists-path
   ];
   systemd.services.gonic.after = ["network-online.target" "local-fs.target"];
   services.gonic = {
