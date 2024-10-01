@@ -20,6 +20,9 @@
   documentation.man.generateCaches = true;  # Enable whatis/apropos.
   security.pki.certificateFiles = [ "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt" ];
 
+  # big CVE here! We can configure printers by hand.
+  systemd.services.cups-browsed.enable = false;
+
   time.timeZone = lib.mkDefault "America/Toronto";
   i18n = {
     defaultLocale = "en_CA.UTF-8";
