@@ -102,6 +102,8 @@ in {
   programs.adb.enable = true;
   environment.systemPackages = with pkgs; [
     chromium  # ffmpeg/libavcodec is part of the common package set
+    golly
     scrcpy  # for android stuff
+    vscodium
   ];
 }

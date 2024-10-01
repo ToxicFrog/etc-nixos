@@ -64,6 +64,10 @@
     gargoyle
     unstable.gzdoom udb-editor
     love
+    (retroarch.override {
+      cores = with libretro; [
+        dolphin mgba beetle-psx beetle-psx-hw bsnes snes9x gambatte nxengine ppsspp mupen64plus
+      ];})
     steam steam.run unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
     syncthing qsyncthingtray
     unstable.prusa-slicer

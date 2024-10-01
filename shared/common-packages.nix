@@ -13,7 +13,6 @@
     binutils  # for strings and nm
     btop
     unstable.chezmoi
-    csvkit
     dos2unix
     dtrx
     eza
@@ -25,7 +24,6 @@
     gnumake
     htop
     jre
-    lsd # deprecated, remove later
     luajit
     man-pages
     micro
@@ -35,17 +33,16 @@
     p7zip
     posix_man_pages
     python3
+    ripgrep
     rlwrap
     sshfs sshfs-fuse
     stdmanpages
-    taskwarrior
     tmux
+    tree
     unrar
     unzip
-    vivid
     wget
     xxd
-    unstable.zig
     zip
   ];
 }

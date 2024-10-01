@@ -26,6 +26,12 @@ in {
   users.users.root = users.root;
   users.users.alex = users.alex; # // { createHome = true; };
 
+  environment.systemPackages = with pkgs; [
+    unstable.google-chrome
+    notepadqq
+    # unstable.steam
+  ];
+
   # Fix for HDMI audio going away after suspend
   # powerManagement.resumeCommands = ''
   #   sleep 2

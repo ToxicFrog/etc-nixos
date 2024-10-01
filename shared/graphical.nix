@@ -50,6 +50,7 @@
     libnotify
     tdrop
     vlc
+    xorg.libX11  # for XCompose locale data
     xscreensaver
   ];
 
