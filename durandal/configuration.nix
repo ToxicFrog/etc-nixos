@@ -47,7 +47,7 @@
   sound.enable = true;
   sound.extraConfig = ''
     pcm_type.a52 {
-      lib "${pkgs.alsa-plugins-full}/lib/alsa-lib/libasound_module_pcm_a52.so"
+      lib "${pkgs.alsa-plugins}/lib/alsa-lib/libasound_module_pcm_a52.so"
     }
 
     pcm.spdif51 {
@@ -58,7 +58,7 @@
       rate 48000
     }
 
-    ${builtins.readFile "${pkgs.alsa-plugins-full}/share/alsa/alsa.conf.d/60-a52-encoder.conf"}
+    ${builtins.readFile "${pkgs.alsa-plugins}/share/alsa/alsa.conf.d/60-a52-encoder.conf"}
   '';
   # hardware.pulseaudio = lib.mkForce {
   #   enable = true;
@@ -70,7 +70,7 @@
   # environment.etc."alsa/conf.d".source = "${pkgs.alsa-plugins-full}/share/alsa/alsa.conf.d/";
   nixpkgs.overlays = [
     (self: super: {
-      alsa-plugins-full = super.alsa-plugins.overrideAttrs (old: rec {
+      alsa-plugins = super.alsa-plugins.overrideAttrs (old: rec {
         buildInputs = old.buildInputs ++ (with self; [ libsamplerate ffmpeg ]);
       });
     })
