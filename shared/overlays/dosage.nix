@@ -14,6 +14,8 @@ self: super:
           a cls("CircuitsAndVeins", "challenge/circuits-and-veins", 98905),
           a cls("Flowerpot", "challenge/flowerpot", 51856),
           a cls("TheLastHuman", "challenge/the-last-human-in-a-crowded-galaxy", 403136),
+          a cls("Asterion", "drama/asterion", 2471),
+          a cls("Vowrune", "canvas/vowrune-gl", 430737),
         }
       ' dosagelib/plugins/webtoons.py
     '';
