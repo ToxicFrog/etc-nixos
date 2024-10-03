@@ -140,6 +140,8 @@ in {
         NISIP 127.0.0.1
         BATTERYLEVEL 10
         MINUTES 5
+        KILLDELAY 0
+        NOLOGON disable
       '';
     };
     bitlbee = {

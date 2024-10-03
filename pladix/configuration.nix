@@ -96,6 +96,8 @@ in {
       NISIP 127.0.0.1
       BATTERYLEVEL 80
       MINUTES 30
+      KILLDELAY 0
+      NOLOGON disable
     '';
   };
 
