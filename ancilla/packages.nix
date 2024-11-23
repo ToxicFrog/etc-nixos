@@ -1,6 +1,11 @@
 { pkgs, unstable, ... }:
 
 {
+  # Needed by python mautrix bridges...for now
+  nixpkgs.config.permittedInsecurePackages = [
+    "olm-3.2.16"
+  ];
+
   #environment.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
   environment.systemPackages = with pkgs; [
     abcde mkcue cdparanoia

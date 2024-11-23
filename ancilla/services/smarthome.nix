@@ -47,6 +47,9 @@
     http.enable = false;
     streams = {
       # Used for announcements from hass.
+      # TODO: see if we can push stuff from hass over TCP instead, rather than
+      # needing to generate a URL, send that to mpd, and then have mpd fetch
+      # the audio and push it into this pipe.
       station = {
         type = "pipe";
         location = "/run/snapserver/station";
@@ -69,6 +72,16 @@
         query.codec = "flac";
         query.dryout_ms = "1000";
       };
+    };
+  };
+
+  systemd.services.snapclient = {
+    requires = [ "snapserver.service" ];
+    after = [ "snapserver.service" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla -s sysdefault:CARD=SoundBar";
+      Restart = "always";
+      RestartSec = "60s";
     };
   };
 

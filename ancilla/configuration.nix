@@ -67,6 +67,7 @@
     jshon
     xxd pv exiftool imagemagick sigal # for share
     lgogdownloader
+    ncmpcpp
     tmuxinator
     lm_sensors
     qbittorrent-nox
