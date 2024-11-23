@@ -110,9 +110,9 @@ in {
       use_node_name yes
       address isis
 
-      [laptops;lots-of-cats]
-      use_node_name yes
-      address lots-of-cats
+      # [laptops;lots-of-cats]
+      # use_node_name yes
+      # address lots-of-cats
 
       [laptops;thoth]
       use_node_name yes
