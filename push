@@ -9,13 +9,25 @@ function die {
 	exit 1
 }
 
+cd /etc/nixos
+
 TARGET="$1"; shift
+
+case $1 in
+  diff)
+    nix build -o /tmp/$$ ".#nixosConfigurations.$TARGET.config.system.build.toplevel" |& nom
+    nvd diff built/$TARGET /tmp/$$
+    rm /tmp/$$
+    exit
+    ;;
+  *)
+esac
+
 ssh -o BatchMode=yes root@$TARGET true || die "Unable to ssh root@$TARGET noninteractively"
 
-cd /etc/nixos
 # This is a gross hack to create a gcroot for the built system, so we don't have
 # to rebuild it ex nihilo each time.
-nix build -o built/$TARGET ".#nixosConfigurations.$TARGET.config.system.build.toplevel"
+nix build -o built/$TARGET ".#nixosConfigurations.$TARGET.config.system.build.toplevel" |& nom
 
 # Build was successful, so stage the configs on the target as a reference
 command rsync -a --info=progress2 \
@@ -25,6 +37,6 @@ command rsync -a --info=progress2 \
 	/etc/nixos/ root@$TARGET:/etc/nixos/
 
 # And finally actually install the new system configuration
-nixos-rebuild --target-host "$TARGET" --flake ".#$TARGET" --impure "$@"
+nixos-rebuild --target-host "$TARGET" --flake ".#$TARGET" --impure "$@" |& nom
 
 # TODO: copy shared/ and system-specific configuration to the target.
