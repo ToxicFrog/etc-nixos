@@ -19,9 +19,12 @@ let
   disk-monitoring = builtins.listToAttrs
     (map (dev: lib.attrsets.nameValuePair "smart_${dev}" "${pkgs.munin}/lib/plugins/smart_") disks);
 in {
-  services.fcgiwrap.enable = true;
-  services.fcgiwrap.user = "munin";
-  services.fcgiwrap.group = "nogroup";
+  services.fcgiwrap.instances.munin = {
+    process.user = "munin";
+    process.group = "nogroup";
+    socket.user = "munin";
+    socket.group = "nogroup";
+  };
   services.nginx.virtualHosts."ancilla.ancilla.ca".locations = {
     "/munin/static/".alias = "/srv/www/munin/static/";
     "/munin/".alias = "/srv/www/munin/";
@@ -47,7 +50,7 @@ in {
         fastcgi_param CGI_DEBUG true;
         fastcgi_param MUNIN_CONFIG ${muninConf};
         fastcgi_param PATH_INFO $fastcgi_path_info;
-        fastcgi_pass unix:${config.services.fcgiwrap.socketAddress};
+        fastcgi_pass unix:${config.services.fcgiwrap.instances.munin.socket.address};
       '';
     };
   };
@@ -168,6 +171,11 @@ in {
   # Local node. This monitors ancilla directly and fetches data from other systems
   # on the network.
   services.munin-node = let
+    # This is a Contraption™ that works by sshing into the dreamhost server and
+    # then fetching the site from there, to verify that it is working properly
+    # when viewed externally and I'm not just testing what it looks like on the
+    # local network.
+    # This is probably what's timing out.
     curl-wrapper = pkgs.writeShellScriptBin "curl" ''
       exec ${pkgs.openssh}/bin/ssh www.ancilla.ca curl "$@"
     '';
