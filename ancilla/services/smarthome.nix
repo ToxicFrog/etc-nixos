@@ -76,6 +76,7 @@
   # hass to send it a URL, at which point mpd will stream the URL, transcode it
   # if needed, and send the data to the snapserver on the "station" channel.
   systemd.services.mpd.requires = [ "snapserver.service" ];
+  systemd.services.mpd.after = [ "snapserver.service" ];
   services.mpd = {
     enable = true;
     network.listenAddress = "any";

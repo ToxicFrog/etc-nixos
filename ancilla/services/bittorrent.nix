@@ -15,7 +15,7 @@
     description = "QBittorrent daemon";
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
-    requires = ["zfs-mount.service"];
+    requires = ["zfs-mount.service" "network-online.target" "local-fs.target"];
     script = ''
       ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox
     '';
