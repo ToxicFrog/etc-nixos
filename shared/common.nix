@@ -35,5 +35,6 @@
     supportedLocales = [ "all" ];
   };
 
+  services.fwupd.enable = true;
   hardware.enableRedistributableFirmware = true;
 }

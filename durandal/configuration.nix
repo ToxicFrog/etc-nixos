@@ -40,41 +40,9 @@
     yakuake
   ];
 
-  # TODO:
-  # - see if just adding the extra plugins to alsa-plugins works
-  # - if not, build it as a separate package (so we don't rebuild the world) and
-  #   then manually add the a52 sink in alsa extraconfig
   sound.enable = true;
-  sound.extraConfig = ''
-    pcm_type.a52 {
-      lib "${pkgs.alsa-plugins}/lib/alsa-lib/libasound_module_pcm_a52.so"
-    }
-
-    pcm.spdif51 {
-      type a52
-      card 1
-      slavepcm "hw:1,1"
-      channels 6
-      rate 48000
-    }
-
-    ${builtins.readFile "${pkgs.alsa-plugins}/share/alsa/alsa.conf.d/60-a52-encoder.conf"}
-  '';
-  # hardware.pulseaudio = lib.mkForce {
-  #   enable = true;
-  #   support32Bit = true;
-  # };
   security.rtkit.enable = true;
   services.pipewire.enable = true;
-
-  # environment.etc."alsa/conf.d".source = "${pkgs.alsa-plugins-full}/share/alsa/alsa.conf.d/";
-  nixpkgs.overlays = [
-    (self: super: {
-      alsa-plugins = super.alsa-plugins.overrideAttrs (old: rec {
-        buildInputs = old.buildInputs ++ (with self; [ libsamplerate ffmpeg ]);
-      });
-    })
-  ];
 
   environment.etc."wireplumber/main.lua.d/99-disable-suspend.lua".text = ''
     table.insert(alsa_monitor.rules,
