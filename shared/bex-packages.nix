@@ -9,8 +9,9 @@
     csvkit
     expect
     inetutils # telnet
+    pandoc # nb export
     poppler_utils # pdf manipulators
-    taskwarrior
+    unstable.taskwarrior3
     vivid
     unstable.zig
   ];
