@@ -189,6 +189,15 @@ in {
         X11Forwarding no
         AllowTcpForwarding no
     '';
+    zfs.autoSnapshot = {
+      # default settings keep:
+      # - 4 15-minute snapshots
+      # - 24 hourly
+      # - 7 daily
+      # - 12 monthly
+      enable = true;
+      flags = "-p -u";
+    };
   };
 
   programs.msmtp = {
