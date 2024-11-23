@@ -18,17 +18,19 @@
     eza
     file
     findutils
-    firefox
     unstable.fortune-kind
     gitFull git-crypt git-secrets gitui
     gnumake
     htop
     jre
     luajit
+    lshw
     man-pages
     micro
+    minimodem
     nb
     ncdu
+    nvd
     unstable.nix-output-monitor
     p7zip
     posix_man_pages
@@ -41,6 +43,7 @@
     tree
     unrar
     unzip
+    usbutils
     wget
     xxd
     zip

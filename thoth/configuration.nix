@@ -66,7 +66,10 @@
     love
     (retroarch.override {
       cores = with libretro; [
-        dolphin mgba beetle-psx beetle-psx-hw bsnes snes9x gambatte nxengine ppsspp mupen64plus
+        dolphin mgba
+        pcsx-rearmed
+        mesen mesen-s snes9x
+        gambatte nxengine ppsspp mupen64plus
       ];})
     steam steam.run unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
     syncthing qsyncthingtray

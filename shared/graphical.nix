@@ -45,6 +45,7 @@
 
   environment.systemPackages = with pkgs; [
     ark
+    firefox
     git-cola
     kitty
     libnotify

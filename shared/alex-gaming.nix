@@ -16,7 +16,9 @@
     # for gaming
     jre stepmania scummvm wine #itch
     steam.run steam
-    unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
+    #table.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
+    heroic
+    unstable.gamescope protonup-ng protonup-qt # gog/epic
     fluidsynth soundfont-fluid
     caffeine-ng # power control for retroarch
     antimicroX # controller support for keyboard-only games
@@ -32,7 +34,7 @@
     unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
     (retroarch.override {
       cores = with libretro; [
-        dolphin mgba beetle-psx beetle-psx-hw bsnes snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
+        dolphin mgba beetle-psx beetle-psx-hw bsnes-hd snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
       ];})
     unstable.pcsx2
     # for dbgl
