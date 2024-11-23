@@ -3,11 +3,11 @@
 { config, pkgs, lib, unstable, ... }:
 
 {
-  users.extraGroups.deluge.gid = 83;
-  users.extraUsers.deluge = {
-    home = lib.mkForce "/ancilla/torrents/deluge";
-    createHome = lib.mkForce false;
-    group = "deluge";
+  users.extraGroups.bittorrent.gid = 83;
+  users.extraUsers.bittorrent = {
+    home = lib.mkForce "/var/lib/bittorrent";
+    createHome = true;
+    group = "bittorrent";
     isSystemUser = true;
   };
 
@@ -17,11 +17,11 @@
     after = ["network-online.target" "local-fs.target"];
     requires = ["zfs-mount.service" "network-online.target" "local-fs.target"];
     script = ''
-      ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox
+      ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --webui-port=9091
     '';
     serviceConfig = {
-      User = "deluge";
-      Group = "deluge";
+      User = "bittorrent";
+      Group = "bittorrent";
       WorkingDirectory = "~";
       Restart = "always";
       RestartSec = "5";
