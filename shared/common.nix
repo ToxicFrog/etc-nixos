@@ -23,6 +23,11 @@
   # big CVE here! We can configure printers by hand.
   systemd.services.cups-browsed.enable = false;
 
+  # JMicron USB/SATA HBA doesn't support UAS
+  boot.extraModprobeConfig = ''
+    options usb_storage quirks=152d:0565:u,2109:0711:u
+  '';
+
   time.timeZone = lib.mkDefault "America/Toronto";
   i18n = {
     defaultLocale = "en_CA.UTF-8";
