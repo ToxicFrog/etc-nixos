@@ -74,9 +74,9 @@
         ./thoth/installer.nix
       ];
       iscsi-target = mkSystem [
-        ./iscsi-target.nix
+        ./misc/iscsi-target.nix
       ];
-      installer = mkSystem [ ./installer.nix ];
+      installer = mkSystem [ ./misc/installer.nix ];
       pladix = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./pladix/configuration.nix ];
       lots-of-cats = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./lots-of-cats/configuration.nix ];
       isis = mkSystem [ ./isis/configuration.nix ];
