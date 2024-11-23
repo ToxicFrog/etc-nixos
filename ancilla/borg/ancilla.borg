@@ -9,6 +9,9 @@ R root
 R srv
 R var/lib
 R var/cache/locatedb
+R ancilla/documents
+R ancilla/scans
+R ancilla/projects
 R ancilla/media/music/beets.db
 R ancilla/media/music/beets.db-journal
 R ancilla/media/music/genres.yaml
