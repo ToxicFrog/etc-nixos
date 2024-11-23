@@ -171,22 +171,6 @@ in {
       "/ancilla/media/other"
     ];
 
-    vsftpd = {
-      enable = true;
-      anonymousMkdirEnable = true;
-      anonymousUploadEnable = true;
-      anonymousUser = true;
-      anonymousUserHome = "/ancilla/scans/";
-      anonymousUserNoPassword = true;
-      writeEnable = true;
-      extraConfig = ''
-        pasv_min_port=21020
-        pasv_max_port=21029
-        syslog_enable=YES
-        xferlog_enable=YES
-      '';
-    };
-
     openssh.ports = [ 22 2222 ];  # Workaround for Bell's busted-ass router firmware
     openssh.settings = {
       # Scanner only uses legacy key types, so we need to enable them here.
