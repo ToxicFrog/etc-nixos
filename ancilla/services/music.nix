@@ -97,10 +97,15 @@ in {
   # div.song-button-box > span { height: 100% }
   # div.song-button-box > span > svg { height: 100%; width: 75% }
   # div.playlist-item { padding-top: 0.4em; padding-bottom: 0; }
+  # also want to add playlist index, song duration, and maybe album to the
+  # playlist display
+  # and rework the search screen so it doesn't have two confusing "search files"
+  # and "search in results" buttons right next to each other
   systemd.services.mstream = {
     description = "mStream music server";
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
+    requires = ["network-online.target" "local-fs.target"];
     script = ''
       mkdir -p art db
       cp -n ${mstreamConfigFile} mstream.conf.json || true
@@ -136,6 +141,7 @@ in {
     config.services.gonic.settings.playlists-path
   ];
   systemd.services.gonic.after = ["network-online.target" "local-fs.target"];
+  systemd.services.gonic.requires = ["network-online.target" "local-fs.target"];
   services.gonic = {
     enable = true;
     settings = {
