@@ -4,7 +4,7 @@
 # It may in the future include some sort of whole-home sound system using MPD
 # and SnapCast, or something.
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, secrets, ... }:
 
 let
   # include_extensions = (builtins.concatMap
@@ -198,4 +198,23 @@ in {
         type null
     }
   '';
+
+  services.mopidy = {
+    enable = true;
+    extensionPackages = with pkgs; [ mopidy-mpd mopidy-subidy ];
+    configuration = ''
+      [subidy]
+      enabled = true
+      url = https://music.ancilla.ca/gonic
+      username = ${secrets.auth.subsonic.bex.user}
+      password = ${secrets.auth.subsonic.bex.pass}
+
+      [mpd]
+      enabled = true
+      port = 6601
+
+      [audio]
+      output = audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! wavenc ! filesink location=${config.services.snapserver.streams.music.location}
+    '';
+  };
 }
