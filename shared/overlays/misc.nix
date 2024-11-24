@@ -4,11 +4,11 @@ self: super:
   # Simple packages
   doomrl = super.callPackage ../packages/doomrl.nix {};
   etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
-  golly = super.callPackage ../packages/golly.nix {};
+  # golly = super.callPackage ../packages/golly.nix {};
   matrix2051 = super.callPackage ../packages/matrix2051.nix {};
   # pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
   sigal = super.callPackage ../packages/sigal.nix {};
-  slashem9 = super.callPackage ../packages/slashem9/slashem9.nix {};
+  slashem9 = super.callPackage ../packages/slashem9/default.nix {};
   udb-editor = super.callPackage ../packages/ultimate-doombuilder.nix {};
 
   # Actual overrides
