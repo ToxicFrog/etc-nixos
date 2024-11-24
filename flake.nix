@@ -54,14 +54,20 @@
 
   outputs = { self, nixos, nixos-unstable, lix-module, ... }@inputs: {
     nixosConfigurations = let
+      nixpkgsConfig = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          "olm-3.2.16"  # needed by ancilla mautrix bridges
+        ];
+      };
       mkSystem = extraModules:
         nixos.lib.nixosSystem rec {
           system = "x86_64-linux";
           modules = [ ./shared/common.nix lix-module.nixosModules.default ] ++ extraModules;
           specialArgs = {
             inherit inputs;
-            unstable = (import nixos-unstable { inherit system; config.allowUnfree = true; }).pkgs;
-            factor-rewrap = (import inputs.nixpkgs-factor-rewrap { inherit system; config.allowUnfree = true; }).pkgs;
+            unstable = (import nixos-unstable { inherit system; config = nixpkgsConfig; }).pkgs;
+            factor-rewrap = (import inputs.nixpkgs-factor-rewrap { inherit system; config = nixpkgsConfig; }).pkgs;
             secrets = (import ./secrets/default.nix);
           };
         };
