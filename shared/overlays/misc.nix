@@ -3,6 +3,7 @@ self: super:
 {
   # Simple packages
   doomrl = super.callPackage ../packages/doomrl.nix {};
+  drl = super.callPackage ../packages/drl.nix {};
   etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
   # golly = super.callPackage ../packages/golly.nix {};
   matrix2051 = super.callPackage ../packages/matrix2051.nix {};

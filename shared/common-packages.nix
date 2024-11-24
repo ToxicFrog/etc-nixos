@@ -14,6 +14,7 @@
     btop
     unstable.chezmoi
     dos2unix
+    drl
     dtrx
     eza
     file
