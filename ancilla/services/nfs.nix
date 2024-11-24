@@ -1,8 +1,27 @@
 # NFS network drive configuration
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
-{
+let
+  concatStringsSep = lib.strings.concatStringsSep;
+  common_opts = ["crossmnt" "no_subtree_check" "root_squash" "anongid=${toString config.users.groups.users.gid}"];
+  ro_opts = common_opts ++ ["ro"];
+  rw_opts = common_opts ++ ["rw"];
+  exports = [
+    { path = "/ancilla"; hosts = ["pladix" "durandal"]; opts = rw_opts; }
+    { path = "/home/alex"; hosts = ["pladix"]; opts = rw_opts; }
+    { path = "/backup/hass"; hosts = ["station"]; opts = rw_opts; }
+    { path = "/backup/nfs/pve"; hosts = ["katamari"];
+      opts = ["rw" "no_root_squash" "no_subtree_check"]; }
+    { path = "/backup/nfs/nwf"; hosts = ["nwf-vm"];
+      opts = [ "crossmnt" "no_subtree_check" "no_root_squash" "rw" ]; }
+  ];
+  mkexport =
+    export: let
+      opts = (concatStringsSep "," export.opts);
+      hosts = (concatStringsSep " " export.hosts);
+    in "${export.path} -${opts} ${hosts}";
+in {
   networking.firewall.allowedTCPPorts = [ 111 2049 4000 4001 4002 ];
   networking.firewall.allowedUDPPorts = [ 111 2049 4000 4001 4002 ];
   services.nfs.server = {
@@ -10,21 +29,6 @@
     statdPort = 4000;
     lockdPort = 4001;
     mountdPort = 4002;
-    exports = ''
-      # /ancilla/installs/games pladix.ancilla.ca(ro,all_squash,anonuid=1000,anongid=100)
-      # /ancilla/installs/games/Retroarch pladix.ancilla.ca(rw,all_squash,anonuid=1000,anongid=100)
-      # /ancilla/installs/games/DOS pladix.ancilla.ca(rw,all_squash,anonuid=1000,anongid=100)
-      # /ancilla/media (ro,all_squash,anonuid=1000,anongid=100)
-      # *.ancilla.ca doesn't work reliably with machines that connect from both wifi and ethernet
-      # e.g. with pladix, dig returns the wifi address but it connects over ethernet
-      # TODO: fix this
-      #/ancilla          *.ancilla.ca(rw,crossmnt,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
-      /ancilla          192.168.1.0/24(rw,crossmnt,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
-      /home/alex        192.168.1.0/24(rw,crossmnt,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
-      /backup/hass      192.168.1.0/24(rw,no_subtree_check,root_squash,anongid=${toString config.users.groups.users.gid})
-    '';
-      # /ancilla/installs 192.168.86.0/24(rw,crossmnt,no_subtree_check)
-      # /ancilla/media
-      # /home      192.168.86.0/24(rw,crossmnt,no_subtree_check)
+    exports = (concatStringsSep "\n" (map mkexport exports));
   };
 }
