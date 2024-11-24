@@ -21,6 +21,11 @@ let
   '';
 in {
   networking.firewall.allowedTCPPorts = [ 4949 ];  # munin-node
+
+  # If the login times out, kmscon doesn't properly reap the zombie login
+  # process and the entire vt hangs :(
+  security.loginDefs.settings.LOGIN_TIMEOUT = 0;
+
   services = {
     fstrim.enable = true;
 
