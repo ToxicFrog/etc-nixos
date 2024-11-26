@@ -23,7 +23,8 @@ in {
     process.user = "munin";
     process.group = "nogroup";
     socket.user = "munin";
-    socket.group = "nogroup";
+    socket.group = "nginx";
+    socket.mode = "0660";
   };
   services.nginx.virtualHosts."ancilla.ancilla.ca".locations = {
     "/munin/static/".alias = "/srv/www/munin/static/";
