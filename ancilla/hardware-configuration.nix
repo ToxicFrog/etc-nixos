@@ -5,6 +5,21 @@
 
 let
   zfs = dataset: { device = dataset; fsType = "zfs"; };
+  # Map of disk path to human-readable location. These will be created as
+  # symlinks in /dev/disk/by-location.
+  # Wildcards are allowed but if more than one disk matches it's undefined
+  # which one wins.
+  diskLocations = {
+    "pci-0000:10:00.0-nvme-1" = "internal-nvme";
+    "pci-0000:31:00.0-ata-1.0"  = "internal-m2";
+    "pci-0000:16:00.1-ata-1.0"  = "internal-sata-LR";
+    "pci-0000:16:00.1-ata-2.0"  = "internal-sata-UR";
+    "pci-0000:16:00.1-ata-5.0"  = "internal-sata-LL";
+    "pci-0000:16:00.1-ata-6.0"  = "internal-sata-UL";
+    "pci-0000:30:00.4-usb-0:2:1.0-scsi-0:0:0:0" = "external-backup-R";
+    "pci-0000:30:00.4-usb-0:2:1.0-scsi-0:0:0:1" = "external-backup-L";
+    "pci-0000:30:00.3-usb-0:2:1.0-scsi-0:0:0:0" = "external-frontpanel";
+  };
 in {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
@@ -38,4 +53,12 @@ in {
   swapDevices = [
     { device = "/dev/disk/by-label/nvme-swap-64"; }
   ];
+
+  # Friendly names for by-path disk locations.
+  services.udev.extraRules = with lib; ''
+    ${concatStrings
+        (mapAttrsToList
+          (k: v: "SUBSYSTEM==\"block\", ENV{ID_PATH}==\"${k}\", ENV{DEVTYPE}!=\"partition\", SYMLINK+=\"disk/by-location/${v}\"\n")
+          diskLocations)}
+  '';
 }
