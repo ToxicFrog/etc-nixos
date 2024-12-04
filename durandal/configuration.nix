@@ -33,10 +33,37 @@
   programs.steam.enable = true;
   virtualisation.waydroid.enable = false;
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "electron-11.5.0"  # needed for itch.io client
+  ];
+
   environment.systemPackages = with pkgs; [
-    # digikam
+    unstable.alephone
+    unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
+    unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
+    antimicroX  # controller support for kb-only games
+    caffeine-ng
+    crossfire-jxclient crossfire-editor
+    digikam
+    dosbox unstable.dosbox-staging dialog
+    fluidsynth soundfont-fluid
+    unstable.gzdoom udb-editor doomrunner
+    #untable.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
+    heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
+    unstable.knossosnet  # Freespace
+    unstable.pcsx2
+    (retroarch.override {
+      cores = with libretro; [
+        dolphin mgba beetle-psx beetle-psx-hw bsnes-hd snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
+      ];})
+    unstable.rpcs3 unstable.ryujinx
+    scanmem  # cheats
+    scummvm
+    steam.run steam
+    stepmania
     syncthing qsyncthingtray
     vscode
+    wine
     yakuake
   ];
 
@@ -65,4 +92,3 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 }
-

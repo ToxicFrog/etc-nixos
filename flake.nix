@@ -73,7 +73,7 @@
         };
     in {
       ancilla = mkSystem [ ./shared/bex-packages.nix ./ancilla/configuration.nix ];
-      durandal = mkSystem [ ./shared/graphical.nix ./shared/alex-gaming.nix ./durandal/configuration.nix ];
+      durandal = mkSystem [ ./shared/graphical.nix ./durandal/configuration.nix ];
       thoth = mkSystem [ ./shared/graphical.nix ./shared/bex-packages.nix ./thoth/configuration.nix ];
       thoth-installer = mkSystem [
         ./shared/graphical.nix
