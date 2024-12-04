@@ -47,6 +47,7 @@
 
   # Shared directories on /ancilla that should be writeable by anyone even if
   # someone else created subdirectories.
+  # FIXME: this runs before zpool import does, so it doesn't work at boot time
   users.groups.parents = {};
   system.activationScripts.shared-directory-acls = with pkgs; ''
     ${acl}/bin/setfacl --recursive -m 'd:g:parents:rwX,g:parents:rwX' /ancilla/documents
