@@ -2,15 +2,16 @@ self: super:
 
 let
   server-path = "/srv/doomrl";
-  src = /home/rebecca/devel/doomrl-server;
+  # src = /home/rebecca/devel/doomrl-server;
+  src = null;
 in {
   doomrl-server = self.stdenv.mkDerivation {
     name = "doomrl-server";
     src = if src != null then src else self.fetchFromGitHub {
       owner = "toxicfrog";
       repo = "doomrl-server";
-      rev = "6ad7e07cc8fe2b87b6492f00b4c354a2f0392654";
-      sha256 = "03cafza49cy02imc38zx4bfdkny3v7gfs4hgx7sarsbs4igk04qb";
+      rev = "10aaa4e6c3b0bf03301738a95ec361d453f11549";
+      hash = "sha256-5eW2Cy7qLXmFnH6l+Fo4XvAoIgYVibw6ki9aW3jahj0=";
     };
 
     nativeBuildInputs = with self; [gnumake git lua5_3];
