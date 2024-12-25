@@ -1,18 +1,18 @@
-{ stdenv, makeWrapper, gradle_6, jre, ffmpeg }:
+{ stdenv, makeWrapper, gradle, jre, ffmpeg }:
 
 stdenv.mkDerivation rec {
   name = "crossfire-jxclient";
-  version = "2023-06-23";
+  version = "2024-12-25";
 
   src = builtins.fetchGit {
     url = "https://git.code.sf.net/p/crossfire/jxclient";
     ref = "master";
-    rev = "fddc21e368b2f998d968169dc72d4b7ea747f8b0";
+    rev = "6c2f7d344ffaf7241d394810737408fa608f495b";
     submodules = true;
     shallow = true;
   };
 
-  nativeBuildInputs = [ gradle_6 makeWrapper ffmpeg ];
+  nativeBuildInputs = [ jre gradle makeWrapper ffmpeg ];
 
   buildPhase = ''
     gradle :createJar
