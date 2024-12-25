@@ -62,6 +62,7 @@
     crossfire-jxclient crossfire-editor
     digikam
     gargoyle
+    gimp
     unstable.gzdoom udb-editor
     love
     (retroarch.override {
