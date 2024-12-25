@@ -57,13 +57,22 @@
       nixpkgsConfig = {
         allowUnfree = true;
         permittedInsecurePackages = [
+          "electron-11.5.0"  # needed for itch.io client
+          "gradle-6.9.4"  # needed to build jxclient and cfedit -- TODO update to gradle 7 or 8
           "olm-3.2.16"  # needed by ancilla mautrix bridges
+          "qbittorrent-nox-4.6.4" # RCE vuln in the autoupdater, not applicable to nixos
+          "dotnet-sdk-6.0.428" # EOL, TODO: figure out what uses this
+          "dotnet-runtime-6.0.36" # ditto
         ];
       };
       mkSystem = extraModules:
         nixos.lib.nixosSystem rec {
           system = "x86_64-linux";
-          modules = [ ./shared/common.nix lix-module.nixosModules.default ] ++ extraModules;
+          modules = [
+            { nixpkgs.config = nixpkgsConfig; }
+            ./shared/common.nix
+            lix-module.nixosModules.default
+          ] ++ extraModules;
           specialArgs = {
             inherit inputs;
             unstable = (import nixos-unstable { inherit system; config = nixpkgsConfig; }).pkgs;

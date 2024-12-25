@@ -49,8 +49,4 @@
     #libsForQt5.phonon-backend-vlc
     #libsForQt5.phonon-backend-gstreamer gst-plugins-good gst-plugins-ugly
   ];
-
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-11.5.0"  # needed for itch.io client
-  ];
 }

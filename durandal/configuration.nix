@@ -33,10 +33,6 @@
   programs.steam.enable = true;
   virtualisation.waydroid.enable = false;
 
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-11.5.0"  # needed for itch.io client
-  ];
-
   environment.systemPackages = with pkgs; [
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
