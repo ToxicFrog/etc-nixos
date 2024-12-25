@@ -23,6 +23,7 @@
     caffeine-ng # power control for retroarch
     antimicroX # controller support for keyboard-only games
     appimage-run # for gdlauncher
+    drl
     opentyrian
     unstable.knossosnet
     scanmem

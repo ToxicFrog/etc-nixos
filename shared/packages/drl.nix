@@ -48,7 +48,8 @@ let
   ];
   launcher = writeShellScript "drl-launcher" ''
     set -e
-    declare -r DRL="$(${coreutils}/bin/dirname "$(${coreutils}/bin/realpath $0)")/../opt/drl"
+    export PATH="''${PATH}:${coreutils}/bin"
+    declare -r DRL="$(dirname "$(realpath $0)")/../opt/drl"
     if ! [[ $DRL ]]; then
       >&2 echo "Error determining location of system DRL install!"
       exit 1
@@ -57,11 +58,13 @@ let
       >&2 echo "Setting up user files..."
     fi
 
-    mkdir -p ~/.config/drl/{backup,config,modules,mortem,screenshot}
-    cd ~/.config/drl
+    DRL_HOME="''${DRL_HOME:-$HOME/.config/drl}"
+
+    mkdir -p "$DRL_HOME"/{backup,config,modules,mortem,screenshot}
+    cd "$DRL_HOME"
     ln -sf -t . "$DRL"/*.wad "$DRL"/*.txt "$DRL"/drl "$DRL"/drl_* "$DRL"/{mp3,wavhq}
     cp -n -t . "$DRL"/*.lua
-    chmod u+w ~/.config/drl/*.lua
+    chmod u+w *.lua
     echo "Setup complete, launching DRL!"
 
     if [[ $DISPLAY ]]; then
