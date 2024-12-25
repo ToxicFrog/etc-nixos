@@ -10,6 +10,8 @@
 
   environment.systemPackages = with pkgs; [
     unstable.atuin
+    bat bat-extras.batdiff bat-extras.batman bat-extras.batwatch bat-extras.batgrep
+    # bat-extras.batpipe
     binutils  # for strings and nm
     btop
     unstable.chezmoi
@@ -24,6 +26,7 @@
     gnumake
     htop
     jre
+    jq
     luajit
     lshw
     man-pages
