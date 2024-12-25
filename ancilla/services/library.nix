@@ -61,7 +61,7 @@
     after = ["network-online.target" "local-fs.target"];
     requires = ["network-online.target" "local-fs.target"];
     script = ''
-      codex-venv/pip/codex
+      codex-venv/bin/codex
     '';
     environment = {
       # Needed so libmupdf, which comes with codex, can find libstd++.
