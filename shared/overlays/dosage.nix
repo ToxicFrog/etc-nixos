@@ -16,6 +16,7 @@ self: super:
           a cls("TheLastHuman", "challenge/the-last-human-in-a-crowded-galaxy", 403136),
           a cls("Asterion", "drama/asterion", 2471),
           a cls("Vowrune", "canvas/vowrune-gl", 430737),
+          a cls("Ophiuchus", "canvas/ophiuchus", 76808),
         }
       ' dosagelib/plugins/webtoons.py
     '';
