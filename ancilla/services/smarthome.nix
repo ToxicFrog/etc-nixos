@@ -105,6 +105,13 @@
         format      "48000:16:2"
         mixer_type  "software"
       }
+      audio_output {
+        type        "fifo"
+        name        "snapserver-music"
+        path        "/run/snapserver/music"
+        format      "48000:16:2"
+        mixer_type  "software"
+      }
     '';
   };
 }
