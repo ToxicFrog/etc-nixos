@@ -14,7 +14,7 @@
     libraries = with pkgs; [
       stdenv.cc.cc.lib libgcc.lib
       readline
-      zlib
+      zlib libz
       fuse
       nss
       openal
@@ -22,7 +22,7 @@
       freetype
       SDL SDL_ttf SDL_net SDL_gpu SDL_gfx SDL_sound SDL_mixer SDL_image
       SDL2 SDL2_ttf SDL2_net SDL2_gfx SDL2_sound SDL2_mixer SDL2_image
-      xorg.libX11 xorg.libXext xorg.libXcursor xorg.libXrandr
+      xorg.libX11 xorg.libXext xorg.libXcursor xorg.libXrandr xorg.libxcb
       libGL
     ];
   };

@@ -13,6 +13,7 @@
     bat bat-extras.batdiff bat-extras.batman bat-extras.batwatch bat-extras.batgrep
     # bat-extras.batpipe
     binutils  # for strings and nm
+    broot  # fast interactive directory search
     btop
     unstable.chezmoi
     dos2unix
@@ -32,7 +33,7 @@
     man-pages
     man-pages-posix
     micro
-    minimodem
+    minimodem  # data/file transfer over audio
     nb
     ncdu
     nvd
@@ -50,6 +51,7 @@
     usbutils
     wget
     xxd
+    yazi  # tty file manager/previewer
     zip
   ];
 }
