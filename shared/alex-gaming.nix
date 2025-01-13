@@ -21,7 +21,7 @@
     unstable.gamescope protonup-ng protonup-qt # gog/epic
     fluidsynth soundfont-fluid
     caffeine-ng # power control for retroarch
-    antimicroX # controller support for keyboard-only games
+    antimicrox # controller support for keyboard-only games
     appimage-run # for gdlauncher
     drl
     opentyrian
@@ -43,7 +43,7 @@
     # for exodos-ll
     unstable.dosbox-staging dialog
     # misc games
-    gnome.quadrapassel ltris lbreakout2
+    quadrapassel ltris lbreakout2
     vulkan-tools vulkan-loader
     love
     #libsForQt5.phonon-backend-vlc

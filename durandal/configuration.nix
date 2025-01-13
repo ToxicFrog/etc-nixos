@@ -37,7 +37,7 @@
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
     unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
-    antimicroX  # controller support for kb-only games
+    antimicrox  # controller support for kb-only games
     caffeine-ng
     crossfire-jxclient crossfire-editor
     digikam
@@ -63,7 +63,6 @@
     yakuake
   ];
 
-  sound.enable = true;
   security.rtkit.enable = true;
   services.pipewire.enable = true;
 

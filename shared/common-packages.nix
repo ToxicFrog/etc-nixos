@@ -30,6 +30,7 @@
     luajit
     lshw
     man-pages
+    man-pages-posix
     micro
     minimodem
     nb
@@ -37,7 +38,6 @@
     nvd
     unstable.nix-output-monitor
     p7zip
-    posix_man_pages
     python3
     ripgrep
     rlwrap

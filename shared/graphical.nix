@@ -5,9 +5,9 @@
 
 {
   hardware.bluetooth.enable = true;
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
-    driSupport32Bit = true;
+    enable32Bit = true;
   };
 
   # Enable X11 and KDEPlasma
@@ -30,7 +30,6 @@
   environment.sessionVariables.GTK_USE_PORTAL = "1";
 
   # Enable sound with pipewire.
-  sound.enable = true;
   hardware.pulseaudio = lib.mkDefault {
     enable = false;
     support32Bit = false;

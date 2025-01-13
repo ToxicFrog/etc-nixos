@@ -42,7 +42,6 @@
   services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
   services.desktopManager.plasma6.enable = true;
 
-  sound.enable = true;
   hardware.pulseaudio = lib.mkForce {
     enable = true;
     support32Bit = true;

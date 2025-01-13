@@ -6,7 +6,8 @@
   # in common-nix, these are also aliased to <nixpkgs> and <unstable> respectively,
   # as both channels and flakes.
   inputs = {
-    nixos.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixos.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixos-old.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     # nixpkgs-local.url = "/home/bex/devel/nixpkgs";  # TODO: doesn't work when bootstrapping
 
@@ -52,7 +53,7 @@
     };
   };
 
-  outputs = { self, nixos, nixos-unstable, lix-module, ... }@inputs: {
+  outputs = { self, nixos, nixos-old, nixos-unstable, lix-module, ... }@inputs: {
     nixosConfigurations = let
       nixpkgsConfig = {
         allowUnfree = true;
@@ -76,6 +77,7 @@
           specialArgs = {
             inherit inputs;
             unstable = (import nixos-unstable { inherit system; config = nixpkgsConfig; }).pkgs;
+            oldstable = (import nixos-old { inherit system; config = nixpkgsConfig; }).pkgs;
             factor-rewrap = (import inputs.nixpkgs-factor-rewrap { inherit system; config = nixpkgsConfig; }).pkgs;
             secrets = (import ./secrets/default.nix);
           };
