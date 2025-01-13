@@ -8,6 +8,7 @@ self: super:
   # golly = super.callPackage ../packages/golly.nix {};
   matrix2051 = super.callPackage ../packages/matrix2051.nix {};
   # pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
+  randovania = super.callPackage ../packages/randovania.nix {};
   sigal = super.callPackage ../packages/sigal.nix {};
   slashem9 = super.callPackage ../packages/slashem9/default.nix {};
   udb-editor = super.callPackage ../packages/ultimate-doombuilder.nix {};

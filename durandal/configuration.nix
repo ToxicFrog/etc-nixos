@@ -33,6 +33,17 @@
   programs.steam.enable = true;
   virtualisation.waydroid.enable = false;
 
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      input-overlay
+      obs-pipewire-audio-capture
+      obs-vkcapture
+      waveform
+      wlrobs
+    ];
+  };
+
   environment.systemPackages = with pkgs; [
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
@@ -46,8 +57,10 @@
     unstable.gzdoom udb-editor doomrunner
     #untable.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
     heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
+    itch
     unstable.knossosnet  # Freespace
     unstable.pcsx2
+    randovania
     (retroarch.override {
       cores = with libretro; [
         dolphin mgba beetle-psx beetle-psx-hw bsnes-hd snes9x gambatte pcsx2 nxengine ppsspp mupen64plus

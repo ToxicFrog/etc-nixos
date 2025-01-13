@@ -63,7 +63,9 @@
     gargoyle
     gimp
     unstable.gzdoom udb-editor
+    itch
     love
+    randovania
     (retroarch.override {
       cores = with libretro; [
         dolphin mgba
