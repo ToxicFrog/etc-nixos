@@ -7,6 +7,7 @@ self: super:
   etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
   # golly = super.callPackage ../packages/golly.nix {};
   matrix2051 = super.callPackage ../packages/matrix2051.nix {};
+  pcal = super.callPackage ../packages/pcal.nix {};
   # pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
   randovania = super.callPackage ../packages/randovania.nix {};
   sigal = super.callPackage ../packages/sigal.nix {};

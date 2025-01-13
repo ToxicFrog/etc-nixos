@@ -17,11 +17,12 @@
     grip-search
     hledger hledger-ui hledger-web
     kpcli
+    ledger-autosync
     leiningen
     lieer
     notmuch
     nox
-    ledger-autosync
+    pcal
     recode
     wring
     unstable.yt-dlp
