@@ -25,10 +25,10 @@
     firewall.enable = false;
   };
 
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "bex";
-  };
+  # services.displayManager.autoLogin = {
+  #   enable = true;
+  #   user = "bex";
+  # };
 
   programs.steam.enable = true;
   virtualisation.waydroid.enable = false;
