@@ -15,9 +15,9 @@ TARGET="$1"; shift
 
 case $1 in
   diff)
+    trap "rm -f /tmp/$$" EXIT
     nix build -o /tmp/$$ ".#nixosConfigurations.$TARGET.config.system.build.toplevel" |& nom
     nvd diff built/$TARGET /tmp/$$
-    rm /tmp/$$
     exit
     ;;
   *)
