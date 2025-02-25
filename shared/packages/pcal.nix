@@ -1,5 +1,4 @@
-{lib, stdenv, fetchurl, groff,
- wxGTK32-curl, perl, python3, zlib, libGLU, libGL, libX11, SDL2}:
+{lib, stdenv, fetchurl, groff}:
 
 stdenv.mkDerivation rec {
   pname = "pcal";
