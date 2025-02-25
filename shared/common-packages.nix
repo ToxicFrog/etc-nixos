@@ -22,6 +22,7 @@
     eza
     file
     findutils
+    fontfor # find which font has a given glyph in it; fontfor -t for ascii art
     unstable.fortune-kind
     gitFull git-crypt git-secrets gitui
     gnumake
@@ -49,6 +50,7 @@
     unrar
     unzip
     usbutils
+    visidata  # tui table editor
     wget
     xxd
     yazi  # tty file manager/previewer

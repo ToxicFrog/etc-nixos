@@ -44,6 +44,7 @@
 
   environment.systemPackages = with pkgs; [
     ark
+    appimage-run
     firefox
     git-cola
     kitty

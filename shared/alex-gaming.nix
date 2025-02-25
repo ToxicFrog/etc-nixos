@@ -14,9 +14,9 @@
 
   environment.systemPackages = with pkgs; [
     # for gaming
-    jre stepmania scummvm wine #itch
+    jre scummvm wine # itch itgmania
     steam.run steam
-    #table.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
+    #unstable.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
     heroic
     unstable.gamescope protonup-ng protonup-qt # gog/epic
     fluidsynth soundfont-fluid

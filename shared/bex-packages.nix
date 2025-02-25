@@ -6,11 +6,13 @@
 
 {
   environment.systemPackages = with pkgs; [
+    clojure leiningen
     csvkit
     expect
     inetutils # telnet
     pandoc # nb export
     poppler_utils # pdf manipulators
+    unstable.signal-desktop
     unstable.taskwarrior3
     vivid
     unstable.zig

@@ -57,6 +57,7 @@
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
     appimage-run
+    archipelago
     calibre
     crossfire-jxclient crossfire-editor
     digikam
