@@ -76,6 +76,18 @@
     yakuake
   ];
 
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5 = {
+      plasma6Support = true;
+      waylandFrontend = true;
+      addons = with pkgs; [
+        fcitx5-anthy fcitx5-mozc
+      ];
+    };
+  };
+
   security.rtkit.enable = true;
   services.pipewire.enable = true;
 
