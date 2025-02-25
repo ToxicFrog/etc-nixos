@@ -45,11 +45,11 @@
   };
 
   environment.systemPackages = with pkgs; [
-    unstable.alephone
-    unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
-    unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
     antimicrox  # controller support for kb-only games
+    apdoom
+    archipelago
     caffeine-ng
+    chromium # for rando nights over discord
     crossfire-jxclient crossfire-editor
     digikam
     dosbox unstable.dosbox-staging dialog
@@ -59,6 +59,7 @@
     heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
     itch
     unstable.knossosnet  # Freespace
+    love
     unstable.pcsx2
     randovania
     (retroarch.override {
@@ -69,7 +70,6 @@
     scanmem  # cheats
     scummvm
     steam.run steam
-    stepmania
     syncthing qsyncthingtray
     vscode
     wine
