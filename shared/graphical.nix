@@ -57,9 +57,17 @@
 
   fonts = {
     fontDir.enable = true;
-    enableDefaultPackages = true;
     enableGhostscriptFonts = true;
+    # embeddedbitmaps needs to be on for noto-color-emoji to work, and if it's
+    # installed firefox will ALWAYS try to use it regardless of other fontconfig
+    # configuration.
+    # If it's not installed FF will always prefer color emoji to B&W one, again
+    # regardless of FC settings.
+    fontconfig.useEmbeddedBitmaps = true;
     fontconfig.cache32Bit = true;
+    fontconfig.defaultFonts.emoji = lib.mkForce [
+      "Noto Sans Symbols 2" "Noto Emoji Regular" "Symbola" "Unifont Upper"
+    ];
     fontconfig.localConf = ''
       <selectfont>
         <rejectfont>
@@ -78,6 +86,16 @@
               <string>FreeSerif</string>
             </patelt>
           </pattern>
+          <!--
+            This can be used to disable noto color emoji if they cause problems.
+            This used to be necessary because without useEmbeddedBitmaps they
+            wouldn't render at all in most programs.
+          <pattern>
+            <patelt name="family">
+              <string>Noto Color Emoji</string>
+            </patelt>
+          </pattern>
+          -->
         </rejectfont>
       </selectfont>
     '';
@@ -89,6 +107,7 @@
       noto-fonts
       noto-fonts-cjk-sans
       noto-fonts-emoji
+      noto-fonts-monochrome-emoji
       symbola
       unifont
       unifont_upper
