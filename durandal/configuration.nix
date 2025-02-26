@@ -56,7 +56,14 @@
     fluidsynth soundfont-fluid
     unstable.gzdoom udb-editor doomrunner
     #untable.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
-    heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
+    # This is needed for Timespinner rando to work when launched from Heroic.
+    (writeShellScriptBin "heroic" ''
+      export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${mono}/lib"
+      rm -f ~/.config/mono/new-certs/Trust
+      ln -s "${mono}/share/.mono/new-certs/Trust" ~/.config/mono/new-certs/Trust
+      exec ${heroic}/bin/heroic
+    '')
+    unstable.gamescope protonup-ng protonup-qt # gog/epic
     itch
     unstable.knossosnet  # Freespace
     love
