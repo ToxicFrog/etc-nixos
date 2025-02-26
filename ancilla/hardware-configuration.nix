@@ -23,8 +23,6 @@ let
 in {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  sound.enable = true;
-
   services.zfs.autoScrub = {
     enable = true;
     interval = "*-*-01 01:15:00";

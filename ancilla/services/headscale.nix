@@ -9,10 +9,10 @@
     port = 8514;
     settings = {
       useRoutingFeatures = "server";
-      dns_config = {
-        base_domain = "ancilla.ca";
-        domains = [ "ancilla.ca" ];
-        nameservers = [ "192.168.1.1" ];
+      dns = {
+        base_domain = "tailnet.ancilla.ca";
+        search_domains = [ "ancilla.ca" ];
+        nameservers.global = [ "192.168.1.1" ];
         override_local_dns = true;
       };
       server_url = "https://headscale.ancilla.ca";

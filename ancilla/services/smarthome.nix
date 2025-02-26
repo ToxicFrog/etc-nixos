@@ -27,15 +27,12 @@
     ];
   };
 
-  services.nginx.upstreams.station = {
-    servers."station.ancilla.ca:8123" = {};
-  };
 
   services.nginx.virtualHosts."home.ancilla.ca" = {
     forceSSL = true;
     enableACME = true;
     locations."/" = {
-      proxyPass = "http://station/";
+      proxyPass = "http://station.ancilla.ca:8123/";
       proxyWebsockets = true;
     };
   };

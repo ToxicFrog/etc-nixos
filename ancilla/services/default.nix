@@ -172,15 +172,21 @@ in {
     ];
 
     openssh.ports = [ 22 2222 ];  # Workaround for Bell's busted-ass router firmware
-    openssh.settings = {
-      # Scanner only uses legacy key types, so we need to enable them here.
-      KexAlgorithms = lib.mkOptionDefault [
-        "diffie-hellman-group14-sha1"
-      ];
-      Macs = lib.mkOptionDefault [
-        "hmac-sha1"
-      ];
-    };
+    # openssh.settings = {
+    #   # Scanner only uses legacy key types, so we need to enable them here.
+    #   KexAlgorithms = lib.mkOptionDefault [
+    #     "diffie-hellman-group14-sha1"
+    #   ];
+    #   Macs = lib.mkOptionDefault [
+    #     "hmac-sha1"
+    #   ];
+    # };
+      # This turns out not to be allowed, we can't use Macs or KexAlgorithms
+      # inside a Match block
+      # To do this right we probably need a separate sshd running on a different port :/
+      # Match address 192.168.1.236
+      #   Macs +hmac-sha1
+      #   KexAlgorithms +diffie-hellman-group14-sha1
     openssh.extraConfig = ''
       PubkeyAcceptedKeyTypes +ssh-rsa
       HostKeyAlgorithms +ssh-rsa

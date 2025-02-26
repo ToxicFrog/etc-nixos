@@ -16,7 +16,7 @@ in {
       google-fonts
       gentium
       inconsolata-lgc
-      noto-fonts-emoji
+      # noto-fonts-emoji # causes problems when found by programs that aren't chrome
       symbola
       unifont
       unifont_upper

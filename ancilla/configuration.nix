@@ -58,11 +58,14 @@
 
   # TODO a lot of this should be moved to packages.nix
   environment.systemPackages = with pkgs; [
+    clojure leiningen
     digikam # for digitaglinktree
     dnsutils
+    doomrl
     dosage
     elinks
     # ipfs
+    ghostscript
     jq
     rsync
     jshon
@@ -71,15 +74,12 @@
     ncmpcpp
     tmuxinator
     lm_sensors
+    pcal
     qbittorrent-nox
+    timg tiv
     weechat
     # keybase keybase-gui # keybase chat
-    # notmuch alot gmailieer # mail reading
-    doomrl
-    timg tiv
-    clojure leiningen
   ];
 
-  sound.enable = true;
   users.users = secrets.users { inherit config pkgs; };
 }

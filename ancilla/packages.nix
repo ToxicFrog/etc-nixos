@@ -1,10 +1,10 @@
-{ pkgs, unstable, ... }:
+{ pkgs, unstable, oldstable, ... }:
 
 {
   #environment.extraOutputsToInstall = [ "doc" "devdoc" "man" ];
   environment.systemPackages = with pkgs; [
     abcde mkcue cdparanoia
-    alot
+    oldstable.alot # broken in 24.11 due to python gpg breakage: https://github.com/NixOS/nixpkgs/issues/354166
     atop
     # TODO: beancount
     beets-unstable

@@ -8,15 +8,15 @@
   networking.firewall.allowedUDPPorts = [ 137 138 ];
   services.samba = {
     enable = true;
-    extraConfig = ''
-    guest account = nobody
-    map to guest = Bad User
-    [homes]
-      browsable = no
-      writable = yes
-    '';
-    shares = {
-      # Current mountpoints.
+    settings = {
+      global = {
+        "guest account" = "nobody";
+        "map to guest" = "Bad User";
+      };
+      homes = {
+        browseable = "no";
+        writable = "yes";
+      };
       ancilla = {
         browseable = "yes";
         comment = "/ancilla";

@@ -58,6 +58,11 @@ in {
     ];
   };
 
+  services.mpd = {
+    musicDirectory = "/ancilla/media/music/.srv";
+    playlistDirectory = "/ancilla/media/music/Playlists";
+  };
+
   services.nginx.virtualHosts."music.ancilla.ca" = {
     forceSSL = true;
     enableACME = true;
@@ -190,10 +195,10 @@ in {
     # };
   };
 
-  sound.enable = true;
   services.pipewire.enable = false;
   hardware.pulseaudio.enable = false;
-  sound.extraConfig = ''
+  hardware.alsa.enablePersistence = true;
+  environment.etc."asound.conf".text = ''
     pcm.!default {
         type null
     }
