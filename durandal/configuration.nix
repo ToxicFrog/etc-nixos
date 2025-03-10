@@ -23,6 +23,7 @@
     domain = "ancilla.ca";
     networkmanager.enable = true;
     firewall.enable = false;
+    hostId = "c4262b23";
   };
 
   # services.displayManager.autoLogin = {
