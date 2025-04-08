@@ -7,6 +7,7 @@ let
   localpkgs = (import /home/bex/devel/nixpkgs {});
 in {
   imports = [
+    ../../secrets/scanner.nix
     ../munin/munin.nix
     ../munin/hugin.nix
     ./bittorrent.nix
@@ -172,29 +173,10 @@ in {
     ];
 
     openssh.ports = [ 22 2222 ];  # Workaround for Bell's busted-ass router firmware
-    # openssh.settings = {
-    #   # Scanner only uses legacy key types, so we need to enable them here.
-    #   KexAlgorithms = lib.mkOptionDefault [
-    #     "diffie-hellman-group14-sha1"
-    #   ];
-    #   Macs = lib.mkOptionDefault [
-    #     "hmac-sha1"
-    #   ];
-    # };
-      # This turns out not to be allowed, we can't use Macs or KexAlgorithms
-      # inside a Match block
-      # To do this right we probably need a separate sshd running on a different port :/
-      # Match address 192.168.1.236
-      #   Macs +hmac-sha1
-      #   KexAlgorithms +diffie-hellman-group14-sha1
-    openssh.extraConfig = ''
-      PubkeyAcceptedKeyTypes +ssh-rsa
-      HostKeyAlgorithms +ssh-rsa
-      Match user scanner
-        ForceCommand ${pkgs.openssh}/libexec/sftp-server
-        X11Forwarding no
-        AllowTcpForwarding no
-    '';
+    # openssh.extraConfig = ''
+    #   PubkeyAcceptedKeyTypes +ssh-rsa
+    #   HostKeyAlgorithms +ssh-rsa
+    # '';
     zfs.autoSnapshot = {
       # default settings keep:
       # - 4 15-minute snapshots
@@ -219,20 +201,6 @@ in {
       password = secrets.auth.msmtp.pass;
     };
   };
-
-  users.users.scanner = {
-    isSystemUser = true;
-    description = "ADS-1700W scanner receptron";
-    openssh.authorizedKeys.keys = [
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDujmZgyB8AO4rpcDokqM74EbD3Vm7gDvMHIliLzlWfqFEU3ItwkFQelHzYGDrZ/M9IE1jAvYjyZ7ylhyq/tYLmPkZMa42rzAO1yDRMy8dPC5g9kFFcswbFrqt4ExOlRgzdX/Dhz/zS6Fj46DpSBzfU7UWbBAR+gu5MVqUBo4ZY3QBmgj7Uhb1rTgPTIVSIlPUU/pPyXgA1FYgekcXP5Kl9Vpz6rNlDcnHBJNLr+X+fxKeidUSZRl+1rLwnlQTeWwscnCZpzPwfzLFc6bt6Tjtke0WxVKQI+q2D9jHxeF3Msw3iTioI05bDnkeYezd8azTcEGfqbt5IF79iUpJnRBF1 root@BR5CF3704E4CEA"
-      "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA1vSpVbx5fVJIK502nZl2ddk9VIbo7H06Up6eqk5brnFJG06gn9RtztFpIZaSUmDtdIlb9X0wSGGoiWGkwithc/79SvulOZD1X1DgNjjxIgXnNR1qlXm5ZjqjbWvL2NPKmyO7BP7IA1B0YkEj6sIQL7FWi7uIV/04qI/xSKPtGbhFtS+qoskv5p1GwhlJOuk3zKHJ7tue/CIiT8HEBl3OSGlQazItPOjLf4jkw7aE6Bl5pU8vbruUVry/SrXBo4AQw80H5Np6GCPrGj5eCDmsT4E+e5SZmaF414ih9YL6dtGXWWI2k13su9A3/OZ+UNx6Oz3iEoarkBPpap9VnhrbRQ== rebecca@thoth.ancilla.ca"
-    ];
-    home = "/ancilla/scans";
-    createHome = false;
-    useDefaultShell = true;
-    group = "scanner";
-  };
-  users.groups.scanner = {};
 
   # Crank the inotify limit waaaaay up there for syncthing.
   boot.kernel.sysctl = { "fs.inotify.max_user_watches" = 204800; };
