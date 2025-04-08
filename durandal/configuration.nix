@@ -48,14 +48,14 @@
   environment.systemPackages = with pkgs; [
     antimicrox  # controller support for kb-only games
     apdoom
-    archipelago
+    unstable.archipelago
     caffeine-ng
     chromium # for rando nights over discord
     crossfire-jxclient crossfire-editor
     digikam
     dosbox unstable.dosbox-staging dialog
     fluidsynth soundfont-fluid
-    unstable.gzdoom udb-editor doomrunner
+    unstable.gzdoom udb-editor doomrunner unstable.slade
     #untable.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
     # This is needed for Timespinner rando to work when launched from Heroic.
     (writeShellScriptBin "heroic" ''

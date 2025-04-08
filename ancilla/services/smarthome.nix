@@ -28,11 +28,12 @@
   };
 
 
+  # 192.168.1.203 == station.ancilla.ca
   services.nginx.virtualHosts."home.ancilla.ca" = {
     forceSSL = true;
     enableACME = true;
     locations."/" = {
-      proxyPass = "http://station.ancilla.ca:8123/";
+      proxyPass = "http://192.168.1.203:8123/";
       proxyWebsockets = true;
     };
   };

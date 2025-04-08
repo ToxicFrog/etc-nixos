@@ -32,6 +32,7 @@
     ];
   };
   networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  networking.firewall.allowedUDPPorts = [41641];
 
   services.displayManager.defaultSession = "plasma";
   services.displayManager.autoLogin = {
@@ -57,13 +58,13 @@
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
     appimage-run
-    archipelago
+    unstable.archipelago
     calibre
     crossfire-jxclient crossfire-editor
     digikam
     gargoyle
     gimp
-    unstable.gzdoom udb-editor
+    unstable.gzdoom udb-editor unstable.slade
     itch
     love
     randovania
