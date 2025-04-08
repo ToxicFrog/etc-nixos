@@ -2,18 +2,18 @@ self: super:
 
 {
   # Simple packages
-  apdoom = super.callPackage ../packages/apdoom.nix {};
-  doomrl = super.callPackage ../packages/doomrl.nix {};
-  drl = super.callPackage ../packages/drl.nix {};
+  apdoom = super.callPackage ./packages/apdoom.nix {};
+  doomrl = super.callPackage ./packages/doomrl.nix {};
+  drl = super.callPackage ./packages/drl.nix {};
   etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
-  # golly = super.callPackage ../packages/golly.nix {};
-  matrix2051 = super.callPackage ../packages/matrix2051.nix {};
-  pcal = super.callPackage ../packages/pcal.nix {};
-  # pgvecto-rs = super.callPackage ../packages/pgvecto-rs.nix {};
-  randovania = super.callPackage ../packages/randovania.nix {};
-  sigal = super.callPackage ../packages/sigal.nix {};
-  slashem9 = super.callPackage ../packages/slashem9/default.nix {};
-  udb-editor = super.callPackage ../packages/ultimate-doombuilder.nix {};
+  # golly = super.callPackage ./packages/golly.nix {};
+  matrix2051 = super.callPackage ./packages/matrix2051.nix {};
+  pcal = super.callPackage ./packages/pcal.nix {};
+  # pgvecto-rs = super.callPackage ./packages/pgvecto-rs.nix {};
+  randovania = super.callPackage ./packages/randovania.nix {};
+  sigal = super.callPackage ./packages/sigal.nix {};
+  slashem9 = super.callPackage ./packages/slashem9/default.nix {};
+  udb-editor = super.callPackage ./packages/ultimate-doombuilder.nix {};
 
   # Actual overrides
   # TODO: replace this with gonic if and when I can.

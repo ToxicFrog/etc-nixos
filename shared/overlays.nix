@@ -24,7 +24,7 @@
     # import breaks in spooky and confusing ways otherwise.
     # TODO: figure out wtf is going on there.
     (final: prev: {
-      mstream = prev.callPackage ./packages/mstream.nix { source = inputs.mstream; };
+      mstream = prev.callPackage ./overlays/packages/mstream.nix { source = inputs.mstream; };
     })
   ];
 }
