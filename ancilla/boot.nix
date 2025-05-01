@@ -31,7 +31,6 @@
     initrd.availableKernelModules = [
       "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" "rtsx_pci_sdmmc"
     ];
-    extraModulePackages = [ pkgs.linuxPackages.netatop ];
 
     postBootCommands = ''
       echo "=== STARTING ZPOOL IMPORT ==="
