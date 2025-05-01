@@ -64,6 +64,8 @@
           "qbittorrent-nox-4.6.4" # RCE vuln in the autoupdater, not applicable to nixos
           "dotnet-sdk-6.0.428" # EOL, TODO: figure out what uses this
           "dotnet-runtime-6.0.36" # ditto
+          "freeimage-3.18.0-unstable-2024-04-18" # needed by slade
+          "freeimage-unstable-2021-11-01" # ditto
         ];
       };
       mkSystem = extraModules:

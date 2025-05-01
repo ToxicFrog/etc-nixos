@@ -64,7 +64,7 @@
     digikam
     gargoyle
     gimp
-    unstable.gzdoom udb-editor unstable.slade
+    unstable.gzdoom udb-editor slade
     itch
     love
     randovania

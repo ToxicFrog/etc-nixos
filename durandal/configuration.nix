@@ -55,7 +55,7 @@
     digikam
     dosbox unstable.dosbox-staging dialog
     fluidsynth soundfont-fluid
-    unstable.gzdoom udb-editor doomrunner unstable.slade
+    unstable.gzdoom udb-editor doomrunner slade
     #untable.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
     # This is needed for Timespinner rando to work when launched from Heroic.
     (writeShellScriptBin "heroic" ''
@@ -66,6 +66,7 @@
       exec ${heroic}/bin/heroic
     '')
     unstable.gamescope protonup-ng protonup-qt # gog/epic
+    gimp
     itch
     unstable.knossosnet  # Freespace
     love
@@ -73,7 +74,8 @@
     randovania
     (retroarch.override {
       cores = with libretro; [
-        dolphin mgba beetle-psx beetle-psx-hw bsnes-hd snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
+        dolphin mgba beetle-psx beetle-psx-hw bsnes-hd gambatte pcsx2 nxengine ppsspp mupen64plus
+        bsnes-mercury-performance # for Archipelago
       ];})
     unstable.rpcs3 unstable.ryujinx
     scanmem  # cheats
