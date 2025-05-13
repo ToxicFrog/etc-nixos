@@ -71,5 +71,5 @@ self: super:
     };
     nativeBuildInputs = with self; [ cmake pkg-config ];
   });
-  yaft = super.yaft.overrideAttrs (_: { src = /home/bex/devel/devterm/yaft; }); # TODO: doesn't work when bootstrapping
+  # yaft = super.yaft.overrideAttrs (_: { src = /home/bex/devel/devterm/yaft; }); # TODO: doesn't work when bootstrapping
 }

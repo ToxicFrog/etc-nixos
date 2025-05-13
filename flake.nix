@@ -9,7 +9,8 @@
     nixos.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixos-old.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgs-local.url = "/home/bex/devel/nixpkgs";  # TODO: doesn't work when bootstrapping
+    nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+    # nixpkgs-local.url = "/home/bex/src/nixpkgs";  # TODO: doesn't work when bootstrapping
 
     # Nixpkgs patches
     nixpkgs-factor-rewrap.url = "github:spacefrogg/nixpkgs/factor-rewrap";
@@ -36,32 +37,17 @@
       url = "/home/bex/devel/doomrl-server";
       flake = false;
     };
-    crossfire-server = {
-      # url = "/home/bex/devel/crossfire-server";
-      url = "git+file:///home/bex/devel/crossfire-server/.git?ref=master";
-      flake = false;
-    };
-    crossfire-arch = {
-      # url = "/home/bex/devel/crossfire-arch";
-      url = "git+file:///home/bex/devel/crossfire-arch/.git";
-      flake = false;
-    };
-    crossfire-maps = {
-      url = "/home/bex/src/crossfire-maps";
-      # url = "git+file:///home/bex/src/crossfire-maps/.git";
-      flake = false;
-    };
   };
 
-  outputs = { self, nixos, nixos-old, nixos-unstable, lix-module, ... }@inputs: {
+  outputs = { self, nixos, nixos-old, nixos-unstable, nixos-unstable-small, lix-module, ... }@inputs: {
     nixosConfigurations = let
       nixpkgsConfig = {
         allowUnfree = true;
         permittedInsecurePackages = [
-          "electron-11.5.0"  # needed for itch.io client
-          "gradle-6.9.4"  # needed to build jxclient and cfedit -- TODO update to gradle 7 or 8
+          #"electron-11.5.0"  # needed for itch.io client
+          #"gradle-6.9.4"  # needed to build jxclient and cfedit -- TODO update to gradle 7 or 8
           "olm-3.2.16"  # needed by ancilla mautrix bridges
-          "qbittorrent-nox-4.6.4" # RCE vuln in the autoupdater, not applicable to nixos
+          #"qbittorrent-nox-4.6.4" # RCE vuln in the autoupdater, not applicable to nixos
           "dotnet-sdk-6.0.428" # EOL, TODO: figure out what uses this
           "dotnet-runtime-6.0.36" # ditto
           "freeimage-3.18.0-unstable-2024-04-18" # needed by slade
@@ -80,6 +66,7 @@
             inherit inputs;
             unstable = (import nixos-unstable { inherit system; config = nixpkgsConfig; }).pkgs;
             oldstable = (import nixos-old { inherit system; config = nixpkgsConfig; }).pkgs;
+            nixpkgs-head = (import nixos-unstable-small { inherit system; config = nixpkgsConfig; }).pkgs;
             factor-rewrap = (import inputs.nixpkgs-factor-rewrap { inherit system; config = nixpkgsConfig; }).pkgs;
             secrets = (import ./secrets/default.nix);
           };

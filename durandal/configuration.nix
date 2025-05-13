@@ -51,7 +51,7 @@
     unstable.archipelago
     caffeine-ng
     chromium # for rando nights over discord
-    crossfire-jxclient crossfire-editor
+    crossfire-jxclient crossfire-gridarta
     digikam
     dosbox unstable.dosbox-staging dialog
     fluidsynth soundfont-fluid

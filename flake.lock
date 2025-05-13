@@ -1,51 +1,5 @@
 {
   "nodes": {
-    "crossfire-arch": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1714231481,
-        "narHash": "sha256-MUYs+cProMvjqFrbv8WcV/lrT4PqHWeQzp3V9GTgkxs=",
-        "ref": "refs/heads/work",
-        "rev": "e3580bf469723bac333d18bb220fabb2ddd1a5f1",
-        "revCount": 2675,
-        "type": "git",
-        "url": "file:///home/bex/devel/crossfire-arch/.git"
-      },
-      "original": {
-        "type": "git",
-        "url": "file:///home/bex/devel/crossfire-arch/.git"
-      }
-    },
-    "crossfire-maps": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1698187266,
-        "narHash": "sha256-F38avqb9JJ3VxvdgcyoRG4mAjR8WkBM9srrvF9+Rv10=",
-        "path": "/home/bex/src/crossfire-maps",
-        "type": "path"
-      },
-      "original": {
-        "path": "/home/bex/src/crossfire-maps",
-        "type": "path"
-      }
-    },
-    "crossfire-server": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1685065934,
-        "narHash": "sha256-ivdHlS6VFI+cYwlbgQTZC/hEJYH0GbpqX4azNuc9WIs=",
-        "ref": "master",
-        "rev": "c2906c1ecaff8688575caf653310136515b1626b",
-        "revCount": 7842,
-        "type": "git",
-        "url": "file:///home/bex/devel/crossfire-server/.git"
-      },
-      "original": {
-        "ref": "master",
-        "type": "git",
-        "url": "file:///home/bex/devel/crossfire-server/.git"
-      }
-    },
     "doomrl-server": {
       "flake": false,
       "locked": {
@@ -197,16 +151,32 @@
     },
     "nixos-unstable": {
       "locked": {
-        "lastModified": 1743964447,
-        "narHash": "sha256-nEo1t3Q0F+0jQ36HJfbJtiRU4OI+/0jX/iITURKe3EE=",
+        "lastModified": 1746141548,
+        "narHash": "sha256-IgBWhX7A2oJmZFIrpRuMnw5RAufVnfvOgHWgIdds+hc=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "063dece00c5a77e4a0ea24e5e5a5bd75232806f8",
+        "rev": "f02fddb8acef29a8b32f10a335d44828d7825b78",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
         "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixos-unstable-small": {
+      "locked": {
+        "lastModified": 1746122609,
+        "narHash": "sha256-C+rTQHGJ0cqQ8kv02rKWuu4EhJHugSYnN61zMRfMKuw=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "a85a037d481695e6f16053c5b9079a8cb0d50d77",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable-small",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -229,9 +199,6 @@
     },
     "root": {
       "inputs": {
-        "crossfire-arch": "crossfire-arch",
-        "crossfire-maps": "crossfire-maps",
-        "crossfire-server": "crossfire-server",
         "doomrl-server": "doomrl-server",
         "lix-module": "lix-module",
         "mstream": "mstream",
@@ -239,6 +206,7 @@
         "nixos": "nixos",
         "nixos-old": "nixos-old",
         "nixos-unstable": "nixos-unstable",
+        "nixos-unstable-small": "nixos-unstable-small",
         "nixpkgs-factor-rewrap": "nixpkgs-factor-rewrap"
       }
     },

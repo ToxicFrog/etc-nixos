@@ -60,7 +60,7 @@
     appimage-run
     unstable.archipelago
     calibre
-    crossfire-jxclient crossfire-editor
+    crossfire-jxclient crossfire-gridarta
     digikam
     gargoyle
     gimp
