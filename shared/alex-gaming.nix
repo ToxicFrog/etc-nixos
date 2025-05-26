@@ -29,7 +29,7 @@
     scanmem
     # golly
     unstable.gzdoom udb-editor doomrunner
-    crossfire-jxclient crossfire-editor
+    crossfire-jxclient crossfire-gridarta
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
     unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
