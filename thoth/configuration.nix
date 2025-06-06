@@ -67,12 +67,13 @@
     unstable.gzdoom udb-editor slade
     itch
     love
+    openscad
     randovania
     (retroarch.override {
       cores = with libretro; [
         dolphin mgba
         pcsx-rearmed
-        mesen mesen-s snes9x
+        mesen mesen-s snes9x bsnes-mercury-performance
         gambatte nxengine ppsspp mupen64plus
       ];})
     steam steam.run unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic

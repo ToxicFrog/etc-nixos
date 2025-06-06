@@ -22,6 +22,7 @@
     lieer
     notmuch
     nox
+    mp3gain
     pcal
     recode
     wring
