@@ -27,6 +27,8 @@ in {
     # directories.
     (final: prev: {
       mstream = prev.callPackage ./overlays/packages/mstream.nix { source = inputs.mstream; };
+      polaris = prev.callPackage ./overlays/packages/polaris.nix {};
+      polaris-web = prev.callPackage ./overlays/packages/polaris-web.nix {};
       slade = unstable.slade;
       crossfire-jxclient = unstable.crossfire-jxclient;
       crossfire-gridarta = unstable.crossfire-gridarta;
