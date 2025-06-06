@@ -103,6 +103,10 @@ in {
       use_node_name no
       address localhost
 
+      [ancilla.ca;bex-ppc]
+      use_node_name yes
+      address ssh://bex-ppc:30014 -W localhost:4949
+
       [networking;crossfire.real-time.com]
       use_node_name no
       address localhost
@@ -178,7 +182,7 @@ in {
     # local network.
     # This is probably what's timing out.
     curl-wrapper = pkgs.writeShellScriptBin "curl" ''
-      exec ${pkgs.openssh}/bin/ssh www.ancilla.ca curl "$@"
+      exec ${pkgs.openssh}/bin/ssh bex-ppc curl "$@"
     '';
     http-prober-wrapper = pkgs.writeShellScriptBin "http_response" ''
       export PATH="${lib.makeBinPath [ curl-wrapper ]}:$PATH"
