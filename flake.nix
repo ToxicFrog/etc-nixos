@@ -44,7 +44,7 @@
       nixpkgsConfig = {
         allowUnfree = true;
         permittedInsecurePackages = [
-          #"electron-11.5.0"  # needed for itch.io client
+          "electron-33.4.11"  # needed for itch.io client
           #"gradle-6.9.4"  # needed to build jxclient and cfedit -- TODO update to gradle 7 or 8
           "olm-3.2.16"  # needed by ancilla mautrix bridges
           #"qbittorrent-nox-4.6.4" # RCE vuln in the autoupdater, not applicable to nixos

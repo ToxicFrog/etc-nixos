@@ -21,13 +21,6 @@ in
     extraEnvironment = {
       RUST_MIN_STACK = "16777216";
     };
-    package = unstable.matrix-conduit.overrideAttrs (old: {
-      patches = [ ./conduit-618.diff ]; #./conduit-logging.patch ];
-      postPatch = ''
-        sed -Ei 's,latest_database_version = 13,latest_database_version = 14,' src/database/mod.rs
-      '';
-        # sed -Ei 's,tracing_subscriber::fmt::Layer::new\(\),tracing_subscriber::fmt::Layer::new\(\).pretty\(\),' src/main.rs
-    });
     settings.global = {
       server_name = "ancilla.ca";
       address = "127.0.0.1";

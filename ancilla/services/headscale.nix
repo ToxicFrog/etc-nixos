@@ -44,6 +44,7 @@
   ];
 
   # Set up an edge router
+  networking.firewall.allowedUDPPorts = [41641];
   services.tailscale = {
     enable = true;
     useRoutingFeatures = "server";

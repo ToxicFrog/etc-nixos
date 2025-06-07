@@ -47,7 +47,6 @@
 
   environment.systemPackages = with pkgs; [
     antimicrox  # controller support for kb-only games
-    apdoom
     unstable.archipelago
     caffeine-ng
     chromium # for rando nights over discord
