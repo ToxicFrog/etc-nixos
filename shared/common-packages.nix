@@ -20,6 +20,7 @@
     drl
     dtrx
     eza
+    fd # fast find replacement
     file
     findutils
     fontfor # find which font has a given glyph in it; fontfor -t for ascii art
