@@ -31,7 +31,7 @@
       "--login-server=https://headscale.ancilla.ca"
     ];
   };
-  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+  # networking.firewall.trustedInterfaces = [ "tailscale0" ];
   networking.firewall.allowedUDPPorts = [41641];
 
   services.displayManager.defaultSession = "plasma";
@@ -71,10 +71,9 @@
     randovania
     (retroarch.override {
       cores = with libretro; [
-        dolphin mgba
-        pcsx-rearmed
-        mesen mesen-s snes9x bsnes-mercury-performance
-        gambatte nxengine ppsspp mupen64plus
+        dolphin mgba pcsx-rearmed
+        mesen-s bsnes-hd bsnes-mercury-performance
+        gambatte nxengine
       ];})
     steam steam.run unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
     syncthing qsyncthingtray
