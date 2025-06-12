@@ -252,6 +252,10 @@ in {
         env.sensors sensors -c /etc/sensors3.conf
         env.ignore_temp4 true
         env.volt_warn_percent 10
+        # TODO: this is really really noisy and frequently dips below 0.3V causing
+        # munin to freak out
+        env.ignore_in0 true
+
 
       [smart_*]
         user root
@@ -341,7 +345,7 @@ in {
       # thresholds are wrong
       set temp1_max 115
       set temp1_max_hyst 90
-      set in0_min 0.4
+      set in0_min 0.25
     ''
   ];
   systemd.services.lmsensors-load-thresholds = rec {
