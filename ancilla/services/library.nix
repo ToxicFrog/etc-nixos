@@ -52,9 +52,9 @@
   # The venv is initialized with:
   # $ virtualenv codex-venv
   # Codex is then installed with:
-  # $ codex-venv/bin/install codex
+  # $ codex-venv/bin/pip install codex
   # And then executed with:
-  # $ codex-venv/pip/codex
+  # $ codex-venv/bin/codex
   systemd.services.codex = {
     description = "codex comic server";
     wantedBy = ["multi-user.target"];
