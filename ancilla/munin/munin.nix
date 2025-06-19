@@ -55,6 +55,13 @@ in {
       '';
     };
   };
+  services.nginx.virtualHosts."localhost".locations."/nginx_status".extraConfig = ''
+    stub_status on;
+    access_log off;
+    allow 127.0.0.1;
+    allow ::1;
+    deny all;
+  '';
   # Munin master to collect and graph metrics.
   services.munin-cron = {
     enable = true;
@@ -201,6 +208,8 @@ in {
       file_age = "${inputs.munin-contrib}/plugins/disk/file_age";
       http_nanolathe_prusaconnect = ./plugins/http__prusaconnect;
       http_remote_response = "${http-prober-wrapper}/bin/http_response";
+      nginx_request = "${pkgs.munin}/lib/plugins/nginx_request";
+      nginx_status = "${pkgs.munin}/lib/plugins/nginx_status";
       #http_response = "${inputs.munin-contrib}/plugins/http/http_response";
       whois = ./plugins/whois;
       zpool_health = ./plugins/zpool_health;
@@ -212,6 +221,19 @@ in {
     # TODO: extraAutoPlugins should do this automatically in the module
     extraAutoPlugins = [
       "${inputs.munin-contrib}/plugins/zfs"
+    ];
+    disabledPlugins = [
+      "acpi"          # sensors_ works better
+      "cpuspeed"      # so noisy it's useless
+      "buddyinfo"     # don't care about memory fragmentation
+      "meminfo"       # duplicate of above
+      "diskstat_*"    # conflicts with diskstat
+      # "munin_stats"   # broken on NixOS
+      "port_*"        # don't care about this either
+      "proc"          # doesn't work
+      # "zfs_arcstats"  # doesn't support ZoL
+      "zpool_iostat"  # TODO: replace with per-pool rather than per-disk iostat
+      "zfs-filesystem-graph" # is actually a wildcard plugin and needs to be configured in extraPlugins
     ];
     extraPluginConfig = ''
       [df]
@@ -247,6 +269,9 @@ in {
         env.max_time 20
         env.short_label true
         env.follow_redirect false
+
+      [nginx*]
+        env.url http://localhost/nginx_status
 
       [sensors_*]
         env.sensors sensors -c /etc/sensors3.conf
@@ -286,19 +311,6 @@ in {
       [zpool_health]
         env.zpool ${pkgs.zfs}/bin/zpool
     '';
-    disabledPlugins = [
-      "acpi"          # sensors_ works better
-      "cpuspeed"      # so noisy it's useless
-      "buddyinfo"     # don't care about memory fragmentation
-      "meminfo"       # duplicate of above
-      "diskstat_*"    # conflicts with diskstat
-      "munin_stats"   # broken on NixOS
-      "port_*"        # don't care about this either
-      "proc"          # doesn't work
-      "zfs_arcstats"  # doesn't support ZoL
-      "zpool_iostat"  # TODO: replace with per-pool rather than per-disk iostat
-      "zfs-filesystem-graph" # is actually a wildcard plugin and needs to be configured in extraPlugins
-    ];
   };
   # concat with ${pkgs.lm-sensors}/etc/sensors3.conf
   environment.etc."sensors3.conf".text = builtins.concatStringsSep "\n" [
