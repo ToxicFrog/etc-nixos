@@ -1,0 +1,72 @@
+From 48b4e6e20cc564b7d08e13daec7e47fa65253e00 Mon Sep 17 00:00:00 2001
+From: Alex Kelly <alex@ancilla.ca>
+Date: Sun, 15 Jun 2025 18:31:16 -0400
+Subject: [PATCH] balance changes
+
+---
+ src/game.cpp | 7 +++++--
+ src/map.cpp  | 2 +-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/src/game.cpp b/src/game.cpp
+index 4680b8d..d664843 100644
+--- a/src/game.cpp
++++ b/src/game.cpp
+@@ -120,7 +120,7 @@ void game_t::set(game_types_t tp, skill_levels_t sk)
+ 		bolt_damage = 50;
+ 
+ 		// Enemies
+-		rock_health = 500;
++		rock_health = 250;
+ 		rock_damage = 20;
+ 		enemy_m_health = 2000;
+ 		bomb_delay = 12;
+@@ -141,7 +141,7 @@ void game_t::set(game_types_t tp, skill_levels_t sk)
+ 		bolt_damage = 45;
+ 
+ 		// Enemies
+-		rock_health = 1000;
++		rock_health = 500;
+ 		rock_damage = 30;
+ 		enemy_m_health = 2500;
+ 		bomb_delay = 10;
+@@ -155,6 +155,7 @@ void game_t::set(game_types_t tp, skill_levels_t sk)
+ 		stage_cleared_health_bonus = 25;
+ 
+ 		// Enemies
++		rock_health = 1500;
+ 		enemy_m_health = 3000;
+ 		bomb_delay = 8;
+ 		break;
+@@ -167,6 +168,7 @@ void game_t::set(game_types_t tp, skill_levels_t sk)
+ 		stage_cleared_health_bonus = 25;
+ 
+ 		// Enemies
++		rock_health = 1500;
+ 		enemy_m_health = 4000;
+ 		bomb_delay = 4;
+ 		break;
+@@ -180,6 +182,7 @@ void game_t::set(game_types_t tp, skill_levels_t sk)
+ 		stage_cleared_health_bonus = 10;
+ 
+ 		// Enemies
++		rock_health = 1500;
+ 		enemy_m_health = 5000;
+ 		bomb_delay = 1;
+ 		break;
+diff --git a/src/map.cpp b/src/map.cpp
+index 5242244..f4518aa 100644
+--- a/src/map.cpp
++++ b/src/map.cpp
+@@ -33,7 +33,7 @@ void KOBO_map::init(const KOBO_scene *s)
+ 	for(int i = 0; i < s->base_max; i++)
+ 		make_maze(s->base[i].x, s->base[i].y, s->base[i].h,
+ 				s->base[i].v);
+-	convert(s->ratio);
++	convert(std::min(s->ratio, 64));
+ }
+ 
+ void KOBO_map::clear()
+-- 
+2.47.2
+

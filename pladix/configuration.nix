@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, secrets, ... }:
+{ config, pkgs, lib, secrets, unstable, ... }:
 
 let
   users = secrets.users { inherit config pkgs; };
@@ -33,9 +33,9 @@ in {
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-1-2 --mode 1920x1080
   '';
-  services.xserver.displayManager.defaultSession = "plasmawayland";
+  services.displayManager.defaultSession = "plasmawayland";
 
-  services.xserver.displayManager.autoLogin = {
+  services.displayManager.autoLogin = {
     enable = true;
     user = "alex";
   };
@@ -104,7 +104,10 @@ in {
   programs.adb.enable = true;
   environment.systemPackages = with pkgs; [
     chromium  # ffmpeg/libavcodec is part of the common package set
+    unstable.gdlauncher-carbon
     golly
+    goxel
+    koboredux-free
     scrcpy  # for android stuff
     vscodium
   ];

@@ -40,6 +40,11 @@ self: super:
   ffmpegfs = super.callPackage ../packages/ffmpegfs.nix {
     ffmpeg = self.ffmpeg-vgz;
   };
+  koboredux-free = super.koboredux-free.overrideAttrs (old: {
+    patches = old.patches ++ [
+      ./kobo-balance-changes.patch
+    ];
+  });
   libgme-vgz = super.game-music-emu.overrideAttrs (old: {
     cmakeFlags = [ "-DENABLE_UBSAN=OFF" ];
     buildInputs = [ self.zlib ];
