@@ -2,7 +2,6 @@ self: super:
 
 {
   # Simple packages
-  apdoom = super.callPackage ./packages/apdoom.nix {};
   doomrl = super.callPackage ./packages/doomrl.nix {};
   drl = super.callPackage ./packages/drl.nix {};
   etcd = super.etcd_3_4; # TODO: try upgrading to latest stable (3.5)
@@ -16,15 +15,16 @@ self: super:
   udb-editor = super.callPackage ./packages/ultimate-doombuilder.nix {};
 
   # Actual overrides
-  # TODO: replace this with gonic if and when I can.
-  airsonic = super.airsonic.overrideAttrs (_: rec {
-    version = "11.0.2-kagemomiji";
-    name = "airsonic-advanced-${version}";
-    src = super.fetchurl {
-      url = "https://github.com/kagemomiji/airsonic-advanced/releases/download/11.0.2/airsonic.war";
-      sha256 = "PgErtEizHraZgoWHs5jYJJ5NsliDd9VulQfS64ackFo=";
+  dtrx = (super.dtrx.overrideAttrs (old: {
+    version = "8.5.3+git";
+
+    src = super.fetchFromGitHub {
+      owner = "dtrx-py";
+      repo = "dtrx";
+      rev = "fb61df037f5303e5e348c16e3afbc103a8568f35";
+      sha256 = "sha256-2O9pVgR4luGZmJWlMA3kwyT1hgnSqb/O50vcDksxTOo=";
     };
-  });
+  }));
   # TODO: add an overlay for calibre that adds the libcrypto dependency that ACSM import needs
   ffmpeg-vgz = (super.ffmpeg-full.overrideAttrs (old: {
     pname = "ffmpeg-vgz";

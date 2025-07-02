@@ -65,7 +65,8 @@
       "unstable=/etc/channels/nixos-unstable"
       # And these are additional NIX_PATH settings with no equivalent in the
       # flake registry.
-      "nixpkgs-overlays=/etc/nixos/shared/overlays"
+      # "nixpkgs-overlays=/etc/nixos/shared/overlays"
+      "nixpkgs-overlays=/etc/channels/overlays"
       "nixos-config=/etc/nixos/configuration.nix"
       "/nix/var/nix/profiles/per-user/root/channels"
     ];
@@ -76,5 +77,6 @@
   environment.etc."channels/nixpkgs".source = inputs.nixos.outPath;
   environment.etc."channels/nixos-unstable".source = inputs.nixos-unstable.outPath;
   environment.etc."channels/unstable".source = inputs.nixos-unstable.outPath;
+  environment.etc."channels/overlays".source = ./overlays;
   # environment.etc."channels/nixpkgs-local".source = inputs.nixpkgs-local.outPath; # TODO: doesn't work when bootstrapping
 }
