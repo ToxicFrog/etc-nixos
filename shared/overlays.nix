@@ -26,7 +26,6 @@ in {
     # unstable or other inputs need to go here, or be imported from files in other
     # directories.
     (final: prev: {
-      mstream = prev.callPackage ./overlays/packages/mstream.nix { source = inputs.mstream; };
       polaris = prev.callPackage ./overlays/packages/polaris.nix {};
       polaris-web = prev.callPackage ./overlays/packages/polaris-web.nix {};
       slade = unstable.slade;

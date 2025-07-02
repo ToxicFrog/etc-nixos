@@ -1,73 +1,26 @@
 # Configuration for music streaming.
-# At the moment this just means Airsonic, with streaming to the browser via the
-# web client and to mobile devices via Ultrasonic.
-# It may in the future include some sort of whole-home sound system using MPD
-# and SnapCast, or something.
+# This handles both out-of-the-house streaming to individual devices (via gonic
+# and polaris) and in-house streaming to speakers (via mpd and snapcast).
 
 { config, pkgs, lib, secrets, ... }:
 
 let
-  # include_extensions = (builtins.concatMap
-  #   (s: ["include_extensions=${s}" "include_extensions=${lib.strings.toUpper s}"])
-  #   ["ahx" "dbm" "gdm" "hvl" "imf" "it" "mo3" "mod" "mpc" "mptm" "mtm" "s3m" "umx" "vgm" "vgz" "xm"]);
-  include_extensions =
-    (lib.strings.concatStrings (lib.strings.intersperse ","
-      (builtins.concatMap
-        (s: ["${s}" "${lib.strings.toUpper s}"])
-        ["ahx" "dbm" "gdm" "hvl" "imf" "it" "mo3" "mod" "mpc" "mptm" "mtm" "s3m" "umx" "vgm" "vgz" "xm"])));
-  mstreamConfig = builtins.toJSON {
-    secret = "+UW1ciKs1J84FHdTUhaVlk/aJ4bOMlGJhA3cXxI+FK+xNK6AwKs7nPhYCGaA3h4m0mkwgVeCA86nomMziK9B96QmK3t/ZdEYPtUltVHrY5+sxOGT6qr7iFHh/CvAvF2Sk3cw03fxVT;+eJvSsIbh5i2vMyMVcI1NlbCy2hf5x8KE=";
-    port = 3003;
-    noUpload = true;
-    writeLogs = false;
-    folders = {
-      ancilla = { root = "/ancilla/media/music/.srv"; };
-      podcasts = { root = "/ancilla/media/music/Podcasts"; };
-      archive = { root = "/ancilla/media/music/ancilla-archive"; };
-      quetzalcoatl = { root = "/ancilla/media/music/quetzalcoatl"; };
-    };
-    storage = {
-      albumArtDirectory = "art";
-      dbDirectory = "db";
-      logsDirectory = "/var/log/mstream";
-    };
-    transcode = {
-      enabled = false;
-      ffmpegDirectory = "${pkgs.ffmpeg-vgz}/bin/";
-      defaultCodec = "opus";
-      defaultBitrate = "128k";
-    };
-    users = secrets.auth.mstream;
-  };
-  mstreamConfigFile = pkgs.writeText "mstream.conf.json" mstreamConfig;
 in {
-  users.users.airsonic.createHome = lib.mkForce false;
-
-  # DLNA
-  # networking.firewall.allowedTCPPorts = [1900 1901 4041];
-  # networking.firewall.allowedUDPPorts = [1900 1901 4041];
-
-  services.airsonic = {
-    enable = true;
-    maxMemory = 4096;
-    jre = pkgs.jdk17;
-    home = "/srv/airsonic";
-    transcoders = [
-      "${pkgs.ffmpeg-vgz}/bin/ffmpeg"
-      "${pkgs.ffmpeg-vgz}/bin/ffprobe"
-    ];
-  };
-
-  services.mpd = {
-    musicDirectory = "/ancilla/media/music/.srv";
-    playlistDirectory = "/ancilla/media/music/Playlists";
-  };
-
+  # Out-of-the-house configuration.
+  #
+  # Polaris, on music.ancilla.ca, serves a web interface that can be used to
+  # play music in the browser. This is the most convenient way to use it from a
+  # desktop or laptop.
+  #
+  # Gonic, on music.ancilla.ca/gonic, serves a Subsonic-compatible API suitable
+  # for use by Subsonic/OpenSubsonic clients. I use this to listen to music on
+  # my phone via Ultrasonic, which, while a bit clunky, supports the critical
+  # feature of downloading music for offline listening.
   services.nginx.virtualHosts."music.ancilla.ca" = {
     forceSSL = true;
     enableACME = true;
     locations."/" = {
-      proxyPass = "http://127.0.0.1:4040/";
+      proxyPass = "http://127.0.0.1:3003/";
       proxyWebsockets = true;
       extraConfig = ''
         proxy_redirect          http:// https://;
@@ -81,57 +34,25 @@ in {
     };
     locations."/gonic/" = {
       proxyPass = "http://127.0.0.1:4747/";
+      proxyWebsockets = true;
     };
   };
 
-  users.users.mstream = {
-    isSystemUser = true;
-    description = "mstream service account";
-    home = "/var/lib/mstream";
-    group = "mstream";
-    createHome = true;
-  };
-  users.groups.mstream = {};
-  # environment.etc."mstream.conf.json".text = mstreamConfig;
-
-  # mstream patch
-  # document.querySelectorAll('div.dirz span.songDropdown').forEach(x => x.click())
-  # need to hook the addAll function, which only works on albums, not dirs
-  # and then in css
-  # div.song-button-box { height: 100% }
-  # div.song-button-box > span { height: 100% }
-  # div.song-button-box > span > svg { height: 100%; width: 75% }
-  # div.playlist-item { padding-top: 0.4em; padding-bottom: 0; }
-  # also want to add playlist index, song duration, and maybe album to the
-  # playlist display
-  # and rework the search screen so it doesn't have two confusing "search files"
-  # and "search in results" buttons right next to each other
-  systemd.services.mstream = {
-    description = "mStream music server";
-    wantedBy = ["multi-user.target"];
-    after = ["network-online.target" "local-fs.target"];
-    requires = ["network-online.target" "local-fs.target"];
-    script = ''
-      mkdir -p art db
-      cp -n ${mstreamConfigFile} mstream.conf.json || true
-      ${pkgs.mstream}/bin/mstream -j mstream.conf.json
-    '';
-    serviceConfig = {
-      User = "mstream";
-      Group = "mstream";
-      WorkingDirectory = "~";
-      Restart = "always";
-      RestartSec = "30";
+  services.polaris = {
+    enable = true;
+    port = 3003;
+    settings = {
+      reindex_every_n_seconds = 7*24*60*60; # weekly
+      album_art_pattern = "(cover|front|folder)\.(jpeg|jpg|png|bmp|gif)";
+      mount_dirs = [
+        { name = "ancilla"; source = "/ancilla/media/music/.srv"; }
+        { name = "podcasts"; source = "/ancilla/media/music/Podcasts"; }
+      ];
+      users = secrets.polaris.users;
     };
   };
-
-  # TODO: replace airsonic with gonic + mstream
-  # mstream uses / and /api for all its stuff
-  # the subsonic API served by gonic uses /rest, so we can host them both
-  # on the same domain by routing /rest to the gonic port and
-  # everything else to mstream
-  # though this may make it hard to access the gonic admin UI
-  # mstream's admin UI is at /admin, not sure where gonic's is
+  # Needed for 0.15.0 until the official update lands in nixpks
+  systemd.services.polaris.serviceConfig.WorkingDirectory = "/var/lib/polaris";
 
   systemd.services.gonic.serviceConfig.BindReadOnlyPaths = lib.mkForce [
     "-/etc/resolv.conf"
@@ -142,7 +63,6 @@ in {
     "/ancilla/media/music/Library"  # many of the files in the library are symlinks into this
   ];
   systemd.services.gonic.serviceConfig.BindPaths = [
-    "-/run/snapserver/music"
     config.services.gonic.settings.playlists-path
   ];
   systemd.services.gonic.after = ["network-online.target" "local-fs.target"];
@@ -153,48 +73,30 @@ in {
       "music-path" = [
         "/ancilla/media/music/.srv"
         "/ancilla/media/music/Podcasts"
-        # "/ancilla/media/music/ancilla-archives/library/albums"
+        "/ancilla/media/music/ancilla-archive/library"
       ];
-      "podcast-path" = "/var/empty";
+      "podcast-path" = "/var/empty"; # TODO: podcasts?
       "playlists-path" = "/ancilla/media/music/Playlists";
       "scan-at-start-enabled" = false;
       "scan-interval" = 60; # in minutes
       "scan-watcher-enabled" = true;
-      "jukebox-enabled" = true;
-      "jukebox-mpv-extra-args" = "--audio-channels=stereo --audio-samplerate=48000 --audio-format=s16 --ao=pcm --ao-pcm-file=/run/snapserver/music";
+      "jukebox-enabled" = false;
       "proxy-prefix" = "/gonic";
     };
   };
 
-  services.nginx.virtualHosts."staging.ancilla.ca" = {
-    # forceSSL = true;
-    # enableACME = true;
-    locations."/" = {
-      proxyPass = "http://127.0.0.1:3003/";
-      proxyWebsockets = true;
-    };
-    # locations."/" = {
-    #   root = "/srv/www/airsonic-refix/";
-    #   tryFiles = "$uri $uri/ /index.html";
-    # };
-    locations."/gonic/" = {
-      proxyPass = "http://127.0.0.1:4747/";
-    };
-    # locations."/rest/" = {
-    #   proxyPass = "http://127.0.0.1:4040/";
-    #   proxyWebsockets = true;
-    #   extraConfig = ''
-    #     proxy_redirect          http:// https://;
-    #     proxy_read_timeout      600s;
-    #     proxy_send_timeout      600s;
-    #     proxy_buffering         off;
-    #     proxy_request_buffering off;
-    #     #proxy_set_header        Host $host;
-    #     client_max_body_size    0;
-    #   '';
-    # };
-  };
-
+  # In-house music.
+  #
+  # This is done via Snapcast. Internally, it listens to a fifo, which other
+  # things can feed music to; over in smarthome.nix there's also configuration
+  # for an "announcements fifo" which takes precedence over the music one, for
+  # TTS traffic.
+  #
+  # To actually get music playing, and control the snapnet, we run the web UI
+  # on snapcast.ancilla.ca (accessible only from inside the lan) and the MPD
+  # frontend mympd on snapcast.ancilla.ca/mpd. Anything you play on mpd (via
+  # that frontend or via other clients like ncmpcpp) goes to the music fifo and
+  # thence to the snapserver.
   services.pipewire.enable = false;
   hardware.pulseaudio.enable = false;
   hardware.alsa.enablePersistence = true;
@@ -204,22 +106,78 @@ in {
     }
   '';
 
-  services.mopidy = {
+  services.snapserver = {
     enable = true;
-    extensionPackages = with pkgs; [ mopidy-mpd mopidy-subidy ];
-    configuration = ''
-      [subidy]
-      enabled = true
-      url = https://music.ancilla.ca/gonic
-      username = ${secrets.auth.subsonic.bex.user}
-      password = ${secrets.auth.subsonic.bex.pass}
+    openFirewall = true;
+    tcp.enable = true;
+    http.enable = true;
+    streams = {
+      # Used for mopidy/mpd local music playback.
+      music = {
+        type = "pipe";
+        location = "/run/snapserver/music";
+        sampleFormat = "48000:16:2";
+        query.codec = "flac";
+        query.dryout_ms = "1000";
+      };
+    };
+  };
 
-      [mpd]
-      enabled = true
-      port = 6601
+  systemd.services.snapclient = {
+    requires = [ "snapserver.service" ];
+    after = [ "snapserver.service" ];
+    wantedBy = [ "default.target" ];
+    serviceConfig = {
+      ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla -s sysdefault:CARD=SoundBar";
+      Restart = "always";
+      RestartSec = "60s";
+    };
+  };
 
-      [audio]
-      output = audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! wavenc ! filesink location=${config.services.snapserver.streams.music.location}
+  services.mpd = {
+    enable = true;
+    musicDirectory = "/ancilla/media/music/.srv";
+    # playlistDirectory = "/ancilla/media/music/Playlists/mpd";
+    extraConfig = ''
+      audio_output {
+        type "fifo"
+        name "snapcast"
+        format "48000:16:2"
+        mixer_type "software"
+        path "${config.services.snapserver.streams.music.location}"
+      }
     '';
   };
+  services.mympd = {
+    enable = true;
+    settings = {
+      http_port = 6008;
+      mympd_uri = "https://snapcast.ancilla.ca/mpd";
+    };
+  };
+
+  services.nginx.virtualHosts."snapcast.ancilla.ca" = {
+    forceSSL = false;
+    enableACME = false;
+    extraConfig = ''
+      # Internal LAN
+      deny 192.168.1.1;
+      allow 192.168.1.0/24;
+      # Tailscale
+      allow 100.64.0.2/24;
+      deny all;
+    '';
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:1780/";
+      proxyWebsockets = true;
+    };
+    locations."/mpd/" = {
+      proxyPass = "http://127.0.0.1:6008/";
+      proxyWebsockets = true;
+      extraConfig = ''
+        proxy_redirect / /mpd/;
+      '';
+    };
+  };
+
 }

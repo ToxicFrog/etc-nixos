@@ -4,14 +4,14 @@
 # Configuration for virt-manager overall is over in virtualization.nix.
 # This file contains the various ancillary services needed by hass outside
 # the VM, like the pubsub broker and audio sink.
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
-{
-  networking.firewall.allowedTCPPorts = [
-    1883 # MQTT
-    6600 # MPD
-  ];
-  networking.firewall.allowedUDPPorts = [1883];
+let
+  mqtt-ports = [1883];
+  dlna-ports = [1900 1901 4041 49494];
+in {
+  networking.firewall.allowedTCPPorts = mqtt-ports ++ dlna-ports;
+  networking.firewall.allowedUDPPorts = mqtt-ports ++ dlna-ports;
 
   # MQTT server
   # Currently not visible to the internet and does not require authentication.
@@ -27,7 +27,6 @@
     ];
   };
 
-
   # 192.168.1.203 == station.ancilla.ca
   services.nginx.virtualHosts."home.ancilla.ca" = {
     forceSSL = true;
@@ -39,26 +38,13 @@
   };
 
   services.snapserver = {
-    enable = true;
-    openFirewall = true;
-    tcp.enable = true;
-    http.enable = false;
     streams = {
       # Used for announcements from hass.
-      # TODO: see if we can push stuff from hass over TCP instead, rather than
-      # needing to generate a URL, send that to mpd, and then have mpd fetch
-      # the audio and push it into this pipe.
+      # This is fed by gmediarender, below, which receives play commands over
+      # DLNA.
       station = {
         type = "pipe";
         location = "/run/snapserver/station";
-        sampleFormat = "48000:16:2";
-        query.codec = "flac";
-        query.dryout_ms = "1000";
-      };
-      # Used for airsonic/gonic jukebox mode.
-      music = {
-        type = "pipe";
-        location = "/run/snapserver/music";
         sampleFormat = "48000:16:2";
         query.codec = "flac";
         query.dryout_ms = "1000";
@@ -73,54 +59,10 @@
     };
   };
 
-  systemd.services.snapclient = {
-    requires = [ "snapserver.service" ];
-    after = [ "snapserver.service" ];
-    serviceConfig = {
-      ExecStart = "${pkgs.snapcast}/bin/snapclient -h ancilla -s sysdefault:CARD=SoundBar";
-      Restart = "always";
-      RestartSec = "60s";
-    };
-  };
-
-  # MPD is used to remotely push audio to the snapserver. The curl input allows
-  # hass to send it a URL, at which point mpd will stream the URL, transcode it
-  # if needed, and send the data to the snapserver on the "station" channel.
-  systemd.services.mpd.requires = [ "snapserver.service" ];
-  systemd.services.mpd.after = [ "snapserver.service" ];
-  services.mpd = {
+  services.gmediarender = {
     enable = true;
-    network.listenAddress = "any";
-    extraConfig = ''
-      default_permissions "read,add,control"
-      input {
-        plugin "curl"
-      }
-      audio_output {
-        type        "fifo"
-        name        "snapserver"
-        path        "/run/snapserver/station"
-        format      "48000:16:2"
-        mixer_type  "software"
-      }
-      audio_output {
-        type        "fifo"
-        name        "snapserver-music"
-        path        "/run/snapserver/music"
-        format      "48000:16:2"
-        mixer_type  "software"
-      }
-    '';
   };
-}
+  systemd.services.gmediarender.serviceConfig.ExecStart = lib.mkForce
+    "${pkgs.gmrender-resurrect}/bin/gmediarender --logfile=stdout --friendly-name=station-dlna --gstout-audiopipe 'audioresample ! audioconvert ! audio/x-raw,rate=48000,channels=2,format=S16LE ! wavenc ! filesink location=/run/snapserver/station'";
 
-  # users.users.hass = {
-  #   isSystemUser = true;
-  #   description = "HomeAssistant";
-  #   home = "/var/lib/hass";
-  #   createHome = false;
-  #   group = "hass";
-  #   extraGroups = ["dialout" "audio" "video"];
-  #   uid = 286;
-  # };
-  # users.groups.hass = { gid = 286; };
+}

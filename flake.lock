@@ -83,23 +83,6 @@
         "url": "https://git.lix.systems/lix-project/nixos-module"
       }
     },
-    "mstream": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1714956161,
-        "narHash": "sha256-MBM7DeD664ommN56ZZkEGpGJg/YWcLXGT44oXke/hjk=",
-        "owner": "IrosTheBeggar",
-        "repo": "mstream",
-        "rev": "6488cd1db765d83f6a56172d6dbe6276fbdd8042",
-        "type": "github"
-      },
-      "original": {
-        "owner": "IrosTheBeggar",
-        "ref": "v5.12.2",
-        "repo": "mstream",
-        "type": "github"
-      }
-    },
     "munin-contrib": {
       "flake": false,
       "locked": {
@@ -201,7 +184,6 @@
       "inputs": {
         "doomrl-server": "doomrl-server",
         "lix-module": "lix-module",
-        "mstream": "mstream",
         "munin-contrib": "munin-contrib",
         "nixos": "nixos",
         "nixos-old": "nixos-old",
