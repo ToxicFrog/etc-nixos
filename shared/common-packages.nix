@@ -25,7 +25,7 @@
     findutils
     fontfor # find which font has a given glyph in it; fontfor -t for ascii art
     unstable.fortune-kind
-    gitFull git-crypt git-secrets gitui
+    gitFull git-crypt git-secrets gitui git-interactive-rebase-tool
     gnumake
     htop
     jre
@@ -46,6 +46,7 @@
     rlwrap
     sshfs sshfs-fuse
     stdmanpages
+    (tic-80.override { withPro = true; })
     tmux
     tree
     unrar
