@@ -72,7 +72,16 @@ in
     };
   };
 
-  systemd.services.mautrix-googlechat = {
+  # The gchat bridge depends on the python cgi module, which is deprecated, and
+  # removed entirely in python3.13. For now we just use python3.12 for it, but
+  # at some point we should add python3Packages.cgi-legacy to its closure as
+  # an explicit dependency.
+  systemd.services.mautrix-googlechat = let
+    mautrix-googlechat = unstable.mautrix-googlechat.override { python3 = unstable.python312; };
+    #unstable.mautrix-googlechat.overrideAttrs (old: {
+    #  propagatedBuildInputs = old.propagatedBuildInputs ++ python3.pkgs.standard-cgi
+    #})
+  in {
     description = "Matrix-to-Googlechat puppeting bridge";
     wantedBy = ["multi-user.target"];
     wants = ["network-online.target" "conduit.service"];
@@ -80,7 +89,7 @@ in
     path = with pkgs; [ lottieconverter ];
     serviceConfig = {
       DynamicUser = "true";
-      ExecStart = "${unstable.mautrix-googlechat}/bin/mautrix-googlechat";
+      ExecStart = "${mautrix-googlechat}/bin/mautrix-googlechat";
       Restart = "on-failure";
       RestartSec = "30s";
       StateDirectory = "mautrix-googlechat";

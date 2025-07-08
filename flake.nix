@@ -7,9 +7,7 @@
   # as both channels and flakes.
   inputs = {
     nixos.url = "github:NixOS/nixpkgs/nixos-24.11";
-    nixos-old.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixos-unstable-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
     # nixpkgs-local.url = "/home/bex/src/nixpkgs";  # TODO: doesn't work when bootstrapping
 
     # Nixpkgs patches
@@ -35,7 +33,7 @@
     };
   };
 
-  outputs = { self, nixos, nixos-old, nixos-unstable, nixos-unstable-small, lix-module, ... }@inputs: {
+  outputs = { self, nixos, nixos-unstable, lix-module, ... }@inputs: {
     nixosConfigurations = let
       nixpkgsConfig = {
         allowUnfree = true;
@@ -61,8 +59,6 @@
           specialArgs = {
             inherit inputs;
             unstable = (import nixos-unstable { inherit system; config = nixpkgsConfig; }).pkgs;
-            oldstable = (import nixos-old { inherit system; config = nixpkgsConfig; }).pkgs;
-            nixpkgs-head = (import nixos-unstable-small { inherit system; config = nixpkgsConfig; }).pkgs;
             factor-rewrap = (import inputs.nixpkgs-factor-rewrap { inherit system; config = nixpkgsConfig; }).pkgs;
             secrets = (import ./secrets/default.nix);
           };

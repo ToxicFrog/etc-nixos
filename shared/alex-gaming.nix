@@ -35,7 +35,7 @@
     unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
     (retroarch.override {
       cores = with libretro; [
-        dolphin mgba beetle-psx beetle-psx-hw bsnes-hd snes9x gambatte pcsx2 nxengine ppsspp mupen64plus
+        dolphin mgba beetle-psx beetle-psx-hw bsnes-hd gambatte pcsx2 nxengine ppsspp mupen64plus
       ];})
     unstable.pcsx2
     # for dbgl

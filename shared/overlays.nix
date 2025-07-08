@@ -45,16 +45,6 @@ in {
         '';
         # hardeningDisable = [ "all" ];
       });
-      # gzdoom = unstable.gzdoom.overrideAttrs (oldAttrs: rec {
-      #   version = "4.14.1";
-      #   src = final.fetchFromGitHub {
-      #     owner = "ZDoom";
-      #     repo = "gzdoom";
-      #     rev = "g4.14.1";
-      #     fetchSubmodules = true;
-      #     hash = "sha256-Hrqi2xpyMGcTJ2rI59EpcEtoJ+gCGmwEy+F396M3f/4=";
-      #   };
-      # });
     })
   ];
 }

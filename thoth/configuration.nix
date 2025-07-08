@@ -64,7 +64,7 @@
     digikam
     gargoyle
     gimp
-    unstable.gzdoom udb-editor slade
+    unstable.gzdoom udb-editor doomrunner unstable.sladeUnstable
     itch
     love
     openscad

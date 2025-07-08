@@ -54,7 +54,7 @@
     digikam
     dosbox unstable.dosbox-staging dialog
     fluidsynth soundfont-fluid
-    unstable.gzdoom udb-editor doomrunner slade
+    unstable.gzdoom udb-editor doomrunner unstable.sladeUnstable
     #untable.heroic.override { mesa = pkgs.mesa; }) # override for Mesa bug when stable/unstable Mesa are mixed in the same package
     # This is needed for Timespinner rando to work when launched from Heroic.
     (writeShellScriptBin "heroic" ''
