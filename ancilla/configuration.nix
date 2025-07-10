@@ -1,6 +1,6 @@
 # Configuration specific to ancilla.
 
-{ config, pkgs, lib, inputs, secrets, ... }:
+{ config, options, pkgs, lib, inputs, secrets, ... }:
 
 {
   imports = [
@@ -48,7 +48,6 @@
   # Shared directories on /ancilla that should be writeable by anyone even if
   # someone else created subdirectories.
   # FIXME: this runs before zpool import does, so it doesn't work at boot time
-  users.groups.parents = {};
   system.activationScripts.shared-directory-acls = with pkgs; ''
     ${acl}/bin/setfacl --recursive -m 'd:g:parents:rwX,g:parents:rwX' /ancilla/documents
     ${acl}/bin/setfacl --recursive -m 'd:g:parents:rwX,g:parents:rwX' /ancilla/projects
@@ -81,5 +80,5 @@
     # keybase keybase-gui # keybase chat
   ];
 
-  users.users = secrets.users { inherit config pkgs; };
+  users = (secrets.users { inherit config pkgs lib; }).ancilla;
 }

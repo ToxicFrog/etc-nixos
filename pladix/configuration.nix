@@ -4,9 +4,7 @@
 
 { config, pkgs, lib, secrets, unstable, ... }:
 
-let
-  users = secrets.users { inherit config pkgs; };
-in {
+{
   imports =
     [
       ./hardware-configuration.nix
@@ -21,14 +19,7 @@ in {
     networkmanager.enable = false;
   };
 
-  users.users = let
-    pladix-users = secrets.pladix { inherit pkgs; };
-  in {
-    root = users.root // pladix-users.root;
-    alex = users.alex;
-    bex = users.bex;
-    pladix = pladix-users.pladix;
-  };
+  users = (secrets.users { inherit config pkgs lib; }).pladix;
 
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-1-2 --mode 1920x1080
