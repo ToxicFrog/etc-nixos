@@ -16,14 +16,13 @@
     xkb.layout = "us";
     # Ctrl on capslock, alt is both alt and meta, compose is on left winkey
     xkb.options = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
-    desktopManager.plasma5.enable = lib.mkDefault true;
+    desktopManager.plasma6.enable = lib.mkDefault true;
     # libinput.enable = false;
   };
+  services.displayManager.defaultSession = "plasma";
   services.displayManager.sddm = {
     enable = true;
     autoNumlock = true;
-    # wayland.enable = true;
-    # settings.General.DisplayServer = "x11";
   };
   # Enable XDG desktop portal for GTK programs like VSCode, so that they will
   # use native (i.e. Qt) file pickers and stuff.
@@ -43,7 +42,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    ark
+    kdePackages.ark
     appimage-run
     firefox
     git-cola
@@ -111,7 +110,10 @@
       symbola
       unifont
       unifont_upper
-      (nerdfonts.override { fonts = [ "Cousine" "Hasklig" "NerdFontsSymbolsOnly" "FiraCode" ]; })
+      nerd-fonts.cousine
+      #nerd-fonts.hasklig
+      nerd-fonts.symbols-only
+      nerd-fonts.fira-code
     ];
   };
 }

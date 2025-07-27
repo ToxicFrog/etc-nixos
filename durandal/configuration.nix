@@ -69,11 +69,11 @@
     love
     unstable.pcsx2
     randovania
-    (retroarch.override {
-      cores = with libretro; [
+    (retroarch.withCores
+      (libretro: with libretro; [
         dolphin mgba beetle-psx beetle-psx-hw bsnes-hd gambatte pcsx2 nxengine ppsspp mupen64plus
         bsnes-mercury-performance # for Archipelago
-      ];})
+        ]))
     unstable.rpcs3 unstable.ryujinx
     scanmem  # cheats
     scummvm
@@ -81,7 +81,7 @@
     syncthing qsyncthingtray
     vscode
     wine
-    yakuake
+    kdePackages.yakuake
   ];
 
   i18n.inputMethod = {

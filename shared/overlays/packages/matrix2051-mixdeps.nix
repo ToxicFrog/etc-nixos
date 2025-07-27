@@ -101,12 +101,12 @@ let
 
     mochiweb = buildRebar3 rec {
       name = "mochiweb";
-      version = "2.22.0";
+      version = "3.2.2";
 
       src = fetchHex {
         pkg = "mochiweb";
         version = "${version}";
-        sha256 = "cbbd1fd315d283c576d1c8a13e0738f6dafb63dc840611249608697502a07655";
+        sha256 = "4114e51f1b44c270b3242d91294fe174ce1ed989100e8b65a1fab58e0cba41d5";
       };
 
       beamDeps = [];

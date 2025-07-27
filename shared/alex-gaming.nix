@@ -33,10 +33,11 @@
     unstable.alephone
     unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
     unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
-    (retroarch.override {
-      cores = with libretro; [
+    (retroarch.withCores
+      (libretro: with libretro; [
         dolphin mgba beetle-psx beetle-psx-hw bsnes-hd gambatte pcsx2 nxengine ppsspp mupen64plus
-      ];})
+        bsnes-mercury-performance # for Archipelago
+        ]))
     unstable.pcsx2
     # for dbgl
     swt dosbox gsettings-desktop-schemas

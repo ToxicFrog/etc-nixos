@@ -31,10 +31,11 @@
       "--login-server=https://headscale.ancilla.ca"
     ];
   };
-  # networking.firewall.trustedInterfaces = [ "tailscale0" ];
-  networking.firewall.allowedUDPPorts = [41641];
+  networking.firewall = {
+    allowedUDPPorts = [41641];
+    # trustedInterfaces = ["tailscale0"];
+  };
 
-  services.displayManager.defaultSession = "plasma";
   services.displayManager.autoLogin = {
     enable = true;
     user = "bex";
@@ -69,18 +70,18 @@
     love
     openscad
     randovania
-    (retroarch.override {
-      cores = with libretro; [
+    (retroarch.withCores
+      (libretro: with libretro; [
         dolphin mgba pcsx-rearmed
         mesen-s bsnes-hd bsnes-mercury-performance
         gambatte nxengine
-      ];})
+      ]))
     steam steam.run unstable.heroic unstable.gamescope protonup-ng protonup-qt # gog/epic
     syncthing qsyncthingtray
     unstable.prusa-slicer
     vscode
     vulkan-loader vulkan-tools
-    yakuake
+    kdePackages.yakuake
   ];
 
   i18n.inputMethod = {

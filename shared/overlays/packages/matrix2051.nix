@@ -7,7 +7,7 @@
 
 beamPackages.mixRelease rec {
   pname = "matrix2051";
-  version = "0.1.0-2ee9da0";
+  version = "0.1.0-e1ea865";
 
   # src = fetchFromGitHub {
   #   owner = "progval";
@@ -17,6 +17,11 @@ beamPackages.mixRelease rec {
   # };
   src = /home/bex/devel/matrix2051;
 
+  # Update with
+  # nix-shell -p elixir mix2nix beam.packages.erlang.hex
+  # mix deps.get
+  # cp mix.lock ~/devel/nix/shared/overlays/packages/matrix2051.lock
+  # mix2nix > ~/devel/nix/shared/overlays/packages/matrix2051-mixdeps.nix
   mixNixDeps = import ./matrix2051-mixdeps.nix {
     inherit beamPackages lib;
   };

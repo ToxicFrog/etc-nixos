@@ -33,15 +33,12 @@ in {
       enable = true;
       hwRender = true;
       fonts = [
-        { name = "Cousine Nerd Font Mono"; package = (pkgs.nerdfonts.override { fonts = [ "Cousine" ]; }); }
+        { name = "Cousine Nerd Font Mono"; package = pkgs.nerd-fonts.cousine; }
       ];
     };
 
     locate = {
       enable = true;
-      package = pkgs.plocate;
-      localuser = null;  # plocate always runs as root
-      pruneFS = options.services.locate.pruneFS.default ++ [ "fuse.ffmpegfs" ];
     };
 
     munin-node = {

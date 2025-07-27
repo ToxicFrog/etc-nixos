@@ -24,7 +24,6 @@
   services.xserver.displayManager.setupCommands = ''
     ${pkgs.xorg.xrandr}/bin/xrandr --output HDMI-1-2 --mode 1920x1080
   '';
-  services.displayManager.defaultSession = "plasmawayland";
 
   services.displayManager.autoLogin = {
     enable = true;

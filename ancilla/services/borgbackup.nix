@@ -44,7 +44,6 @@ let
       "/backup/borg"
       "/backup/cache"
     ];
-    startAt = ["*-*-* 02,04,06,13:01:00"];
     dateFormat = "+%Y%m%d";
     postCreate = ''
       echo "Updating info cache for $archiveName..."
@@ -74,12 +73,12 @@ let
         -o ro,workaround=rename,ServerAliveInterval=5,ServerAliveCountMax=5
       cd /mnt/backup
     '';
-    extraServiceConfig = {
-      # This will TERM after 3 hours and then KILL five minutes after that
-      # TODO: this doesn't address the issue where the lock is left held after KILL
-      TimeoutStartSec = 60*60*3;
-      TimeoutStopSec = 60*5;
-    };
+    # extraServiceConfig = {
+    #   # This will TERM after 3 hours and then KILL five minutes after that
+    #   # TODO: this doesn't address the issue where the lock is left held after KILL
+    #   TimeoutStartSec = 60*60*3;
+    #   TimeoutStopSec = 60*5;
+    # };
   } // removeAttrs opts ["host" "path" "touch"]);
   borg-rsync = {
       name, touch,
@@ -157,12 +156,12 @@ in {
     "funkyhorror" = borg-rsync {
       name = "funkyhorror";
       touch = ".borgbackup";
-      minAge = weekly;
+      startAt = "weekly";
     };
     "godbehere.ca" = borg-rsync {
       name = "godbehere.ca";
       touch = ".borgbackup";
-      minAge = weekly;
+      startAt = "weekly";
     };
     "grandriverallbreedrescue.ca" = borg-rsync {
       name = "GRABR.ca";
@@ -198,15 +197,4 @@ in {
       startAt = ["*-*-* 02,04,06,08,09,10,11,19,20,21:01:00"];
     };
   };
-  systemd.services = borg-ordering [
-    "ancilla"
-    "thoth"
-    "isis"
-    "pladix"
-    "lots-of-cats"
-    "durandal"
-    "godbehere.ca"
-    "grandriverallbreedrescue.ca"
-    "funkyhorror"
-  ];
 }

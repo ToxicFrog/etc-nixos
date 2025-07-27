@@ -314,7 +314,7 @@ in {
   };
   # concat with ${pkgs.lm-sensors}/etc/sensors3.conf
   environment.etc."sensors3.conf".text = builtins.concatStringsSep "\n" [
-    (builtins.readFile "${pkgs.lm_sensors}/etc/sensors3.conf")
+    (builtins.readFile "${pkgs.lm_sensors.out}/etc/sensors3.conf")
     ''
       chip "iwlwifi-*"
       label temp1 "WiFi"
@@ -357,7 +357,7 @@ in {
       # thresholds are wrong
       set temp1_max 115
       set temp1_max_hyst 90
-      set in0_min 0.25
+      set in0_min 0
     ''
   ];
   systemd.services.lmsensors-load-thresholds = rec {
