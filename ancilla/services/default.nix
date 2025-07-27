@@ -29,7 +29,6 @@ in {
     ./timelapse.nix
     ./tv.nix
     # ./vncdesktop.nix
-    # secrets.personal-services
   ];
 
   users.users.git.createHome = lib.mkForce false;
