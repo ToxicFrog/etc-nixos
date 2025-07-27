@@ -20,7 +20,10 @@ let
     | ${pkgs.mosquitto}/bin/mosquitto_pub -L mqtt://ancilla.ancilla.ca/hugin/smartd/$(hostname) -s
   '';
 in {
-  networking.firewall.allowedTCPPorts = [ 4949 ];  # munin-node
+  networking.firewall = {
+    allowedTCPPorts = [ 4949 ];  # munin-node
+    checkReversePath = "loose";
+  };
 
   # If the login times out, kmscon doesn't properly reap the zombie login
   # process and the entire vt hangs :(
