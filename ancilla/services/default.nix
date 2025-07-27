@@ -185,6 +185,7 @@ in {
 
   systemd.services.food-of-tyria = {
     description = "Food of Tyria tracker";
+    wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
     requires = ["network-online.target" "local-fs.target"];
     environment.PORT = "8099";
