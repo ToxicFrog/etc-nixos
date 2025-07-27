@@ -48,12 +48,6 @@
   # Shared directories on /ancilla that should be writeable by anyone even if
   # someone else created subdirectories.
   # FIXME: this runs before zpool import does, so it doesn't work at boot time
-  system.activationScripts.shared-directory-acls = with pkgs; ''
-    ${acl}/bin/setfacl --recursive -m 'd:g:parents:rwX,g:parents:rwX' /ancilla/documents
-    ${acl}/bin/setfacl --recursive -m 'd:g:parents:rwX,g:parents:rwX' /ancilla/projects
-    ${acl}/bin/setfacl --recursive -m 'd:g:parents:rwX,g:parents:rwX' /ancilla/scans
-    ${acl}/bin/setfacl --recursive -m 'd:g:users:rwX,d:o::rX,g:users:rwX,o::rX' /ancilla/installs/games/Retroarch/games
-  '';
 
   # TODO a lot of this should be moved to packages.nix
   environment.systemPackages = with pkgs; [
