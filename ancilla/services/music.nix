@@ -47,6 +47,7 @@ in {
       mount_dirs = [
         { name = "ancilla"; source = "/ancilla/media/music/.srv"; }
         { name = "podcasts"; source = "/ancilla/media/music/Podcasts"; }
+        { name = "ancilla-archive"; source = "/ancilla/media/music/ancilla-archive"; }
       ];
       users = secrets.polaris.users;
     };
