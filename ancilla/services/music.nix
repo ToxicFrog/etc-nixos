@@ -28,10 +28,16 @@ in {
         proxy_send_timeout      600s;
         proxy_buffering         off;
         proxy_request_buffering off;
-        #proxy_set_header        Host $host;
-        client_max_body_size    0;
+        # Needed to prevent polaris from compressing things on its end, which
+        # breaks sub_filter.
+        proxy_set_header Accept-Encoding "";
+        sub_filter '</head>' '<script src="/polaris-extra.js" defer></script></head>';
+        sub_filter_last_modified on;
+        sub_filter_once on;
       '';
     };
+    locations."= /polaris-extra.js".alias = ./polaris-extra.js;
+    locations."= /help.html".alias = ./music-help.html;
     locations."/gonic/" = {
       proxyPass = "http://127.0.0.1:4747/";
       proxyWebsockets = true;
