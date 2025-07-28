@@ -16,9 +16,9 @@
     xkb.layout = "us";
     # Ctrl on capslock, alt is both alt and meta, compose is on left winkey
     xkb.options = "caps:ctrl_modifier,altwin:meta_alt,compose:lwin";
-    desktopManager.plasma6.enable = lib.mkDefault true;
     # libinput.enable = false;
   };
+  services.desktopManager.plasma6.enable = lib.mkDefault true;
   services.displayManager.defaultSession = "plasma";
   services.displayManager.sddm = {
     enable = true;
@@ -29,7 +29,7 @@
   environment.sessionVariables.GTK_USE_PORTAL = "1";
 
   # Enable sound with pipewire.
-  hardware.pulseaudio = lib.mkDefault {
+  services.pulseaudio = lib.mkDefault {
     enable = false;
     support32Bit = false;
   };

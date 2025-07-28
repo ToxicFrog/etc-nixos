@@ -98,7 +98,7 @@ in {
   # that frontend or via other clients like ncmpcpp) goes to the music fifo and
   # thence to the snapserver.
   services.pipewire.enable = false;
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   hardware.alsa.enablePersistence = true;
   environment.etc."asound.conf".text = ''
     pcm.!default {
@@ -164,7 +164,7 @@ in {
       deny 192.168.1.1;
       allow 192.168.1.0/24;
       # Tailscale
-      allow 100.64.0.2/24;
+      allow 100.64.0.0/24;
       deny all;
     '';
     locations."/" = {

@@ -42,10 +42,7 @@
     user = "bex";
   };
 
-  services.xserver.desktopManager.plasma5.enable = lib.mkForce false;
-  services.desktopManager.plasma6.enable = true;
-
-  hardware.pulseaudio = lib.mkForce {
+  services.pulseaudio = lib.mkForce {
     enable = true;
     support32Bit = true;
   };
