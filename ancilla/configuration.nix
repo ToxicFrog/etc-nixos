@@ -9,6 +9,7 @@
     ./packages.nix
     ./services/default.nix
     ./virtualization.nix
+    ../shared/borgbackup.nix
     secrets.ancilla.netmounts
   ];
 

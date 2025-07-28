@@ -11,6 +11,7 @@
       # ../ancilla/services/syncthing.nix
       # ./camera.nix
       ./sound.nix
+      ../shared/borgbackup.nix
     ];
 
   networking = {

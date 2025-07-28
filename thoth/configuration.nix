@@ -4,6 +4,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../shared/borgbackup.nix
     ];
 
   hardware.bluetooth.enable = true;
