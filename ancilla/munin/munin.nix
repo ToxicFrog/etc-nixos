@@ -109,9 +109,9 @@ in {
       use_node_name no
       address localhost
 
-      [ancilla.ca;bex-ppc]
+      [ancilla.ca;kobold]
       use_node_name yes
-      address ssh://bex-ppc:30014 -W localhost:4949
+      address ssh://kobold:30014 -W localhost:4949
 
       [networking;crossfire.real-time.com]
       use_node_name no
@@ -194,13 +194,12 @@ in {
   # Local node. This monitors ancilla directly and fetches data from other systems
   # on the network.
   services.munin-node = let
-    # This is a Contraption™ that works by sshing into the dreamhost server and
+    # This is a Contraption™ that works by sshing into a remote server and then
     # then fetching the site from there, to verify that it is working properly
     # when viewed externally and I'm not just testing what it looks like on the
     # local network.
-    # This is probably what's timing out.
     curl-wrapper = pkgs.writeShellScriptBin "curl" ''
-      exec ${pkgs.openssh}/bin/ssh bex-ppc curl "$@"
+      exec ${pkgs.openssh}/bin/ssh kobold curl "$@"
     '';
     http-prober-wrapper = pkgs.writeShellScriptBin "http_response" ''
       export PATH="${lib.makeBinPath [ curl-wrapper ]}:$PATH"
@@ -275,8 +274,7 @@ in {
         env.api_key ${secrets.printer-api-key}
 
       [http_remote_response]
-        user root
-        env.sites http://ancilla.ancilla.ca/ http://library.ancilla.ca/ http://tv.ancilla.ca/ https://phobos.ancilla.ca/ http://music.ancilla.ca/
+        env.sites http://ancilla.ancilla.ca/ http://library.ancilla.ca/ http://tv.ancilla.ca/ http://phobos.ancilla.ca/ http://music.ancilla.ca/
         env.max_time 20
         env.short_label true
         env.follow_redirect false
