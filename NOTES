@@ -1,0 +1,21 @@
+Provisioning a new machine is getting more complicated.
+I need to update flake.nix and create its configuration directory, that's fine.
+But I also need to:
+- update any hostname-specific stuff in my chezmoi config;
+- make sure I have ssh keypair access to it;
+- make sure its root account has an ssh key that grants append-only access to borg@ancilla;
+- make sure /backup/borg/passphrase is deployed as /root/borg-passphrase on it
+  (or provision the borg key some other way?)
+
+I'm halfway through the process of moving ancilla /var/lib from the SSDs to the ancilla pool. It's tricky because I need to mostly-migrate each service, shut it down, finish migrating it, replace it with a symlink, and bring it back up, and once I've done that with all of them move the entire mountpoint over, and I keep forgetting to do that when ancilla is freshly started up and it won't disrupt what I'm doing.
+
+
+
+nixos-rebuild --build-host localhost --target-host isis -I nixos-config=/etc/nixos/isis/configuration.nix
+11:24 <jkarlson> You can link this build to eg. environment.etc, where hostname.nix contains the config of your other host
+11:24
+11:24     systemGen = hostname: (import <nixpkgs/nixos/default.nix> {
+11:24       configuration = ./. + "/${hostname}.nix";
+11:24     }).system;
+11:24
+

@@ -152,6 +152,10 @@ in {
       [appliances;octopi]
       use_node_name yes
       address octopi
+
+      [appliances;weather]
+      use_node_name no
+      address localhost
     '';
     # Light on dark theme.
     extraCSS = ''
@@ -215,6 +219,7 @@ in {
       borgbackup = ./plugins/borgbackup;
       certificates = ./plugins/certificates;
       crossfire_metaserver = ./plugins/crossfire_metaserver;
+      envirocan_Guelph = ./plugins/envirocan_;
       file_age = "${inputs.munin-contrib}/plugins/disk/file_age";
       http_nanolathe_prusaconnect = ./plugins/http__prusaconnect;
       http_remote_response = "${http-prober-wrapper}/bin/http_response";
@@ -263,6 +268,11 @@ in {
       [certificates]
         env.domains ancilla.ancilla.ca atuin.ancilla.ca home.ancilla.ca library.ancilla.ca music.ancilla.ca phobos.ancilla.ca tv.ancilla.ca ttlg.ancilla.ca www.ancilla.ca
         env.host_name ancilla.ca
+
+      [envirocan_Guelph]
+        env.province ON
+        env.aqhi_id FBKKK
+        env.weather_id s0000571
 
       [file_age]
         env.file1_path /ancilla/media/photos/timelapse/garden/latest

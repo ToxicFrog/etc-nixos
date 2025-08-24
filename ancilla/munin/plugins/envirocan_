@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+
+: << =cut
+
+=head1 NAME
+
+envirocan -- reports current and predicted AQHI and temperature from Environment Canada.
+
+=head1 CONFIGURATION
+
+Instantiate with a location name, e.g. envirocan_toronto.
+
+Set the following environment variables:
+province=ON  # Ontario
+aqhi_id=FDQBX  # Toronto North
+weather_id=s0000458  # Toronto
+
+You can get these values from the Environment Canada datasets:
+https://collaboration.cmc.ec.gc.ca/cmc/cmos/public_doc/msc-data/aqhi/aqhi_station.geojson
+https://collaboration.cmc.ec.gc.ca/cmc/cmos/public_doc/msc-data/citypage-weather/site_list_en.geojson
+
+=head1 AUTHOR
+
+Written by Rebecca Kelly (ToxicFrog)
+
+=head1 LICENSE
+
+MIT
+
+=head1 MAGIC MARKERS
+
+ #%# family=contrib
+
+=cut
+
+set -e
+shopt -s lastpipe
+
+myname="$(basename $0)"
+location="$(echo "$myname" | cut -d_ -f2)"
+
+function dimension {
+  local name="$1"
+  echo "$name.label $2"
+  shift 2
+  while [[ "$1" ]]; do
+    local k="${1%%:*}"
+    local v="${1#*:}"
+    if [[ $k == cdef ]]; then v="${v//%/$name}"; fi
+    echo "$name.$k $v"
+    shift
+  done
+}
+
+function graph {
+  local name="$1"
+  local title="$2"
+  echo "multigraph envirocan_${location}_$1"
+  echo "graph_title $2 (${location})"
+  echo "graph_category weather"
+  echo "graph_vlabel $3"
+  echo "graph_info $4"
+  echo "graph_args $5"
+}
+
+if [[ "$1" == "config" ]]; then
+  echo "host_name weather"
+  graph aqhi "Air Quality" "AQHI" \
+    "Current and predicted Air Quality Health Index. Higher values mean worse air." \
+    "--base 1000 --units-exponent 0 -l 0 -u 10"
+  dimension aqhi_now "aqhi" "warning:3.5" "critical:6.5"
+  dimension aqhi_12h "aqhi in 12h" "warning:3.5" "critical:6.5"
+  dimension aqhi_24h "aqhi in 24h" "warning:3.5" "critical:6.5"
+
+  graph temperature "Temperature" "°C" \
+    "Current and predicted temperature." \
+    "--base 1000 --units-exponent 0"
+  dimension temperature_now "temperature" "warning:1:25" "critical:-10:30"
+  dimension temperature_low "forecast low" "warning:1:25" "critical:-10:30"
+  dimension temperature_high "forecast high" "warning:1:25" "critical:-10:30"
+  dimension humidex_now "humidex" "warning:25" "critical:30"
+  dimension humidex_next "humidex forecast" "warning:25" "critical:30"
+
+  graph humidity "Humidity" "RH%" \
+    "Current relative humidity." \
+    "--base 1000 --units-exponent 0"
+  dimension humidity_now "humidity"
+  exit 0
+fi
+
+function fetch-aqhi {
+  local collection="$1"; shift 1
+  local args="$(printf '&%s' "$@")"
+  curl -s "https://api.weather.gc.ca/collections/${collection}/items?limit=1&offset=0&location_id=${aqhi_id}&f=json${args}"
+}
+
+function aqhi-now {
+  fetch-aqhi aqhi-observations-realtime sortby=-observation_datetime \
+  | jq '.features[0].properties.aqhi'
+}
+
+function aqhi-forecast {
+  fetch-aqhi aqhi-forecasts-realtime sortby=-publication_datetime forecast_datetime="$1" \
+  | jq '.features[0].properties.aqhi'
+}
+
+function weather-ls {
+  weather-cat "$@" | wring text - //a
+}
+
+function weather-cat {
+  curl -s "https://dd.weather.gc.ca/citypage_weather/${province}/$1"
+}
+
+function weather-query {
+  printf '%s' "$weather_xml" | xq -j | jq -r ".siteData$1" | sed 's,null,U,'
+}
+
+function next-temp {
+  for i in {0..9}; do
+    local temp_class=$(weather-query ".forecastGroup.forecast[$i].temperatures.temperature[\"@class\"]")
+    if [[ $temp_class == $1 ]]; then
+      weather-query ".forecastGroup.forecast[$i].temperatures.temperature[\"#text\"]"
+      return 0
+    fi
+  done
+  echo U
+}
+
+function next-humidex {
+  for i in {0..1}; do
+    local humidex=$(weather-query ".forecastGroup.forecast[$i].humidex.calculated")
+    if [[ $humidex != U ]]; then
+      echo $humidex
+      return 0
+    fi
+  done
+  echo U
+}
+
+next_12h="$(date --utc -d '+12 hours' +'%FT%H:00:00Z')"
+next_24h="$(date --utc -d '+24 hours' +'%FT%H:00:00Z')"
+
+weather_hour="$(weather-ls . | tail -n1)"
+weather_file="$(weather-ls ${weather_hour} | grep ${weather_id}_en | tail -n1)"
+weather_xml="$(weather-cat ${weather_hour}/${weather_file})"
+
+cat <<EOF
+multigraph envirocan_${location}_aqhi
+aqhi_now.value $(aqhi-now)
+aqhi_12h.value $(aqhi-forecast "$next_12h")
+aqhi_24h.value $(aqhi-forecast "$next_24h")
+multigraph envirocan_${location}_temperature
+temperature_now.value $(weather-query '.currentConditions.temperature["#text"]')
+temperature_low.value $(next-temp low)
+temperature_high.value $(next-temp high)
+humidex_now.value $(weather-query '.currentConditions.humidex["#text"]')
+humidex_next.value $(next-humidex)
+multigraph envirocan_${location}_humidity
+humidity_now.value $(weather-query '.currentConditions.relativeHumidity["#text"]')
+EOF

@@ -26,6 +26,7 @@
     pcal
     recode
     wring
+    xq-xml
     unstable.yt-dlp
   ];
 }
