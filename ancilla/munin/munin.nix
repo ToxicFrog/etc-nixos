@@ -48,7 +48,6 @@ in {
         fastcgi_param CONTENT_LENGTH $content_length;
         fastcgi_param QUERY_STRING $query_string;
         fastcgi_param SCRIPT_FILENAME ${pkgs.munin}/www/cgi/$fastcgi_script_name;
-        fastcgi_param CGI_DEBUG true;
         fastcgi_param MUNIN_CONFIG ${muninConf};
         fastcgi_param PATH_INFO $fastcgi_path_info;
         fastcgi_pass unix:${config.services.fcgiwrap.instances.munin.socket.address};
@@ -159,16 +158,28 @@ in {
       html, body { background: #222222; }
       #header, #footer { background: #333333; }
       body, h1, h2, h3, p, span, div { color: #888888; }
-      /*
       img.i, img.iwarn, img.icrit, img.iunkn {
         filter: invert(1) hue-rotate(180deg) saturate(2);
       }
-      */
       #legend th { border-bottom: 1px solid #bbbbbb; }
       #legend .oddrow { background-color: #222222; }
       #legend .oddrow td { border-bottom: 1px solid #666666; }
       #legend .evenrow { background-color: #282828; }
       #legend .evenrow td { border-bottom: 1px solid #666666; }
+
+      /*
+      img.i      { border: 0.5em solid #a0a0a0; }
+      img.iwarn  { border: 0.5em solid #ffd300; }
+      img.icrit  { border: 0.5em solid #ff0000; }
+      img.iunkn  { border: 0.5em solid #ffaa00; }
+      */
+
+      /* We choose colours here that will look good after value inversion,
+         saturation, and hue rotation, which is not perfectly hue-preserving */
+      img.i      { border: 0.5em solid #ddd; }
+      img.iwarn  { border: 0.5em solid #870; }
+      img.icrit  { border: 0.5em solid #f88; }
+      img.iunkn  { border: 0.5em solid #f8f; }
     '';
   };
 
