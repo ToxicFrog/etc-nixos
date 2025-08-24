@@ -5,11 +5,13 @@ let
   patterns = import ./borg-patterns.nix;
 in {
   systemd.services."borgbackup-job-${host}".serviceConfig = {
-    RandomizedDelaySec = toString (60*60*2);
     Restart = "on-failure";
-    RestartSec = "600";
+    RestartSec = "547";
     SuccessExitStatus = "1";
     Type = "oneshot";
+  };
+  systemd.timers."borgbackup-job-${host}".timerConfig = {
+    RandomizedDelaySec = toString (60*60*2);
   };
   services.borgbackup.jobs."${host}" = {
     appendFailedSuffix = false;
