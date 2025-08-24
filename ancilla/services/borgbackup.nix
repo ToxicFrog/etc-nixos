@@ -6,11 +6,13 @@ let
   patterns = import ../../shared/borg-patterns.nix;
   borg-rsync = name: host: path: {
     systemd.services."borgbackup-job-${name}".serviceConfig = {
-      RandomizedDelaySec = toString (60*60*2);
       Restart = "on-failure";
-      RestartSec = "600";
+      RestartSec = "547";
       SuccessExitStatus = "1";
       Type = "oneshot";
+    };
+    systemd.timers."borgbackup-job-${name}".timerConfig = {
+      RandomizedDelaySec = toString (60*60*2);
     };
     services.borgbackup.jobs."${name}" = {
       appendFailedSuffix = false;
@@ -40,6 +42,7 @@ let
         fi
         touch .borgbackup
       '';
+      readWritePaths = [ "/backup/cache" ];
       repo = "borg@ancilla.ancilla.ca:.";
       startAt = "weekly";
     };
@@ -53,6 +56,7 @@ in lib.lists.fold lib.attrsets.recursiveUpdate {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHQghF2NeCZRtvfguD0ZPbCBEy4AmXzmZVTwQGAvlZM8 root@thoth"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKMTvcdoA9ZGGrUI3DY3v7ZsZ7Nbmd0Uk+fAgCg9AYvk root@durandal"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMIF8epayZlkhHtnKTYPBJN8scn3I6LL/qWxSer5bC9H root@pladix"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG1BBItB59XPBAyNpaArAgfuHM3xkjmOjJksTaZRtfGi munin@ancilla"
     ];
     path = "/backup/borg-repo";
   };

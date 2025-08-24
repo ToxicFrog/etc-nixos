@@ -55,6 +55,8 @@ is_multigraph
 touch $MUNIN_STATEFILE
 mkdir -p "$info_cache_dir"
 
+export BORG_USE_CHUNKS_ARCHIVE=no
+
 function dimension {
   local name="$1"
   echo "$name.label $2"
@@ -173,6 +175,7 @@ function values_for_prefix {
 # info is very slow and on some configurations can time out.
 function borg_info_json {
   if [[ ! -f "$info_cache_dir/$1" ]]; then
+    >&2 echo "Building info cache for ::$1"
     borg info "::$1" --json > "$info_cache_dir/$1.tmp" && mv "$info_cache_dir/$1.tmp" "$info_cache_dir/$1"
   fi
   cat "$info_cache_dir/$1"
@@ -185,6 +188,7 @@ function borg_info_json {
   echo "DEDUP multigraph borg_dedup_size"
   echo "TIME multigraph borg_duration"
   for prefix in $backup_prefixes; do
+    # >&2 echo "Checking backup prefix $prefix"
     freq="${prefix#*::}"
     prefix="${prefix%::*}"
     archive="$(borg list --short --glob-archives "${prefix}*" | egrep -v '\.checkpoint$' | tail -n1)"
@@ -192,5 +196,6 @@ function borg_info_json {
     borg_info_json "$archive" | values_for_prefix "$(normalize-prefix $prefix)" "$freq"
   done
 } | sort --key 1,1 --stable | cut -d' ' -f2-
+# >&2 echo "Reporting repo-level stats"
 echo "multigraph borg_repo_size"
 echo "borg_repo_size.value $(borg info --json | jq -r .cache.stats.unique_csize)"

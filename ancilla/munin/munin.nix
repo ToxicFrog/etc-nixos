@@ -301,15 +301,12 @@ in {
         env.whois ${pkgs.whois}/bin/whois
 
       [borgbackup]
-        user root
-        env.backup_prefixes ancilla::24 thoth::24 durandal::168 pladix::168 lots-of-cats::0 isis::0 funkyhorror::168 godbehere.ca::168 GRABR.ca::168
-        env.info_cache_dir /backup/borg/info-cache
-        env.BORG_REPO /backup/borg-repo
-        env.BORG_PASSCOMMAND cat /backup/borg/passphrase
-        env.BORG_CONFIG_DIR /backup/borg/config
-        env.BORG_CACHE_DIR /backup/borg/cache
-        env.BORG_SECURITY_DIR /backup/borg/security
-        env.BORG_KEYS_DIR /backup/borg/keys
+        env.backup_prefixes ancilla::24 thoth::24 durandal::168 pladix::168 funkyhorror::168 godbehere.ca::168 GRABR.ca::168
+        env.info_cache_dir /var/lib/munin/borg-info-cache
+        env.HOME /var/lib/munin
+        env.BORG_REPO borg@ancilla.ancilla.ca:.
+        env.BORG_USE_CHUNKS_ARCHIVE no
+        env.BORG_PASSCOMMAND cat /var/lib/munin/borg-passphrase
 
       [zfs_*]
         user root
@@ -379,5 +376,32 @@ in {
       RemainAfterExit = true;
       ExecStart = "${pkgs.lm_sensors}/bin/sensors -c /etc/sensors3.conf -s";
     };
+  };
+  systemd.paths.munin-rebuild-borg-cache = {
+    wantedBy = [ config.systemd.defaultUnit ];
+    after = [ "local-fs.target" ];
+    pathConfig = {
+      # Changes on every write to the repo datastore.
+      PathChanged = "/backup/borg-repo/nonce";
+    };
+  };
+  systemd.services.munin-rebuild-borg-cache = {
+    description = "Automatically rebuild borg cache for Munin after backups";
+    serviceConfig = {
+      Restart = "on-failure";
+      RestartSec = "547";
+      Type = "oneshot";
+      User = "munin";
+      Group = "munin";
+    };
+    environment = {
+      BORG_USE_CHUNKS_ARCHIVE = "no";
+      BORG_REPO = "borg@ancilla.ancilla.ca:.";
+      BORG_PASSCOMMAND = "cat /var/lib/munin/borg-passphrase";
+      HOME = "/var/lib/munin";
+    };
+    script = ''
+      ${pkgs.borgbackup}/bin/borg info --json > /dev/null
+    '';
   };
 }
