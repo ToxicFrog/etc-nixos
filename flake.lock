@@ -3,11 +3,11 @@
     "bizhawk-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1754070089,
-        "narHash": "sha256-v9vSF+sNVlrB3tt1CM6ag1xzrG0RhP37JPapk0Q6RkU=",
+        "lastModified": 1755871312,
+        "narHash": "sha256-vG2w1lBqO2T4VdIOJEDrxYX8GMz1tG8NB120CtNiWs4=",
         "owner": "TASEmulators",
         "repo": "BizHawk",
-        "rev": "5a837366790baea5ed00d0ac601e3d77ea0ccdc3",
+        "rev": "74fd5125267dc614df3be695f44ac30484f5f6de",
         "type": "github"
       },
       "original": {
@@ -87,11 +87,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1751909859,
-        "narHash": "sha256-gbpuESxl/An4GTh7QEbQRYJozVIxWkwVGbWK0/0GoRc=",
+        "lastModified": 1755826886,
+        "narHash": "sha256-AzCj0tc+JHFg74VqvLYgro5xSJ6eT0NoS6zxhavc4eo=",
         "ref": "refs/heads/main",
-        "rev": "4d4c2b8f0a801c91ce5b717c77fe3a17efa1402f",
-        "revCount": 150,
+        "rev": "71bd6a06def2404b7e0f68e57bf5a08c634f5041",
+        "revCount": 159,
         "type": "git",
         "url": "https://git.lix.systems/lix-project/nixos-module"
       },
@@ -103,11 +103,11 @@
     "munin-contrib": {
       "flake": false,
       "locked": {
-        "lastModified": 1752436246,
-        "narHash": "sha256-bfrC8xZ1udlYzw2OrXTvdDaBwBXGxGA577m2tP+vGVc=",
+        "lastModified": 1755118321,
+        "narHash": "sha256-J9ARODNwYXgCiqXVQN9UyFJ3jWEg5Nje+VPkhZp8+TU=",
         "owner": "munin-monitoring",
         "repo": "contrib",
-        "rev": "cceb4a7db768bf0b95b808101172307015c339d8",
+        "rev": "f7429783b319145b41bf70ee3203a59832aa2484",
         "type": "github"
       },
       "original": {
@@ -119,11 +119,11 @@
     },
     "nixos": {
       "locked": {
-        "lastModified": 1752308619,
-        "narHash": "sha256-pzrVLKRQNPrii06Rm09Q0i0dq3wt2t2pciT/GNq5EZQ=",
+        "lastModified": 1755922037,
+        "narHash": "sha256-wY1+2JPH0ZZC4BQefoZw/k+3+DowFyfOxv17CN/idKs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "650e572363c091045cdbc5b36b0f4c1f614d3058",
+        "rev": "b1b3291469652d5a2edb0becc4ef0246fff97a7c",
         "type": "github"
       },
       "original": {
@@ -135,11 +135,11 @@
     },
     "nixos-unstable": {
       "locked": {
-        "lastModified": 1751984180,
-        "narHash": "sha256-LwWRsENAZJKUdD3SpLluwDmdXY9F45ZEgCb0X+xgOL0=",
+        "lastModified": 1755615617,
+        "narHash": "sha256-HMwfAJBdrr8wXAkbGhtcby1zGFvs+StOp19xNsbqdOg=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9807714d6944a957c2e036f84b0ff8caf9930bc0",
+        "rev": "20075955deac2583bb12f07151c2df830ef346b4",
         "type": "github"
       },
       "original": {
@@ -167,6 +167,7 @@
     },
     "root": {
       "inputs": {
+        "bizhawk-src": "bizhawk-src",
         "doomrl-server": "doomrl-server",
         "lix-module": "lix-module",
         "munin-contrib": "munin-contrib",

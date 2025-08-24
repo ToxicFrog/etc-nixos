@@ -26,8 +26,8 @@
 
     bizhawk-src = {
       url = "github:TASEmulators/BizHawk/master";
+      flake = false;
     };
-
     # Local inputs
     # Uncomment the git+ url to use latest commit, or the plain path to use
     # whatever is in the worktree.
