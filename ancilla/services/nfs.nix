@@ -15,6 +15,10 @@ let
       opts = ["rw" "no_root_squash" "no_subtree_check"]; }
     { path = "/backup/nfs/nwf"; hosts = ["nwf-vm"];
       opts = [ "crossmnt" "no_subtree_check" "no_root_squash" "rw" ]; }
+    # { path = "/home/nwf"; hosts = ["nwf-vm"];
+    #   opts = [ "crossmnt" "no_subtree_check" "no_root_squash" "rw" ]; }
+    { path = "/ancilla/installs"; hosts = ["nwf-vm"]; opts = ro_opts; }
+    { path = "/ancilla/media"; hosts = ["nwf-vm"]; opts = ro_opts; }
   ];
   mkexport =
     export: let
