@@ -25,6 +25,7 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # services.tlp.enable = true;  # cannot use with power-profiles-daemon
   services.tailscale = {
     enable = true;
     openFirewall = true;
@@ -54,8 +55,8 @@
   programs.steam.enable = true;
   services.input-remapper.enable = true;
   environment.systemPackages = with pkgs; [
-    unstable.alephone
-    unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
+    # alephone
+    # alephone-marathon alephone-durandal alephone-infinity
     appimage-run
     unstable.archipelago
     calibre

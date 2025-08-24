@@ -30,9 +30,9 @@
     # golly
     unstable.gzdoom udb-editor doomrunner
     crossfire-jxclient crossfire-gridarta
-    unstable.alephone
-    unstable.alephone-marathon unstable.alephone-durandal unstable.alephone-infinity
-    unstable.alephone-pathways-into-darkness unstable.alephone-rubicon-x
+    alephone
+    alephone-marathon alephone-durandal alephone-infinity
+    alephone-pathways-into-darkness alephone-rubicon-x
     (retroarch.withCores
       (libretro: with libretro; [
         dolphin mgba beetle-psx beetle-psx-hw bsnes-hd gambatte pcsx2 nxengine ppsspp mupen64plus
