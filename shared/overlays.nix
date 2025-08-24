@@ -1,8 +1,6 @@
-{ pkgs, options, lib, inputs, factor-rewrap, makeWrapper, unstable, ... }:
+{ pkgs, options, lib, inputs, makeWrapper, unstable, ... }:
 
-let
-  o = import ./overlays/crossfire.nix;
-in {
+{
   # Overlays for nixos itself, e.g. module replacements
   disabledModules = [
     # "config/users-groups.nix"
@@ -22,6 +20,10 @@ in {
     # unstable or other inputs need to go here, or be imported from files in other
     # directories.
     (final: prev: {
+      bizhawk = (final.callPackage inputs.bizhawk-src {
+          dotnet-sdk_5 = final.dotnetCorePackages.sdk_8_0;
+          lua = final.lua54Packages.lua;
+        }).emuhawk-latest-bin;
       polaris = prev.callPackage ./overlays/packages/polaris.nix {};
       polaris-web = prev.callPackage ./overlays/packages/polaris-web.nix {};
       crossfire-jxclient = unstable.crossfire-jxclient;

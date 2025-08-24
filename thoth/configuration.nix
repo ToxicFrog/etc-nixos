@@ -67,7 +67,8 @@
     itch
     love
     openscad
-    randovania
+    poptracker
+    # randovania
     (retroarch.withCores
       (libretro: with libretro; [
         dolphin mgba pcsx-rearmed

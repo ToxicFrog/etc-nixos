@@ -47,6 +47,7 @@
   environment.systemPackages = with pkgs; [
     antimicrox  # controller support for kb-only games
     unstable.archipelago
+    bizhawk
     caffeine-ng
     chromium # for rando nights over discord
     crossfire-jxclient crossfire-gridarta
@@ -69,7 +70,8 @@
     unstable.knossosnet  # Freespace
     love
     unstable.pcsx2
-    randovania
+    poptracker
+    # randovania
     (retroarch.withCores
       (libretro: with libretro; [
         dolphin mgba beetle-psx beetle-psx-hw bsnes-hd gambatte pcsx2 nxengine ppsspp mupen64plus

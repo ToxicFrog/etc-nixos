@@ -24,6 +24,10 @@
       flake = false;
     };
 
+    bizhawk-src = {
+      url = "github:TASEmulators/BizHawk/master";
+    };
+
     # Local inputs
     # Uncomment the git+ url to use latest commit, or the plain path to use
     # whatever is in the worktree.
@@ -33,37 +37,40 @@
     };
   };
 
-  outputs = { self, nixos, nixos-unstable, lix-module, ... }@inputs: {
-    nixosConfigurations = let
-      nixpkgsConfig = {
-        allowUnfree = true;
-        permittedInsecurePackages = [
-          "electron-33.4.11"  # needed for itch.io client
-          #"gradle-6.9.4"  # needed to build jxclient and cfedit -- TODO update to gradle 7 or 8
-          "olm-3.2.16"  # needed by ancilla mautrix bridges
-          #"qbittorrent-nox-4.6.4" # RCE vuln in the autoupdater, not applicable to nixos
-          "dotnet-sdk-6.0.428" # EOL, TODO: figure out what uses this
-          "dotnet-runtime-6.0.36" # ditto
-          "freeimage-3.18.0-unstable-2024-04-18" # needed by slade
-          "freeimage-unstable-2021-11-01" # ditto
-        ];
-      };
-      mkSystem = extraModules:
-        nixos.lib.nixosSystem rec {
-          system = "x86_64-linux";
-          modules = [
-            { nixpkgs.config = nixpkgsConfig; }
-            ./shared/common.nix
-            lix-module.nixosModules.default
-          ] ++ extraModules;
-          specialArgs = {
-            inherit inputs;
-            unstable = (import nixos-unstable { inherit system; config = nixpkgsConfig; }).pkgs;
-            factor-rewrap = (import inputs.nixpkgs-factor-rewrap { inherit system; config = nixpkgsConfig; }).pkgs;
-            secrets = (import ./secrets/default.nix);
-          };
+  outputs = {
+    self, nixos, nixos-unstable, lix-module, bizhawk-src, ...
+  }@inputs: let
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = [
+        "electron-33.4.11"  # needed for itch.io client
+        "olm-3.2.16"  # needed by ancilla mautrix bridges
+        "dotnet-sdk-6.0.428" # EOL, TODO: figure out what uses this
+        "dotnet-runtime-6.0.36" # ditto
+        "freeimage-3.18.0-unstable-2024-04-18" # needed by slade
+        "freeimage-unstable-2021-11-01" # ditto
+      ];
+    };
+    system = "x86_64-linux";
+    commonModules = [
+      { nixpkgs.config = config; }
+      ./shared/common.nix
+      lix-module.nixosModules.default
+    ];
+    secrets = (import ./secrets/default.nix);
+    # nixpkgs = (import nixos { inherit system config; }).pkgs;
+    nixpkgs-unstable = (import nixos-unstable { inherit system config; }).pkgs;
+    mkSystem = extraModules:
+      nixos.lib.nixosSystem rec {
+        inherit system;
+        modules = commonModules ++ extraModules;
+        specialArgs = {
+          inherit inputs secrets;
+          unstable = nixpkgs-unstable;
         };
-    in {
+      };
+  in {
+    nixosConfigurations = {
       ancilla = mkSystem [ ./shared/bex-packages.nix ./ancilla/configuration.nix ];
       durandal = mkSystem [ ./shared/graphical.nix ./shared/bex-packages.nix ./durandal/configuration.nix ];
       thoth = mkSystem [ ./shared/graphical.nix ./shared/bex-packages.nix ./thoth/configuration.nix ];

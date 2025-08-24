@@ -1,5 +1,22 @@
 {
   "nodes": {
+    "bizhawk-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754070089,
+        "narHash": "sha256-v9vSF+sNVlrB3tt1CM6ag1xzrG0RhP37JPapk0Q6RkU=",
+        "owner": "TASEmulators",
+        "repo": "BizHawk",
+        "rev": "5a837366790baea5ed00d0ac601e3d77ea0ccdc3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TASEmulators",
+        "ref": "master",
+        "repo": "BizHawk",
+        "type": "github"
+      }
+    },
     "doomrl-server": {
       "flake": false,
       "locked": {
