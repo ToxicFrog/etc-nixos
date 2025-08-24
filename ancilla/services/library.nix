@@ -7,7 +7,7 @@
   services.nginx.virtualHosts."library.ancilla.ca" = {
     forceSSL = true;
     enableACME = true;
-    basicAuth = secrets.auth.nginx.library;
+    # basicAuth = secrets.auth.nginx.library;
     # Proxy to Calibre library. TODO: move calibre service configuration into
     # nix rather than running it out of my homedir.
     locations."/".proxyPass = "http://127.0.0.1:26657/";
@@ -26,15 +26,12 @@
   };
 
   services.calibre-web = {
-    enable = false;
-    user = "bex";
-    group = "users";
-    options = {
-      calibreLibrary = "/home/bex/Books/Calibre";
-    };
+    enable = true;
     listen.port = 26657;
     listen.ip = "127.0.0.1";
   };
+  # TODO: daily at midnight:
+  # rsync --delete-after --chown calibre-web:calibre-web --chmod D0550,F0440 ~bex/Books/Calibre/ /srv/calibre-web/
 
   users.users.codex = {
     isSystemUser = true;
