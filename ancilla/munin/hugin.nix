@@ -27,7 +27,7 @@ in {
     startLimitIntervalSec = 10;
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
-    requires = ["network-online.target" "local-fs.target"];
+    requires = ["network-online.target"];
     script = ''
       echo "Connecting..."
       ${pkgs.ii}/bin/ii \

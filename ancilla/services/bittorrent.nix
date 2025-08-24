@@ -14,8 +14,8 @@
   systemd.services.qbittorrentd = {
     description = "QBittorrent daemon";
     wantedBy = ["multi-user.target"];
-    after = ["network-online.target" "local-fs.target"];
-    requires = ["zfs-mount.service" "network-online.target" "local-fs.target"];
+    after = ["network-online.target" "local-fs.target" "zfs-mount.service"];
+    requires = ["network-online.target"];
     script = ''
       ${pkgs.qbittorrent-nox}/bin/qbittorrent-nox --webui-port=9091
     '';

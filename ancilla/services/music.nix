@@ -73,7 +73,7 @@ in {
     config.services.gonic.settings.playlists-path
   ];
   systemd.services.gonic.after = ["network-online.target" "local-fs.target"];
-  systemd.services.gonic.requires = ["network-online.target" "local-fs.target"];
+  systemd.services.gonic.requires = ["network-online.target"];
   services.gonic = {
     enable = true;
     settings = {

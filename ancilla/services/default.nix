@@ -186,7 +186,7 @@ in {
     description = "Food of Tyria tracker";
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
-    requires = ["network-online.target" "local-fs.target"];
+    requires = ["network-online.target"];
     environment.PORT = "8099";
     serviceConfig = {
       User = "bex"; Group = "users";

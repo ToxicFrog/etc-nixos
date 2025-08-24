@@ -59,7 +59,7 @@
     description = "codex comic server";
     wantedBy = ["multi-user.target"];
     after = ["network-online.target" "local-fs.target"];
-    requires = ["network-online.target" "local-fs.target"];
+    requires = ["network-online.target"];
     script = ''
       codex-venv/bin/codex
     '';
